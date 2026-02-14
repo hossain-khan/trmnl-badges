@@ -43,7 +43,7 @@ npm run test
 
 ## Query Parameters
 
-- `recipe` (required) - TRMNL recipe ID (e.g., 240176)
+- `recipe` (required) - TRMNL recipe ID (e.g., 16765)
 - `label` (optional) - Custom label text
 - `pretty` (optional) - Format numbers in compact notation (e.g., 1.2K)
 
@@ -55,8 +55,8 @@ Add badges to your TRMNL recipe documentation using Markdown or HTML.
 
 Your recipe ID can be found in the URL of your recipe page on TRMNL:
 ```
-https://usetrmnl.com/recipes/240176
-                             ^^^^^^
+https://usetrmnl.com/recipes/16765
+                             ^^^^^
                           (recipe ID)
 ```
 
@@ -64,44 +64,44 @@ https://usetrmnl.com/recipes/240176
 
 | Badge Type | Code | Preview |
 |------------|------|---------|
-| **Installs** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176) |
-| **Forks** | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176)` | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176) |
-| **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&pretty) |
-| **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&label=Downloads) |
-| **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)](https://usetrmnl.com/recipes/240176)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)](https://usetrmnl.com/recipes/240176) |
+| **Installs** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765) |
+| **Forks** | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765)` | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765) |
+| **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&pretty) |
+| **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads) |
+| **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765)](https://usetrmnl.com/recipes/16765)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765)](https://usetrmnl.com/recipes/16765) |
 
 ### HTML Usage
 ```html
-<img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176" alt="Installs">
-<img src="https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176" alt="Forks">
+<img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765" alt="Installs">
+<img src="https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765" alt="Forks">
 ```
 
 ## Examples
 
 ### Installs Badge
 ```
-https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765
 ```
 
 ### Forks Badge with Pretty Formatting
 ```
-https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176&pretty
+https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765&pretty
 ```
 
 ### Custom Label
 ```
-https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&label=Downloads
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads
 ```
 
 ### Stats API
 ```
-https://trmnl-badges.gohk.xyz/api/stats?recipe=240176
+https://trmnl-badges.gohk.xyz/api/stats?recipe=16765
 ```
 
 Returns:
 ```json
 {
-  "id": 240176,
+  "id": 16765,
   "name": "Recipe Name",
   "published_at": "2026-02-09T07:45:36.616Z",
   "stats": {
