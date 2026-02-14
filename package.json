@@ -2,7 +2,7 @@
   "name": "trmnl-badges",
   "private": true,
   "version": "1.0.0",
-  "description": "TRMNL Badges - Cloudflare Workers app for generating GitHub repository badges",
+  "description": "TRMNL Badges - Cloudflare Workers app for generating TRMNL recipe badges",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "dev": "wrangler dev --minify",
     "test": "vitest"
   },
-  "keywords": ["cloudflare-workers", "github", "badges", "trmnl"],
+  "keywords": ["cloudflare-workers", "trmnl", "badges", "recipes", "e-paper"],
   "author": "",
   "license": "ISC",
   "devDependencies": {

@@ -1,14 +1,19 @@
 # TRMNL Badges
 
-A Cloudflare Workers application that generates dynamic badges for TRMNL recipes.
+A Cloudflare Workers application that generates dynamic SVG badges displaying statistics for [TRMNL](https://usetrmnl.com/) recipes.
+
+## About
+
+[TRMNL](https://usetrmnl.com/) is an e-paper display platform that shows personalized content through community-created recipes. This service generates badges to showcase recipe statistics like install counts and forks, perfect for README files and recipe documentation.
 
 ## Features
 
-- ⚡ Fast badge generation using Cloudflare Workers
-- 🎨 TRMNL brand styling with official colors
+- ⚡ Fast badge generation using Cloudflare Workers edge network
+- 🎨 Official TRMNL brand styling and colors
 - 📊 Display recipe statistics (installs, forks)
-- 🔄 TRMNL API integration
-- 🎯 Perfect for showcasing your TRMNL recipes
+- 🔄 Real-time data from TRMNL API
+- 🎯 Simple integration with markdown and HTML
+- 📏 Compact number formatting support
 
 ## Development
 
@@ -41,6 +46,36 @@ npm run test
 - `recipe` (required) - TRMNL recipe ID (e.g., 240176)
 - `label` (optional) - Custom label text
 - `pretty` (optional) - Format numbers in compact notation (e.g., 1.2K)
+
+## Usage
+
+Add badges to your TRMNL recipe documentation using Markdown or HTML.
+
+### Finding Your Recipe ID
+
+Your recipe ID can be found in the URL of your recipe page on TRMNL:
+```
+https://usetrmnl.com/recipes/240176
+                             ^^^^^^
+                          (recipe ID)
+```
+
+### Markdown
+```markdown
+![Installs](https://trmnl-badges.hk-c91.workers.dev/badge/installs?recipe=240176)
+![Forks](https://trmnl-badges.hk-c91.workers.dev/badge/forks?recipe=240176)
+```
+
+### HTML
+```html
+<img src="https://trmnl-badges.hk-c91.workers.dev/badge/installs?recipe=240176" alt="Installs">
+<img src="https://trmnl-badges.hk-c91.workers.dev/badge/forks?recipe=240176" alt="Forks">
+```
+
+### Linked Badges
+```markdown
+[![Installs](https://trmnl-badges.hk-c91.workers.dev/badge/installs?recipe=240176)](https://usetrmnl.com/recipes/240176)
+```
 
 ## Examples
 
@@ -87,6 +122,3 @@ Returns:
 - **Dark**: `#3D3D3E` (dark gray)
 - **Light**: `#E7E7E7` (light gray)
 
-## License
-
-ISC
