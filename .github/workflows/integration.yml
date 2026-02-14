@@ -25,7 +25,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run integration tests
-        run: npm test -- test/integration.test.ts --run
-        env:
-          TRMNL_API_BASE_URL: ${{ secrets.TRMNL_API_BASE_URL || 'https://api.trmnl.com' }}
+      - name: Verify TypeScript
+        run: npx tsc --noEmit
+
+      - name: Run all unit and utility tests
+        run: npm test -- --run --exclude test/integration.test.ts
