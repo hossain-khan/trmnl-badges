@@ -28,5 +28,11 @@ jobs:
       - name: Verify TypeScript
         run: npx tsc --noEmit
 
-      - name: Run all unit and utility tests
-        run: npm test -- --run --exclude test/integration.test.ts
+      - name: Run unit tests
+        run: npm test -- --run
+
+      - name: Make integration test script executable
+        run: chmod +x scripts/integration-test.sh
+
+      - name: Run integration tests
+        run: ./scripts/integration-test.sh
