@@ -1,0 +1,7 @@
+name = "trmnl-badges"
+main = "./src/index.ts"
+compatibility_date = "2025-08-01"
+
+# Uncomment to add environment variables
+# [vars]
+# GITHUB_TOKEN = ""
