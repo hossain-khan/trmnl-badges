@@ -62,41 +62,41 @@ https://usetrmnl.com/recipes/240176
 
 ### Markdown
 ```markdown
-![Installs](https://trmnl-badges.hk-c91.workers.dev/badge/installs?recipe=240176)
-![Forks](https://trmnl-badges.hk-c91.workers.dev/badge/forks?recipe=240176)
+![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)
+![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176)
 ```
 
 ### HTML
 ```html
-<img src="https://trmnl-badges.hk-c91.workers.dev/badge/installs?recipe=240176" alt="Installs">
-<img src="https://trmnl-badges.hk-c91.workers.dev/badge/forks?recipe=240176" alt="Forks">
+<img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176" alt="Installs">
+<img src="https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176" alt="Forks">
 ```
 
 ### Linked Badges
 ```markdown
-[![Installs](https://trmnl-badges.hk-c91.workers.dev/badge/installs?recipe=240176)](https://usetrmnl.com/recipes/240176)
+[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)](https://usetrmnl.com/recipes/240176)
 ```
 
 ## Examples
 
 ### Installs Badge
 ```
-https://trmnl-badges.hk-c91.workers.dev/badge/installs?recipe=240176
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176
 ```
 
 ### Forks Badge with Pretty Formatting
 ```
-https://trmnl-badges.hk-c91.workers.dev/badge/forks?recipe=240176&pretty
+https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176&pretty
 ```
 
 ### Custom Label
 ```
-https://trmnl-badges.hk-c91.workers.dev/badge/installs?recipe=240176&label=Downloads
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&label=Downloads
 ```
 
 ### Stats API
 ```
-https://trmnl-badges.hk-c91.workers.dev/api/stats?recipe=240176
+https://trmnl-badges.gohk.xyz/api/stats?recipe=240176
 ```
 
 Returns:
