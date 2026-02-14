@@ -1,10 +1,6 @@
 # TRMNL Badges
 
-Dynamic SVG badges displaying statistics for [TRMNL](https://usetrmnl.com/) recipes.
-
-## About
-
-[TRMNL](https://usetrmnl.com/) is an e-paper display platform that shows personalized content through community-created recipes. This service generates badges to showcase recipe statistics like install counts and forks, perfect for README files and recipe documentation.
+Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipes](https://trmnl.com/recipes).
 
 ## Features
 
@@ -67,17 +63,6 @@ https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765&pretty
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads
 ```
 
-## TRMNL Brand Colors
-
-- **Primary**: `#F8654B` (orange)
-- **Dark**: `#3D3D3E` (dark gray)
-- **Light**: `#E7E7E7` (light gray)
-
 ## Contributing
 
 For developers interested in contributing or running this project locally, see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## License
-
-ISC
-

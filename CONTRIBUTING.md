@@ -163,4 +163,4 @@ Badges are generated using the `badgen` library with:
 
 ## License
 
-ISC
+MIT
