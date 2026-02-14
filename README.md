@@ -25,9 +25,9 @@ Add badges to your TRMNL recipe documentation using Markdown or HTML.
 
 Your recipe ID can be found in the URL of your recipe page on TRMNL:
 ```
-https://usetrmnl.com/recipes/28496
-                             ^^^^^
-                          (recipe ID)
+https://trmnl.com/recipes/28496
+                    ^^^^^
+                 (recipe ID)
 ```
 
 ### Badge Examples
@@ -38,7 +38,7 @@ https://usetrmnl.com/recipes/28496
 | **Forks** | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496)` | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496) |
 | **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty) |
 | **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads) |
-| **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://usetrmnl.com/recipes/28496)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://usetrmnl.com/recipes/28496) |
+| **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496) |
 
 ### HTML Usage
 ```html
