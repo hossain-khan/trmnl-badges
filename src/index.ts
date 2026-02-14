@@ -131,7 +131,7 @@ app.get('/badge/license', async (c) => {
   const badge = generateBadge({
     label: label || 'License',
     message: licenseText,
-    color: repository.license ? '2ea44f' : '8b949e',
+    color: repository.license ? 'F8654B' : '3D3D3E',
   });
 
   c.header('Content-Type', 'image/svg+xml');
@@ -157,7 +157,7 @@ app.get('/badge/release', async (c) => {
   const badge = generateBadge({
     label: label || 'Release',
     message: releaseText,
-    color: release ? '2ea44f' : '8b949e',
+    color: release ? 'F8654B' : '3D3D3E',
   });
 
   c.header('Content-Type', 'image/svg+xml');
@@ -187,7 +187,7 @@ app.get('/badge/language', async (c) => {
   const badge = generateBadge({
     label: label || 'Language',
     message: languageText,
-    color: repository.language ? '58a6ff' : '8b949e',
+    color: repository.language ? 'F8654B' : '3D3D3E',
   });
 
   c.header('Content-Type', 'image/svg+xml');
