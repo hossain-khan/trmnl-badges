@@ -32,13 +32,3 @@ export function generateBadge(options: BadgeOptions): string {
     icon: logo || trmnlLogoDataUri,
   });
 }
-
-/**
- * Get color based on count thresholds
- */
-export function getColorForCount(count: number): string {
-  if (count >= 1000) return 'F8654B'; // TRMNL brand orange (high engagement)
-  if (count >= 100) return 'FF8C69'; // Lighter orange
-  if (count >= 10) return 'FFB399'; // Light orange
-  return '3D3D3E'; // TRMNL dark gray for low counts
-}

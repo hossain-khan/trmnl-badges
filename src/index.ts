@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import type { Bindings } from './types';
 import { fetchRecipe } from './trmnl-api';
-import { generateBadge, getColorForCount } from './badge-generator';
+import { generateBadge } from './badge-generator';
 import { formatNumber } from './utils';
 
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
@@ -36,7 +36,6 @@ app.get('/badge/installs', async (c) => {
   const badge = generateBadge({
     label: label || 'Installs',
     message: formatNumber(recipeData.stats.installs, isPretty),
-    color: getColorForCount(recipeData.stats.installs),
   });
 
   c.header('Content-Type', 'image/svg+xml');
@@ -61,7 +60,6 @@ app.get('/badge/forks', async (c) => {
   const badge = generateBadge({
     label: label || 'Forks',
     message: formatNumber(recipeData.stats.forks, isPretty),
-    color: getColorForCount(recipeData.stats.forks),
   });
 
   c.header('Content-Type', 'image/svg+xml');
