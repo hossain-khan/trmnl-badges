@@ -49,6 +49,7 @@ trmnl-badges/
 - `recipe` (required) - TRMNL recipe ID
 - `label` (optional) - Custom label text for the badge
 - `pretty` (optional) - Format numbers in compact notation (e.g., 1.2K)
+- `theme` (optional) - Badge theme: `dark` (default) or `light`
 
 ### API Examples
 
@@ -65,6 +66,9 @@ https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&pretty
 
 # With custom label
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads
+
+# With light theme
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&theme=light
 ```
 
 #### Stats API
@@ -142,7 +146,12 @@ Badges are generated using the `badgen` library with:
   - Primary: `#F8654B` (orange)
   - Dark: `#3D3D3E` (dark gray)
   - Light: `#E7E7E7` (light gray)
+- **Theme Support**: 
+  - **Dark theme** (default): Dark gray label background (`#3D3D3E`)
+  - **Light theme**: Light gray label background (`#E7E7E7`)
 - **Color Thresholds**: Dynamic badge colors based on stat counts
+  - Dark mode: Lighter oranges for better visibility
+  - Light mode: Darker oranges for better contrast
 
 ## Code Style
 

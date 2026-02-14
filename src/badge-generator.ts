@@ -20,15 +20,18 @@ export function generateBadge(options: BadgeOptions): string {
     label,
     message,
     color = 'F8654B', // TRMNL brand orange
-    labelColor = '3D3D3E', // TRMNL dark gray
-    logo
+    labelColor,
+    logo,
+    theme = 'dark',
   } = options;
+
+  const defaultLabelColor = theme === 'light' ? 'E7E7E7' : '3D3D3E';
 
   return badgen({
     label,
     status: message,
     color,
-    labelColor,
+    labelColor: labelColor || defaultLabelColor,
     icon: logo || trmnlLogoDataUri,
   });
 }
@@ -36,9 +39,18 @@ export function generateBadge(options: BadgeOptions): string {
 /**
  * Get color based on count thresholds
  */
-export function getColorForCount(count: number): string {
-  if (count >= 1000) return 'F8654B'; // TRMNL brand orange (high engagement)
-  if (count >= 100) return 'FF8C69'; // Lighter orange
-  if (count >= 10) return 'FFB399'; // Light orange
-  return '3D3D3E'; // TRMNL dark gray for low counts
+export function getColorForCount(count: number, theme: 'light' | 'dark' = 'dark'): string {
+  if (theme === 'light') {
+    // Light mode colors - slightly darker for better contrast
+    if (count >= 1000) return 'F8654B'; // TRMNL brand orange (high engagement)
+    if (count >= 100) return 'E85A3E'; // Slightly darker orange
+    if (count >= 10) return 'D94F31'; // Darker orange
+    return '555555'; // Dark gray for better visibility on light
+  } else {
+    // Dark mode colors (original)
+    if (count >= 1000) return 'F8654B'; // TRMNL brand orange (high engagement)
+    if (count >= 100) return 'FF8C69'; // Lighter orange
+    if (count >= 10) return 'FFB399'; // Light orange
+    return '3D3D3E'; // TRMNL dark gray for low counts
+  }
 }

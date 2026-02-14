@@ -24,6 +24,7 @@ export interface BadgeOptions {
   color?: string;
   labelColor?: string;
   logo?: string;
+  theme?: 'light' | 'dark';
 }
 
 export type Bindings = {
