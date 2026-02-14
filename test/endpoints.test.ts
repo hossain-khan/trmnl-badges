@@ -6,34 +6,21 @@ describe('TRMNL Badges API', () => {
     it.todo('should return ok status');
   });
 
-  describe('GET /badge/stars', () => {
-    it.todo('should return 400 when owner is missing');
-    it.todo('should return 400 when repo is missing');
-    it.todo('should generate a stars badge');
+  describe('GET /badge/installs', () => {
+    it.todo('should return 400 when recipe is missing');
+    it.todo('should generate an installs badge');
     it.todo('should support pretty formatting');
+    it.todo('should support custom labels');
   });
 
   describe('GET /badge/forks', () => {
     it.todo('should generate a forks badge');
-  });
-
-  describe('GET /badge/issues', () => {
-    it.todo('should generate an issues badge');
-  });
-
-  describe('GET /badge/license', () => {
-    it.todo('should generate a license badge');
-  });
-
-  describe('GET /badge/release', () => {
-    it.todo('should generate a release badge');
-  });
-
-  describe('GET /badge/language', () => {
-    it.todo('should generate a language badge');
+    it.todo('should support pretty formatting');
   });
 
   describe('GET /api/stats', () => {
-    it.todo('should return JSON stats');
+    it.todo('should return JSON stats for a valid recipe');
+    it.todo('should return 404 for invalid recipe ID');
+    it.todo('should include author information');
   });
 });

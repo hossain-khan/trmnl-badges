@@ -17,25 +17,4 @@ export function formatNumber(value: number, pretty: boolean = false): string {
   return value.toLocaleString('en-US');
 }
 
-/**
- * Validate GitHub owner and repo names
- */
-export function validateGitHubParams(owner: string, repo: string): {
-  valid: boolean;
-  error?: string;
-} {
-  // GitHub usernames and repo names must be alphanumeric with hyphens/underscores
-  const validPattern = /^[a-zA-Z0-9_-]+$/;
-  
-  if (!validPattern.test(owner)) {
-    return { valid: false, error: 'Invalid owner name' };
-  }
-  
-  if (!validPattern.test(repo)) {
-    return { valid: false, error: 'Invalid repository name' };
-  }
-  
-  return { valid: true };
-}
-
 

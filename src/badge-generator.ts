@@ -42,13 +42,3 @@ export function getColorForCount(count: number): string {
   if (count >= 10) return 'FFB399'; // Light orange
   return '3D3D3E'; // TRMNL dark gray for low counts
 }
-
-/**
- * Get color for open issues (red scale)
- */
-export function getIssuesColor(count: number): string {
-  if (count >= 100) return 'dc2626'; // Dark red
-  if (count >= 50) return 'ef4444'; // Red
-  if (count >= 10) return 'f59e0b'; // Orange
-  return 'F8654B'; // TRMNL orange (few issues is good)
-}
