@@ -1,6 +1,6 @@
 # TRMNL Badges
 
-A Cloudflare Workers application that generates dynamic SVG badges displaying statistics for [TRMNL](https://usetrmnl.com/) recipes.
+Dynamic SVG badges displaying statistics for [TRMNL](https://usetrmnl.com/) recipes.
 
 ## About
 
@@ -14,32 +14,6 @@ A Cloudflare Workers application that generates dynamic SVG badges displaying st
 - 🔄 Real-time data from TRMNL API
 - 🎯 Simple integration with markdown and HTML
 - 📏 Compact number formatting support
-
-## Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run locally
-npm run dev
-
-# Deploy to Cloudflare
-npm run deploy
-
-# Run tests
-npm run test
-```
-
-## API Endpoints
-
-### Badge Endpoints
-- `GET /badge/installs?recipe=<recipe_id>` - Recipe install count
-- `GET /badge/forks?recipe=<recipe_id>` - Recipe fork count
-
-### Utility Endpoints
-- `GET /health` - Health check
-- `GET /api/stats?recipe=<recipe_id>` - JSON stats for TRMNL recipes
 
 ## Query Parameters
 
@@ -93,31 +67,17 @@ https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765&pretty
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads
 ```
 
-### Stats API
-```
-https://trmnl-badges.gohk.xyz/api/stats?recipe=16765
-```
-
-Returns:
-```json
-{
-  "id": 16765,
-  "name": "Recipe Name",
-  "published_at": "2026-02-09T07:45:36.616Z",
-  "stats": {
-    "installs": 7,
-    "forks": 5
-  },
-  "author": {
-    "github_url": "https://github.com/...",
-    "learn_more_url": "https://..."
-  }
-}
-```
-
 ## TRMNL Brand Colors
 
 - **Primary**: `#F8654B` (orange)
 - **Dark**: `#3D3D3E` (dark gray)
 - **Light**: `#E7E7E7` (light gray)
+
+## Contributing
+
+For developers interested in contributing or running this project locally, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+ISC
 
