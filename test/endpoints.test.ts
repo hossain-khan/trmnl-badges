@@ -33,13 +33,13 @@ describe('TRMNL Badges API', () => {
       const response = await app.request('/health');
       expect(response.status).toBe(200);
       
-      const json = await response.json();
+      const json = await response.json() as any;
       expect(json).toHaveProperty('status', 'ok');
       expect(json).toHaveProperty('timestamp');
       expect(json).toHaveProperty('projectUrl', 'https://github.com/hossain-khan/trmnl-badges');
       
       // Verify timestamp is a valid ISO string
-      expect(() => new Date(json.timestamp)).not.toThrow();
+      expect(() => new Date(json.timestamp as string)).not.toThrow();
     });
   });
 
@@ -182,7 +182,7 @@ describe('TRMNL Badges API', () => {
       expect(response.status).toBe(200);
       expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
       
-      const json = await response.json();
+      const json = await response.json() as any;
       expect(json).toHaveProperty('id', 240176);
       expect(json).toHaveProperty('name', 'Kung Fu Panda Quotes');
       expect(json).toHaveProperty('published_at');
@@ -195,7 +195,7 @@ describe('TRMNL Badges API', () => {
       const response = await app.request('/api/stats?recipe=240176');
       expect(response.status).toBe(200);
       
-      const json = await response.json();
+      const json = await response.json() as any;
       expect(json.author).toEqual({
         github_url: 'https://github.com/hossain-khan/trmnl-kung-fu-panda-quotes',
         learn_more_url: 'https://hossain-khan.github.io/trmnl-kung-fu-panda-quotes',
@@ -209,7 +209,7 @@ describe('TRMNL Badges API', () => {
       const response = await app.request('/api/stats?recipe=240176');
       expect(response.status).toBe(200);
       
-      const json = await response.json();
+      const json = await response.json() as any;
       expect(json.author).toEqual({
         github_url: null,
         learn_more_url: null,
