@@ -15,7 +15,11 @@ app.get('/', (c) => {
 });
 
 app.get('/health', (c) => {
-  return c.json({ status: 'ok', timestamp: new Date().toISOString() });
+  return c.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    projectUrl: 'https://github.com/hossain-khan/trmnl-badges'
+  });
 });
 
 // Badge endpoints for TRMNL recipes
