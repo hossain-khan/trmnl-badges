@@ -60,21 +60,20 @@ https://usetrmnl.com/recipes/240176
                           (recipe ID)
 ```
 
-### Markdown
-```markdown
-![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)
-![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176)
-```
+### Badge Examples
 
-### HTML
+| Badge Type | Code | Preview |
+|------------|------|---------|
+| **Installs** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176) |
+| **Forks** | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176)` | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176) |
+| **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&pretty) |
+| **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176&label=Downloads) |
+| **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)](https://usetrmnl.com/recipes/240176)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)](https://usetrmnl.com/recipes/240176) |
+
+### HTML Usage
 ```html
 <img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176" alt="Installs">
 <img src="https://trmnl-badges.gohk.xyz/badge/forks?recipe=240176" alt="Forks">
-```
-
-### Linked Badges
-```markdown
-[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=240176)](https://usetrmnl.com/recipes/240176)
 ```
 
 ## Examples
