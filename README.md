@@ -13,7 +13,7 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 
 ## Query Parameters
 
-- `recipe` (required) - TRMNL recipe ID (e.g., 16765)
+- `recipe` (required) - TRMNL recipe ID (e.g., 28496)
 - `label` (optional) - Custom label text
 - `pretty` (optional) - Format numbers in compact notation (e.g., 1.2K)
 
@@ -25,7 +25,7 @@ Add badges to your TRMNL recipe documentation using Markdown or HTML.
 
 Your recipe ID can be found in the URL of your recipe page on TRMNL:
 ```
-https://usetrmnl.com/recipes/16765
+https://usetrmnl.com/recipes/28496
                              ^^^^^
                           (recipe ID)
 ```
@@ -34,33 +34,33 @@ https://usetrmnl.com/recipes/16765
 
 | Badge Type | Code | Preview |
 |------------|------|---------|
-| **Installs** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765) |
-| **Forks** | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765)` | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765) |
-| **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&pretty) |
-| **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads) |
-| **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765)](https://usetrmnl.com/recipes/16765)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765)](https://usetrmnl.com/recipes/16765) |
+| **Installs** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496) |
+| **Forks** | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496)` | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496) |
+| **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty) |
+| **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads) |
+| **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://usetrmnl.com/recipes/28496)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://usetrmnl.com/recipes/28496) |
 
 ### HTML Usage
 ```html
-<img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765" alt="Installs">
-<img src="https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765" alt="Forks">
+<img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496" alt="Installs">
+<img src="https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496" alt="Forks">
 ```
 
 ## Examples
 
 ### Installs Badge
 ```
-https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496
 ```
 
 ### Forks Badge with Pretty Formatting
 ```
-https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765&pretty
+https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496&pretty
 ```
 
 ### Custom Label
 ```
-https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads
 ```
 
 ## Contributing

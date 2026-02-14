@@ -55,27 +55,27 @@ trmnl-badges/
 #### Badge Endpoints
 ```
 # Installs badge
-https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496
 
 # Forks badge
-https://trmnl-badges.gohk.xyz/badge/forks?recipe=16765
+https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496
 
 # With pretty formatting
-https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&pretty
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty
 
 # With custom label
-https://trmnl-badges.gohk.xyz/badge/installs?recipe=16765&label=Downloads
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads
 ```
 
 #### Stats API
 ```
-https://trmnl-badges.gohk.xyz/api/stats?recipe=16765
+https://trmnl-badges.gohk.xyz/api/stats?recipe=28496
 ```
 
 Returns:
 ```json
 {
-  "id": 16765,
+  "id": 28496,
   "name": "Recipe Name",
   "published_at": "2026-02-09T07:45:36.616Z",
   "stats": {
