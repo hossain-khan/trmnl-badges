@@ -20,7 +20,7 @@ app.get('/health', (c) => {
 
 // Badge endpoints for TRMNL recipes
 app.get('/badge/installs', async (c) => {
-  const { recipe, label, pretty, theme } = c.req.query();
+  const { recipe, label, pretty } = c.req.query();
   
   if (!recipe) {
     return c.text('Missing required parameter: recipe', 400);
@@ -33,12 +33,10 @@ app.get('/badge/installs', async (c) => {
   }
 
   const isPretty = pretty !== undefined;
-  const badgeTheme = theme === 'light' ? 'light' : 'dark';
   const badge = generateBadge({
     label: label || 'Installs',
     message: formatNumber(recipeData.stats.installs, isPretty),
-    color: getColorForCount(recipeData.stats.installs, badgeTheme),
-    theme: badgeTheme,
+    color: getColorForCount(recipeData.stats.installs),
   });
 
   c.header('Content-Type', 'image/svg+xml');
@@ -47,7 +45,7 @@ app.get('/badge/installs', async (c) => {
 });
 
 app.get('/badge/forks', async (c) => {
-  const { recipe, label, pretty, theme } = c.req.query();
+  const { recipe, label, pretty } = c.req.query();
   
   if (!recipe) {
     return c.text('Missing required parameter: recipe', 400);
@@ -60,12 +58,10 @@ app.get('/badge/forks', async (c) => {
   }
 
   const isPretty = pretty !== undefined;
-  const badgeTheme = theme === 'light' ? 'light' : 'dark';
   const badge = generateBadge({
     label: label || 'Forks',
     message: formatNumber(recipeData.stats.forks, isPretty),
-    color: getColorForCount(recipeData.stats.forks, badgeTheme),
-    theme: badgeTheme,
+    color: getColorForCount(recipeData.stats.forks),
   });
 
   c.header('Content-Type', 'image/svg+xml');
