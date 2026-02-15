@@ -39,6 +39,7 @@ trmnl-badges/
 ### Badge Endpoints
 - `GET /badge/installs?recipe=<recipe_id>` - Recipe install count badge
 - `GET /badge/forks?recipe=<recipe_id>` - Recipe fork count badge
+- `GET /badge/connections?recipe=<recipe_id>` - Recipe connections count badge (sum of installs and forks)
 
 ### Utility Endpoints
 - `GET /health` - Health check endpoint
@@ -85,6 +86,9 @@ https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496
 
 # Forks badge
 https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496
+
+# Connections badge
+https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496
 
 # With pretty formatting
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty
