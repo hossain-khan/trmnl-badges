@@ -4,6 +4,9 @@ import { fetchRecipe } from './trmnl-api';
 import { generateBadge } from './badge-generator';
 import { formatNumber } from './utils';
 
+// 🎉 Fun tracking feature: KV store key for total badges served counter
+const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
+
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
 /**
@@ -11,11 +14,10 @@ const app = new Hono<{ Bindings: Bindings }>({ strict: false });
  * This helps us track how popular the badge service is!
  */
 async function incrementBadgeCounter(env: Bindings): Promise<number> {
-  const counterKey = 'badges_served_total';
-  const currentValue = await env.BADGE_COUNTER.get(counterKey);
+  const currentValue = await env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
   const count = currentValue ? parseInt(currentValue, 10) : 0;
   const newCount = count + 1;
-  await env.BADGE_COUNTER.put(counterKey, newCount.toString());
+  await env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
   return newCount;
 }
 
@@ -103,8 +105,7 @@ app.get('/badge/forks', async (c) => {
 // 🎉 Fun tracking feature: Badge showing total badges served
 app.get('/badge/counter', async (c) => {
   const counterKey = 'badges_served_total';
-  const counterValue = await c.env.BADGE_COUNTER.get(counterKey);
-  const count = counterValue ? parseInt(counterValue, 10) : 0;
+  const counterValue = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY
   
   const badge = generateBadge({
     label: 'Badges Served',
