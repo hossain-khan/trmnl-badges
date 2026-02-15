@@ -29,3 +29,23 @@ export const mockRecipeHighEngagement: TRMNLRecipe = {
     forks: 250,
   },
 };
+
+export const mockRecipeZeroStats: TRMNLRecipe = {
+  ...mockRecipe,
+  id: 231754,
+  name: 'New Recipe',
+  stats: {
+    installs: 0,
+    forks: 0,
+  },
+};
+
+export const mockRecipeZeroForks: TRMNLRecipe = {
+  ...mockRecipe,
+  id: 231754,
+  name: 'Rarely Forked Recipe',
+  stats: {
+    installs: 42,
+    forks: 0,
+  },
+};
