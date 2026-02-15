@@ -1,8 +1,9 @@
 import { Hono } from 'hono';
 import type { Bindings } from './types';
 import { fetchRecipe } from './trmnl-api';
-import { generateBadge, generateErrorBadge } from './badge-generator';
+import { generateBadge } from './badge-generator';
 import { formatNumber } from './utils';
+import { returnErrorBadge, isRecipeValid } from './badge-helpers';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
@@ -15,10 +16,7 @@ app.get('/badge/installs', async (c) => {
     const { recipe, label, pretty } = c.req.query();
 
     if (!recipe) {
-      const errorBadge = generateErrorBadge(label || 'Installs', 'Missing recipe ID');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+      return returnErrorBadge(c, label || 'Installs', 'Missing recipe ID');
     }
 
     let recipeData;
@@ -26,24 +24,11 @@ app.get('/badge/installs', async (c) => {
       recipeData = await fetchRecipe(recipe);
     } catch (err) {
       console.error('[installs] Network error fetching recipe:', err);
-      const errorBadge = generateErrorBadge(label || 'Installs', 'Network Error');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+      return returnErrorBadge(c, label || 'Installs', 'Network Error');
     }
 
-    if (!recipeData) {
-      const errorBadge = generateErrorBadge(label || 'Installs', 'Recipe Not Found');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
-    }
-
-    if (recipeData.stats?.installs === undefined) {
-      const errorBadge = generateErrorBadge(label || 'Installs', 'Recipe Not Found');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+    if (!isRecipeValid(recipeData, 'installs')) {
+      return returnErrorBadge(c, label || 'Installs', 'Recipe Not Found');
     }
 
     const isPretty = pretty !== undefined;
@@ -76,10 +61,7 @@ app.get('/badge/installs', async (c) => {
     return c.body(badge);
   } catch (err) {
     console.error('[installs] Unexpected error:', err);
-    const errorBadge = generateErrorBadge('Installs', 'Service Error');
-    c.header('Content-Type', 'image/svg+xml');
-    c.header('Cache-Control', 'public, max-age=60');
-    return c.body(errorBadge);
+    return returnErrorBadge(c, 'Installs', 'Service Error');
   }
 });
 
@@ -88,10 +70,7 @@ app.get('/badge/forks', async (c) => {
     const { recipe, label, pretty } = c.req.query();
 
     if (!recipe) {
-      const errorBadge = generateErrorBadge(label || 'Forks', 'Missing recipe ID');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+      return returnErrorBadge(c, label || 'Forks', 'Missing recipe ID');
     }
 
     let recipeData;
@@ -99,24 +78,11 @@ app.get('/badge/forks', async (c) => {
       recipeData = await fetchRecipe(recipe);
     } catch (err) {
       console.error('[forks] Network error fetching recipe:', err);
-      const errorBadge = generateErrorBadge(label || 'Forks', 'Network Error');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+      return returnErrorBadge(c, label || 'Forks', 'Network Error');
     }
 
-    if (!recipeData) {
-      const errorBadge = generateErrorBadge(label || 'Forks', 'Recipe Not Found');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
-    }
-
-    if (recipeData.stats?.forks === undefined) {
-      const errorBadge = generateErrorBadge(label || 'Forks', 'Recipe Not Found');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+    if (!isRecipeValid(recipeData, 'forks')) {
+      return returnErrorBadge(c, label || 'Forks', 'Recipe Not Found');
     }
 
     const isPretty = pretty !== undefined;
@@ -149,10 +115,7 @@ app.get('/badge/forks', async (c) => {
     return c.body(badge);
   } catch (err) {
     console.error('[forks] Unexpected error:', err);
-    const errorBadge = generateErrorBadge('Forks', 'Service Error');
-    c.header('Content-Type', 'image/svg+xml');
-    c.header('Cache-Control', 'public, max-age=60');
-    return c.body(errorBadge);
+    return returnErrorBadge(c, 'Forks', 'Service Error');
   }
 });
 
@@ -161,10 +124,7 @@ app.get('/badge/connections', async (c) => {
     const { recipe, label, pretty } = c.req.query();
 
     if (!recipe) {
-      const errorBadge = generateErrorBadge(label || 'Connections', 'Missing recipe ID');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+      return returnErrorBadge(c, label || 'Connections', 'Missing recipe ID');
     }
 
     let recipeData;
@@ -172,24 +132,15 @@ app.get('/badge/connections', async (c) => {
       recipeData = await fetchRecipe(recipe);
     } catch (err) {
       console.error('[connections] Network error fetching recipe:', err);
-      const errorBadge = generateErrorBadge(label || 'Connections', 'Network Error');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+      return returnErrorBadge(c, label || 'Connections', 'Network Error');
     }
 
-    if (!recipeData) {
-      const errorBadge = generateErrorBadge(label || 'Connections', 'Recipe Not Found');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
-    }
-
-    if (recipeData.stats?.installs === undefined || recipeData.stats?.forks === undefined) {
-      const errorBadge = generateErrorBadge(label || 'Connections', 'Recipe Not Found');
-      c.header('Content-Type', 'image/svg+xml');
-      c.header('Cache-Control', 'public, max-age=60');
-      return c.body(errorBadge);
+    if (
+      !isRecipeValid(recipeData) ||
+      recipeData.stats?.installs === undefined ||
+      recipeData.stats?.forks === undefined
+    ) {
+      return returnErrorBadge(c, label || 'Connections', 'Recipe Not Found');
     }
 
     const isPretty = pretty !== undefined;
@@ -223,10 +174,7 @@ app.get('/badge/connections', async (c) => {
     return c.body(badge);
   } catch (err) {
     console.error('[connections] Unexpected error:', err);
-    const errorBadge = generateErrorBadge('Connections', 'Service Error');
-    c.header('Content-Type', 'image/svg+xml');
-    c.header('Cache-Control', 'public, max-age=60');
-    return c.body(errorBadge);
+    return returnErrorBadge(c, 'Connections', 'Service Error');
   }
 });
 
