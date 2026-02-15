@@ -186,6 +186,19 @@ Badges are generated using the `badgen` library with:
 - Async/await for asynchronous operations
 - Error handling with try-catch blocks
 
+## Performance Optimizations
+
+### Client-Side
+- **Input debouncing**: Custom label input is debounced (300ms) to prevent excessive requests while typing
+- This significantly reduces server load when users are actively composing labels
+
+### Server-Side
+- **HTTP Caching**: All badge endpoints return appropriate cache headers:
+  - Error responses: `Cache-Control: public, max-age=60` (1 minute)
+  - Success responses: `Cache-Control: public, max-age=3600` (1 hour)
+- Cloudflare Workers cache responses at the edge network, reducing API calls to TRMNL servers
+- The `/badge/counter` endpoint caches for 1 hour to allow for reasonable badge count accuracy while minimizing KV operations
+
 ## Contributing Guidelines
 
 1. Fork the repository
