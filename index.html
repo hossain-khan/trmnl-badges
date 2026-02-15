@@ -596,7 +596,13 @@
 
     function generateSyntaxHighlightedMarkdown(url) {
       const altText = customLabel.value || getBadgeType().charAt(0).toUpperCase() + getBadgeType().slice(1);
-      return `<span class="syntax-bracket">![</span><span class="syntax-domain">${altText}</span><span class="syntax-bracket">](</span><span class="syntax-protocol">https://</span><span class="syntax-domain">trmnl-badges.gohk.xyz</span><span class="syntax-path">/badge/${getBadgeType()}?recipe=${url.match(/recipe=([^&]+)/)[1]}</span><span class="syntax-bracket">)</span>`;
+      
+      // Parse URL for syntax highlighting
+      const urlObj = new URL(url);
+      const domain = urlObj.hostname;
+      const path = urlObj.pathname + urlObj.search;
+      
+      return `<span class="syntax-bracket">![</span><span class="syntax-domain">${altText}</span><span class="syntax-bracket">](</span><span class="syntax-protocol">https://</span><span class="syntax-domain">${domain}</span><span class="syntax-path">${path}</span><span class="syntax-bracket">)</span>`;
     }
 
     function generateSyntaxHighlightedHtml(url) {
