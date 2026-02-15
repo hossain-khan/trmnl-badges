@@ -9,7 +9,7 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
     <img alt="Show it on TRMNL" src="assets/trmnl/trmnl-badge-compatible-with-dark.svg" height="40">
   </picture>
 
-## Features
+<details><summary>Features</summary>
 
 - ⚡ Fast badge generation using Cloudflare Workers edge network
 - 🎨 Official TRMNL brand styling and colors
@@ -17,6 +17,8 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 - 🔄 Real-time data from TRMNL API
 - 🎯 Simple integration with markdown and HTML
 - 📏 Compact number formatting support
+
+</details>
 
 ## Query Parameters
 
