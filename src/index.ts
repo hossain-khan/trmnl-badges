@@ -35,7 +35,13 @@ app.get('/badge/installs', async (c) => {
     try {
       const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
       const count = current ? parseInt(current, 10) : 0;
-      const newCount = count + 1;
+
+      // Validate that parseInt produced a valid number
+      if (!Number.isFinite(count)) {
+        console.warn(`Invalid counter value: ${current}, resetting to 0`);
+      }
+
+      const newCount = (Number.isFinite(count) ? count : 0) + 1;
       await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
     } catch (err) {
       console.error('[installs] Counter error:', err);
@@ -72,7 +78,13 @@ app.get('/badge/forks', async (c) => {
     try {
       const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
       const count = current ? parseInt(current, 10) : 0;
-      const newCount = count + 1;
+
+      // Validate that parseInt produced a valid number
+      if (!Number.isFinite(count)) {
+        console.warn(`Invalid counter value: ${current}, resetting to 0`);
+      }
+
+      const newCount = (Number.isFinite(count) ? count : 0) + 1;
       await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
     } catch (err) {
       console.error('[forks] Counter error:', err);
@@ -138,13 +150,6 @@ app.get('/health-badge', (c) => {
   });
 });
 
-/**
- * 🎉 Fun tracking feature: Badge showing total badges served
- *
- * NOTE: This counter uses approximate counting due to potential race conditions
- * in KV operations. Multiple concurrent requests may result in lost updates.
- */
-
 app.get('/', (c) => {
   if (c.env.NODE_ENV === 'production') {
     return c.redirect('https://github.com/hossain-khan/trmnl-badges');
@@ -153,14 +158,26 @@ app.get('/', (c) => {
   }
 });
 
-// 🎉 Fun tracking feature: Badge showing total badges served
+/**
+ * 🎉 Fun tracking feature: Badge showing total badges served
+ *
+ * NOTE: This counter uses approximate counting due to potential race conditions
+ * in KV operations. Multiple concurrent requests may result in lost updates.
+ */
 app.get('/badge/counter', async (c) => {
   const counterValue = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
   const count = counterValue ? parseInt(counterValue, 10) : 0;
 
+  // Validate that parseInt produced a valid number
+  if (!Number.isFinite(count)) {
+    console.warn(`Invalid counter value: ${counterValue}, resetting to 0`);
+  }
+
+  const validCount = Number.isFinite(count) ? count : 0;
+
   const badge = generateBadge({
     label: 'Badges Served',
-    message: formatNumber(count, true),
+    message: formatNumber(validCount, true),
     color: 'blueviolet',
   });
 
