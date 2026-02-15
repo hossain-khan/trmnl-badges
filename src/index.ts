@@ -1,85 +1,81 @@
-import { Hono } from "hono";
-import type { Bindings } from "./types";
-import { fetchRecipe } from "./trmnl-api";
-import { generateBadge } from "./badge-generator";
-import { formatNumber } from "./utils";
+import { Hono } from 'hono';
+import type { Bindings } from './types';
+import { fetchRecipe } from './trmnl-api';
+import { generateBadge } from './badge-generator';
+import { formatNumber } from './utils';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
-const BADGES_SERVED_COUNTER_KEY = "badges_served_total";
+const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
 
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
 // Badge endpoints for TRMNL recipes
-app.get("/badge/installs", async (c) => {
+app.get('/badge/installs', async (c) => {
   const { recipe, label, pretty } = c.req.query();
 
   if (!recipe) {
-    return c.text("Missing required parameter: recipe", 400);
+    return c.text('Missing required parameter: recipe', 400);
   }
 
   const recipeData = await fetchRecipe(recipe);
 
   if (!recipeData) {
-    return c.text("Recipe not found", 404);
+    return c.text('Recipe not found', 404);
   }
 
   const isPretty = pretty !== undefined;
   const badge = generateBadge({
-    label: label || "Installs",
+    label: label || 'Installs',
     message: formatNumber(recipeData.stats.installs, isPretty),
   });
 
   // 🎉 Fun tracking feature: Increment counter for this badge request
-  incrementBadgeCounter(c.env).catch((err) =>
-    console.error("Failed to increment counter:", err),
-  );
+  incrementBadgeCounter(c.env).catch((err) => console.error('Failed to increment counter:', err));
 
-  c.header("Content-Type", "image/svg+xml");
-  c.header("Cache-Control", "public, max-age=3600");
+  c.header('Content-Type', 'image/svg+xml');
+  c.header('Cache-Control', 'public, max-age=3600');
   return c.body(badge);
 });
 
-app.get("/badge/forks", async (c) => {
+app.get('/badge/forks', async (c) => {
   const { recipe, label, pretty } = c.req.query();
 
   if (!recipe) {
-    return c.text("Missing required parameter: recipe", 400);
+    return c.text('Missing required parameter: recipe', 400);
   }
 
   const recipeData = await fetchRecipe(recipe);
 
   if (!recipeData) {
-    return c.text("Recipe not found", 404);
+    return c.text('Recipe not found', 404);
   }
 
   const isPretty = pretty !== undefined;
   const badge = generateBadge({
-    label: label || "Forks",
+    label: label || 'Forks',
     message: formatNumber(recipeData.stats.forks, isPretty),
   });
 
   // 🎉 Fun tracking feature: Increment counter for this badge request
-  incrementBadgeCounter(c.env).catch((err) =>
-    console.error("Failed to increment counter:", err),
-  );
+  incrementBadgeCounter(c.env).catch((err) => console.error('Failed to increment counter:', err));
 
-  c.header("Content-Type", "image/svg+xml");
-  c.header("Cache-Control", "public, max-age=3600");
+  c.header('Content-Type', 'image/svg+xml');
+  c.header('Cache-Control', 'public, max-age=3600');
   return c.body(badge);
 });
 
 // API endpoint for TRMNL recipe stats
-app.get("/api/stats", async (c) => {
+app.get('/api/stats', async (c) => {
   const { recipe } = c.req.query();
 
   if (!recipe) {
-    return c.json({ error: "Missing required parameter: recipe" }, 400);
+    return c.json({ error: 'Missing required parameter: recipe' }, 400);
   }
 
   const recipeData = await fetchRecipe(recipe);
 
   if (!recipeData) {
-    return c.json({ error: "Recipe not found" }, 404);
+    return c.json({ error: 'Recipe not found' }, 404);
   }
 
   const stats = {
@@ -96,7 +92,7 @@ app.get("/api/stats", async (c) => {
     },
   };
 
-  c.header("Cache-Control", "public, max-age=3600");
+  c.header('Cache-Control', 'public, max-age=3600');
   return c.json(stats);
 });
 
@@ -104,21 +100,21 @@ app.get("/api/stats", async (c) => {
 // Utility endpoints for status, testing and development
 ///////////////////////////////////////////////////////////
 
-app.get("/health", (c) => {
+app.get('/health', (c) => {
   return c.json({
-    status: "ok",
+    status: 'ok',
     timestamp: new Date().toISOString(),
-    projectUrl: "https://github.com/hossain-khan/trmnl-badges",
+    projectUrl: 'https://github.com/hossain-khan/trmnl-badges',
   });
 });
 
 // Health badge endpoint for shields.io
-app.get("/health-badge", (c) => {
+app.get('/health-badge', (c) => {
   return c.json({
     schemaVersion: 1,
-    label: "TRMNL Badge Service",
-    message: "Online",
-    color: "brightgreen",
+    label: 'TRMNL Badge Service',
+    message: 'Online',
+    color: 'brightgreen',
   });
 });
 
@@ -148,27 +144,27 @@ async function incrementBadgeCounter(env: Bindings): Promise<number> {
   return newCount;
 }
 
-app.get("/", (c) => {
-  if (c.env.NODE_ENV === "production") {
-    return c.redirect("https://github.com/hossain-khan/trmnl-badges");
+app.get('/', (c) => {
+  if (c.env.NODE_ENV === 'production') {
+    return c.redirect('https://github.com/hossain-khan/trmnl-badges');
   } else {
-    return c.text("TRMNL Badges API - Development Mode");
+    return c.text('TRMNL Badges API - Development Mode');
   }
 });
 
 // 🎉 Fun tracking feature: Badge showing total badges served
-app.get("/badge/counter", async (c) => {
+app.get('/badge/counter', async (c) => {
   const counterValue = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
   const count = counterValue ? parseInt(counterValue, 10) : 0;
 
   const badge = generateBadge({
-    label: "Badges Served",
+    label: 'Badges Served',
     message: formatNumber(count, true),
-    color: "blueviolet",
+    color: 'blueviolet',
   });
 
-  c.header("Content-Type", "image/svg+xml");
-  c.header("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
+  c.header('Content-Type', 'image/svg+xml');
+  c.header('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
   return c.body(badge);
 });
 

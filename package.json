@@ -12,7 +12,9 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,json}": ["npx prettier --write"]
+    "**/*.{ts,tsx,js,jsx,json}": [
+      "npx prettier --write"
+    ]
   },
   "keywords": [
     "cloudflare-workers",
