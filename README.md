@@ -1,5 +1,5 @@
 [![CI](https://github.com/hossain-khan/trmnl-badges/actions/workflows/ci.yml/badge.svg)](https://github.com/hossain-khan/trmnl-badges/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/github/hossain-khan/trmnl-badges/graph/badge.svg?token=TWWWM4OMY4)](https://codecov.io/github/hossain-khan/trmnl-badges)
+[![codecov](https://codecov.io/github/hossain-khan/trmnl-badges/graph/badge.svg?token=TWWWM4OMY4)](https://codecov.io/github/hossain-khan/trmnl-badges) [![Health](https://img.shields.io/endpoint?url=https://trmnl-badges.gohk.xyz/health-badge)](https://trmnl-badges.gohk.xyz/health)
 
 # TRMNL Badges
 
