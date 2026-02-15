@@ -20,11 +20,6 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 
 </details>
 
-## Query Parameters
-
-- `recipe` (required) - TRMNL recipe ID (e.g., 28496)
-- `label` (optional) - Custom label text
-- `pretty` (optional) - Format numbers in compact notation (e.g., 1.2K)
 
 ## Usage
 
@@ -49,6 +44,13 @@ https://trmnl.com/recipes/28496
 | **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads) |
 | **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496) |
 
+
+## Badge URL Query Parameters
+
+- **`recipe`** (required) - TRMNL recipe ID (e.g., 28496)
+- **`label`** (optional) - Custom label text
+- **`pretty`** (optional) - Format numbers in compact notation (e.g., 1.2K)
+
 ### HTML Usage
 ```html
 <img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496" alt="Installs">
@@ -62,7 +64,7 @@ https://trmnl.com/recipes/28496
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496
 ```
 
-### Forks Badge with Pretty Formatting
+### Forks Badge with Pretty Formatting (e.g., 2.7K)
 ```
 https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496&pretty
 ```
