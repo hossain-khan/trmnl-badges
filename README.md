@@ -15,7 +15,7 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 
 - ⚡ Fast badge generation using Cloudflare Workers edge network
 - 🎨 Official TRMNL brand styling and colors
-- 📊 Display recipe statistics (installs, forks)
+- 📊 Display recipe statistics (installs, forks, connections)
 - 🔄 Real-time data from TRMNL API
 - 🎯 Simple integration with markdown and HTML
 - 📏 Compact number formatting support
@@ -45,6 +45,7 @@ https://trmnl.com/recipes/28496
 |------------|------|---------|
 | **Installs** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496) |
 | **Forks** | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496)` | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496) |
+| **Connections** | `![Connections](https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496)` | ![Connections](https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496) |
 | **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty) |
 | **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads) |
 | **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496) |
@@ -62,6 +63,7 @@ https://trmnl.com/recipes/28496
 ```html
 <img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496" alt="Installs">
 <img src="https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496" alt="Forks">
+<img src="https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496" alt="Connections">
 ```
 
 ## Examples
@@ -71,9 +73,19 @@ https://trmnl.com/recipes/28496
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496
 ```
 
-### Forks Badge with Pretty Formatting (e.g., 2.7K)
+### Forks Badge
 ```
-https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496&pretty
+https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496
+```
+
+### Connections Badge
+```
+https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496
+```
+
+### Badge with Pretty Formatting (e.g., 2.7K)
+```
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty
 ```
 
 ### Custom Label
