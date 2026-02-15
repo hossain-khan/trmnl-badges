@@ -70,6 +70,33 @@
       border-color: #667eea;
     }
 
+    .radio-group {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .radio-option input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #667eea;
+    }
+
+    .radio-label {
+      margin: 0;
+      font-weight: 400;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+    }
+
     .row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -243,11 +270,17 @@
       <!-- Badge Type and Label Row -->
       <div class="row">
         <div class="form-group">
-          <label for="badgeType">Badge Type</label>
-          <select id="badgeType" required>
-            <option value="installs">Installs</option>
-            <option value="forks">Forks</option>
-          </select>
+          <label>Badge Type</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="typeInstalls" name="badgeType" value="installs" checked>
+              <label for="typeInstalls" class="radio-label">Installs</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="typeForks" name="badgeType" value="forks">
+              <label for="typeForks" class="radio-label">Forks</label>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
@@ -307,7 +340,7 @@
     const BASE_URL = 'https://trmnl-badges.gohk.xyz';
 
     const recipeInput = document.getElementById('recipeInput');
-    const badgeType = document.getElementById('badgeType');
+    const badgeTypeRadios = document.querySelectorAll('input[name="badgeType"]');
     const customLabel = document.getElementById('customLabel');
     const prettyFormat = document.getElementById('prettyFormat');
     const previewImage = document.getElementById('previewImage');
@@ -315,6 +348,10 @@
     const htmlCode = document.getElementById('htmlCode');
     const urlCode = document.getElementById('urlCode');
     const recipeError = document.getElementById('recipeError');
+
+    function getBadgeType() {
+      return document.querySelector('input[name="badgeType"]:checked').value;
+    }
 
     function extractRecipeId(input) {
       // Remove whitespace
@@ -343,7 +380,7 @@
       
       recipeError.textContent = '';
 
-      let url = `${BASE_URL}/badge/${badgeType.value}?recipe=${recipeId}`;
+      let url = `${BASE_URL}/badge/${getBadgeType()}?recipe=${recipeId}`;
 
       if (customLabel.value) {
         // URL encode the label (spaces become %20)
@@ -372,7 +409,7 @@
       const url = generateBadgeUrl();
       if (!url) return;
 
-      const altText = customLabel.value || badgeType.value.charAt(0).toUpperCase() + badgeType.value.slice(1);
+      const altText = customLabel.value || getBadgeType().charAt(0).toUpperCase() + getBadgeType().slice(1);
 
       markdownCode.textContent = `![${altText}](${url})`;
       htmlCode.textContent = `<img src="${url}" alt="${altText}">`;
@@ -386,7 +423,7 @@
 
     // Event listeners
     recipeInput.addEventListener('input', update);
-    badgeType.addEventListener('change', update);
+    badgeTypeRadios.forEach(radio => radio.addEventListener('change', update));
     customLabel.addEventListener('input', update);
     prettyFormat.addEventListener('change', update);
 
