@@ -256,6 +256,118 @@ describe('TRMNL Badges API', () => {
     });
   });
 
+  describe('GET /badge/connections', () => {
+    it('should return error badge when recipe parameter is missing', async () => {
+      const response = await app.request('/badge/connections');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Missing recipe ID');
+    });
+
+    it('should return error badge when recipe is not found', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(null);
+
+      const response = await app.request('/badge/connections?recipe=999999');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Recipe Not Found');
+    });
+
+    it('should return error badge when network error occurs', async () => {
+      vi.mocked(fetchRecipe).mockRejectedValueOnce(new Error('Network error'));
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const response = await app.request('/badge/connections?recipe=240176');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=60');
+      const svg = await response.text();
+      expect(svg).toContain('Network Error');
+      expect(consoleMock).toHaveBeenCalledWith(
+        '[connections] Network error fetching recipe:',
+        expect.any(Error)
+      );
+      consoleMock.mockRestore();
+    });
+
+    it('should generate a connections badge combining installs and forks', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      const response = await app.request('/badge/connections?recipe=240176');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
+
+      const svg = await response.text();
+      expect(svg).toContain('Connections');
+      // mockRecipe has installs: 7 and forks: 5, total should be 12
+      expect(svg).toContain('12');
+    });
+
+    it('should support custom label', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      const response = await app.request('/badge/connections?recipe=240176&label=Total Users');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Total Users');
+      expect(svg).toContain('12');
+    });
+
+    it('should support pretty formatting for large numbers', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipeHighEngagement);
+
+      const response = await app.request('/badge/connections?recipe=999999&pretty');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Connections');
+      // mockRecipeHighEngagement has installs: 1500 and forks: 250, total should be 1750 = 1.75K
+      expect(svg).toContain('1.75K');
+    });
+
+    it('should return service error badge for unexpected errors', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      // Mock KV that throws unexpected error during counter increment
+      const failingKV = {
+        get: vi.fn().mockRejectedValue(new Error('KV error')),
+        put: vi.fn().mockRejectedValue(new Error('KV error')),
+      };
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: failingKV };
+
+      const response = await app.request('/badge/connections?recipe=240176', {}, bindings);
+
+      // Should still return 200 with badge despite KV error
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Connections');
+      expect(svg).toContain('12');
+      consoleMock.mockRestore();
+    });
+
+    it('should increment counter when /badge/connections is called', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      const mockKV = {
+        get: vi.fn().mockResolvedValue(null),
+        put: vi.fn().mockResolvedValue(undefined),
+      };
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+
+      // Make a badge request
+      await app.request('/badge/connections?recipe=240176', {}, bindings);
+
+      // Check that counter was incremented
+      expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '1');
+    });
+  });
+
   describe('GET /api/stats', () => {
     it('should return 400 when recipe parameter is missing', async () => {
       const response = await app.request('/api/stats');
