@@ -16,7 +16,7 @@
       background-color: #3D3D3E;
       background-image: url('data:image/svg+xml;utf8,<svg width="160" height="162" viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M43.2322 11.3438L85.6168 27.238L77.7459 48.227L35.3613 32.3328L43.2322 11.3438Z" fill="rgba(255,255,255,0.05)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z" fill="rgba(255,255,255,0.05)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M157.61 56.0687L132.682 93.8538L113.971 81.5097L138.898 43.7246L157.61 56.0687Z" fill="rgba(255,255,255,0.05)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M147.533 123.467L102.449 127.537L100.434 105.211L145.517 101.141L147.533 123.467Z" fill="rgba(255,255,255,0.05)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M88.5488 157.611L57.2578 124.901L73.4561 109.406L104.747 142.116L88.5488 157.611Z" fill="rgba(255,255,255,0.05)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M25.0723 132.802L31.1366 87.9434L53.3508 90.9465L47.2866 135.805L25.0723 132.802Z" fill="rgba(255,255,255,0.05)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M4.9082 67.6828L43.7612 44.4551L55.2637 63.6953L16.4107 86.923L4.9082 67.6828Z" fill="rgba(255,255,255,0.05)"/></svg>');
       background-repeat: repeat;
-      background-size: 200px 204px;
+      background-size: 400px 408px;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -171,24 +171,37 @@
     }
 
     .copy-btn {
-      background: #f0f0f0;
-      border: 1px solid #ddd;
-      padding: 6px 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 14px;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 13px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .copy-btn:hover {
-      background: #e0e0e0;
+      background: #5568d3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
     .copy-btn.copied {
       background: #4caf50;
-      color: white;
-      border-color: #4caf50;
+    }
+
+    .copy-btn::before {
+      content: '📋';
+      font-size: 14px;
+    }
+
+    .copy-btn.copied::before {
+      content: '✓';
     }
 
     code {
@@ -210,6 +223,27 @@
       margin-top: 4px;
     }
 
+    .recipe-feedback {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      margin-top: 4px;
+      min-height: 18px;
+    }
+
+    .recipe-feedback.success {
+      color: #388e3c;
+    }
+
+    .recipe-feedback.error {
+      color: #d32f2f;
+    }
+
+    .recipe-feedback .icon {
+      font-size: 14px;
+    }
+
     button:active {
       transform: scale(0.98);
     }
@@ -224,6 +258,86 @@
       color: #388e3c;
       font-size: 12px;
       margin-top: 4px;
+    }
+
+    /* Tabs Styling */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 30px 0 12px 0;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #999;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #667eea;
+    }
+
+    .tab-btn.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Code Syntax Highlighting */
+    code {
+      display: block;
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 12px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+      color: #333;
+      word-break: break-all;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    /* Syntax coloring */
+    .syntax-protocol {
+      color: #667eea;
+      font-weight: 500;
+    }
+
+    .syntax-domain {
+      color: #d32f2f;
+      font-weight: 500;
+    }
+
+    .syntax-path {
+      color: #333;
+    }
+
+    .syntax-param-key {
+      color: #388e3c;
+    }
+
+    .syntax-param-val {
+      color: #f57c00;
+    }
+
+    .syntax-bracket {
+      color: #666;
     }
 
     .logo {
@@ -267,10 +381,20 @@
           required
         >
         <div class="url-hint">Tip: Paste the full URL or just the recipe ID</div>
-        <div id="recipeError" class="error"></div>
+        <div id="recipeFeedback" class="recipe-feedback"></div>
       </div>
 
-      <!-- Badge Type and Label Row -->
+      <!-- Custom Label - Full Width -->
+      <div class="form-group">
+        <label for="customLabel">Custom Label (optional)</label>
+        <input
+          type="text"
+          id="customLabel"
+          placeholder="e.g., 'My Cool Recipe' – appears as the left side of the badge"
+        >
+      </div>
+
+      <!-- Badge Type and Pretty Format Row -->
       <div class="row">
         <div class="form-group">
           <label>Badge Type</label>
@@ -287,20 +411,11 @@
         </div>
 
         <div class="form-group">
-          <label for="customLabel">Custom Label (optional)</label>
-          <input
-            type="text"
-            id="customLabel"
-            placeholder="e.g., Google Photos"
-          >
-        </div>
-      </div>
-
-      <!-- Pretty Format Option -->
-      <div class="form-group">
-        <div class="checkbox-group">
-          <input type="checkbox" id="prettyFormat">
-          <label for="prettyFormat" class="checkbox-label">Pretty format (compact numbers like 1.2K)</label>
+          <label>&nbsp;</label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="prettyFormat">
+            <label for="prettyFormat" class="checkbox-label">Pretty format (1.2K)</label>
+          </div>
         </div>
       </div>
     </form>
@@ -313,29 +428,40 @@
       </div>
     </div>
 
-    <!-- Generated Code -->
+    <!-- Generated Code with Tabs -->
     <div class="code-section">
-      <div class="code-header">
-        <span class="code-type">Markdown</span>
-        <button type="button" class="copy-btn" data-target="markdownCode">Copy</button>
+      <div class="tabs">
+        <button type="button" class="tab-btn active" data-tab="markdown">Markdown</button>
+        <button type="button" class="tab-btn" data-tab="html">HTML</button>
+        <button type="button" class="tab-btn" data-tab="url">Direct URL</button>
       </div>
-      <code id="markdownCode">![Badge](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)</code>
-    </div>
 
-    <div class="code-section">
-      <div class="code-header">
-        <span class="code-type">HTML</span>
-        <button type="button" class="copy-btn" data-target="htmlCode">Copy</button>
+      <!-- Markdown Tab -->
+      <div class="tab-content active" id="markdown-tab">
+        <div class="code-header">
+          <span class="code-type">Copy Markdown code</span>
+          <button type="button" class="copy-btn" data-target="markdownCode">Copy</button>
+        </div>
+        <code id="markdownCode">![Badge](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)</code>
       </div>
-      <code id="htmlCode">&lt;img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496" alt="Installs"&gt;</code>
-    </div>
 
-    <div class="code-section">
-      <div class="code-header">
-        <span class="code-type">Direct URL</span>
-        <button type="button" class="copy-btn" data-target="urlCode">Copy</button>
+      <!-- HTML Tab -->
+      <div class="tab-content" id="html-tab">
+        <div class="code-header">
+          <span class="code-type">Copy HTML code</span>
+          <button type="button" class="copy-btn" data-target="htmlCode">Copy</button>
+        </div>
+        <code id="htmlCode"><span class="syntax-bracket">&lt;</span><span class="syntax-path">img src=</span><span class="syntax-bracket">"</span><span class="syntax-protocol">https://</span><span class="syntax-domain">trmnl-badges.gohk.xyz</span><span class="syntax-path">/badge/installs?recipe=28496</span><span class="syntax-bracket">"</span><span class="syntax-path"> alt=</span><span class="syntax-bracket">"</span>Installs<span class="syntax-bracket">"</span><span class="syntax-bracket">&gt;</span></code>
       </div>
-      <code id="urlCode">https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496</code>
+
+      <!-- Direct URL Tab -->
+      <div class="tab-content" id="url-tab">
+        <div class="code-header">
+          <span class="code-type">Copy direct URL</span>
+          <button type="button" class="copy-btn" data-target="urlCode">Copy</button>
+        </div>
+        <code id="urlCode"><span class="syntax-protocol">https://</span><span class="syntax-domain">trmnl-badges.gohk.xyz</span><span class="syntax-path">/badge/installs?recipe=28496</span></code>
+      </div>
     </div>
   </div>
 
@@ -350,7 +476,24 @@
     const markdownCode = document.getElementById('markdownCode');
     const htmlCode = document.getElementById('htmlCode');
     const urlCode = document.getElementById('urlCode');
-    const recipeError = document.getElementById('recipeError');
+    const recipeFeedback = document.getElementById('recipeFeedback');
+
+    // Tab switching
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabName = btn.getAttribute('data-tab');
+        
+        // Remove active from all tabs and contents
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active to current
+        btn.classList.add('active');
+        document.getElementById(tabName + '-tab').classList.add('active');
+      });
+    });
 
     function getBadgeType() {
       return document.querySelector('input[name="badgeType"]:checked').value;
@@ -374,19 +517,28 @@
       return null;
     }
 
+    function showValidation(isValid) {
+      if (isValid) {
+        recipeFeedback.className = 'recipe-feedback success';
+        recipeFeedback.innerHTML = '<span class="icon">✓</span><span>Recipe ID valid</span>';
+      } else {
+        recipeFeedback.className = 'recipe-feedback error';
+        recipeFeedback.innerHTML = '<span class="icon">✗</span><span>Invalid recipe URL or ID</span>';
+      }
+    }
+
     function generateBadgeUrl() {
       const recipeId = extractRecipeId(recipeInput.value);
       if (!recipeId) {
-        recipeError.textContent = 'Invalid recipe URL or ID';
+        showValidation(false);
         return null;
       }
       
-      recipeError.textContent = '';
+      showValidation(true);
 
       let url = `${BASE_URL}/badge/${getBadgeType()}?recipe=${recipeId}`;
 
       if (customLabel.value) {
-        // URL encode the label (spaces become %20)
         const encodedLabel = encodeURIComponent(customLabel.value);
         url += `&label=${encodedLabel}`;
       }
@@ -408,15 +560,42 @@
       previewImage.innerHTML = `<img src="${url}" alt="Badge Preview">`;
     }
 
+    function generateSyntaxHighlightedMarkdown(url) {
+      const altText = customLabel.value || getBadgeType().charAt(0).toUpperCase() + getBadgeType().slice(1);
+      return `![${altText}](${url})`;
+    }
+
+    function generateSyntaxHighlightedHtml(url) {
+      const altText = customLabel.value || getBadgeType().charAt(0).toUpperCase() + getBadgeType().slice(1);
+      
+      // Parse URL for syntax highlighting
+      const urlObj = new URL(url);
+      const domain = urlObj.hostname;
+      const path = urlObj.pathname + urlObj.search;
+      
+      return `<span class="syntax-bracket">&lt;</span><span class="syntax-path">img src=</span><span class="syntax-bracket">"</span><span class="syntax-protocol">https://</span><span class="syntax-domain">${domain}</span><span class="syntax-path">${path}</span><span class="syntax-bracket">"</span><span class="syntax-path"> alt=</span><span class="syntax-bracket">"</span>${altText}<span class="syntax-bracket">"</span><span class="syntax-bracket">&gt;</span>`;
+    }
+
+    function generateSyntaxHighlightedUrl(url) {
+      const urlObj = new URL(url);
+      const domain = urlObj.hostname;
+      const path = urlObj.pathname + urlObj.search;
+      
+      return `<span class="syntax-protocol">https://</span><span class="syntax-domain">${domain}</span><span class="syntax-path">${path}</span>`;
+    }
+
     function updateCode() {
       const url = generateBadgeUrl();
       if (!url) return;
 
-      const altText = customLabel.value || getBadgeType().charAt(0).toUpperCase() + getBadgeType().slice(1);
-
-      markdownCode.textContent = `![${altText}](${url})`;
-      htmlCode.textContent = `<img src="${url}" alt="${altText}">`;
-      urlCode.textContent = url;
+      // Update markdown
+      markdownCode.textContent = generateSyntaxHighlightedMarkdown(url);
+      
+      // Update HTML with syntax highlighting
+      htmlCode.innerHTML = generateSyntaxHighlightedHtml(url);
+      
+      // Update URL with syntax highlighting
+      urlCode.innerHTML = generateSyntaxHighlightedUrl(url);
     }
 
     function update() {
@@ -430,21 +609,19 @@
     customLabel.addEventListener('input', update);
     prettyFormat.addEventListener('change', update);
 
-    // Copy buttons
+    // Copy buttons - Updated to work with textarea content
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         e.preventDefault();
         const targetId = btn.getAttribute('data-target');
-        const code = document.getElementById(targetId);
-        const text = code.textContent;
+        const codeElement = document.getElementById(targetId);
+        const text = codeElement.textContent;
 
         try {
           await navigator.clipboard.writeText(text);
-          btn.textContent = 'Copied!';
           btn.classList.add('copied');
 
           setTimeout(() => {
-            btn.textContent = 'Copy';
             btn.classList.remove('copied');
           }, 2000);
         } catch (err) {
