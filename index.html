@@ -180,6 +180,20 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .code-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .code-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .code-type {
@@ -464,13 +478,6 @@
 
     <!-- Generated Code with Tabs -->
     <div class="code-section">
-      <div class="form-group" style="margin-bottom: 16px;">
-        <div class="checkbox-group">
-          <input type="checkbox" id="linkToRecipe">
-          <label for="linkToRecipe" class="checkbox-label">Link badge to recipe</label>
-        </div>
-      </div>
-
       <div class="tabs">
         <button type="button" class="tab-btn active" data-tab="markdown">Markdown</button>
         <button type="button" class="tab-btn" data-tab="html">HTML</button>
@@ -480,8 +487,16 @@
       <!-- Markdown Tab -->
       <div class="tab-content active" id="markdown-tab">
         <div class="code-header">
-          <span class="code-type">Copy Markdown code</span>
-          <button type="button" class="copy-btn" data-target="markdownCode">Copy</button>
+          <div class="code-header-left">
+            <span class="code-type">Copy Markdown code</span>
+            <div class="checkbox-group">
+              <input type="checkbox" id="linkToRecipe">
+              <label for="linkToRecipe" class="checkbox-label">Link to recipe</label>
+            </div>
+          </div>
+          <div class="code-header-right">
+            <button type="button" class="copy-btn" data-target="markdownCode">Copy</button>
+          </div>
         </div>
         <code id="markdownCode">![Badge](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)</code>
       </div>
@@ -489,8 +504,12 @@
       <!-- HTML Tab -->
       <div class="tab-content" id="html-tab">
         <div class="code-header">
-          <span class="code-type">Copy HTML code</span>
-          <button type="button" class="copy-btn" data-target="htmlCode">Copy</button>
+          <div class="code-header-left">
+            <span class="code-type">Copy HTML code</span>
+          </div>
+          <div class="code-header-right">
+            <button type="button" class="copy-btn" data-target="htmlCode">Copy</button>
+          </div>
         </div>
         <code id="htmlCode"><span class="syntax-bracket">&lt;</span><span class="syntax-path">img src=</span><span class="syntax-bracket">"</span><span class="syntax-protocol">https://</span><span class="syntax-domain">trmnl-badges.gohk.xyz</span><span class="syntax-path">/badge/installs?recipe=28496</span><span class="syntax-bracket">"</span><span class="syntax-path"> alt=</span><span class="syntax-bracket">"</span>Installs<span class="syntax-bracket">"</span><span class="syntax-bracket">&gt;</span></code>
       </div>
