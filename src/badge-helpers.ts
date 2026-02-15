@@ -1,4 +1,5 @@
 import { generateErrorBadge } from './badge-generator';
+import type { TRMNLRecipe } from './types';
 
 /**
  * Return error badge response with proper headers
@@ -13,14 +14,13 @@ export function returnErrorBadge(c: any, label: string, message: string, cacheTi
 /**
  * Validate recipe data and its stats
  * Returns true if valid, false if should show error
- * Serves as a type guard to ensure recipeData is not null
+ * Serves as a type guard to ensure recipeData is not null/undefined
  */
 export function isRecipeValid(
-  recipeData: unknown,
+  recipeData: TRMNLRecipe | null | undefined,
   statKey?: 'installs' | 'forks'
-): recipeData is { stats: { installs: number; forks: number } } {
-  if (!recipeData || typeof recipeData !== 'object') return false;
-  const data = recipeData as any;
-  if (statKey && data.stats?.[statKey] === undefined) return false;
+): recipeData is TRMNLRecipe {
+  if (!recipeData) return false;
+  if (statKey && recipeData.stats?.[statKey] === undefined) return false;
   return true;
 }
