@@ -1,10 +1,9 @@
-# TRMNL Badges
-
-Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipes](https://trmnl.com/recipes).
-
 [![CI](https://github.com/hossain-khan/trmnl-badges/actions/workflows/ci.yml/badge.svg)](https://github.com/hossain-khan/trmnl-badges/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/github/hossain-khan/trmnl-badges/graph/badge.svg?token=TWWWM4OMY4)](https://codecov.io/github/hossain-khan/trmnl-badges)
 
+# TRMNL Badges
+
+Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipes](https://trmnl.com/recipes).
 
   <picture align="right">
     <source media="(prefers-color-scheme: dark)" srcset="assets/trmnl/trmnl-badge-compatible-with-dark.svg">
