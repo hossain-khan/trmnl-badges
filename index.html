@@ -464,6 +464,13 @@
 
     <!-- Generated Code with Tabs -->
     <div class="code-section">
+      <div class="form-group" style="margin-bottom: 16px;">
+        <div class="checkbox-group">
+          <input type="checkbox" id="linkToRecipe">
+          <label for="linkToRecipe" class="checkbox-label">Link badge to recipe</label>
+        </div>
+      </div>
+
       <div class="tabs">
         <button type="button" class="tab-btn active" data-tab="markdown">Markdown</button>
         <button type="button" class="tab-btn" data-tab="html">HTML</button>
@@ -511,6 +518,7 @@
     const htmlCode = document.getElementById('htmlCode');
     const urlCode = document.getElementById('urlCode');
     const recipeFeedback = document.getElementById('recipeFeedback');
+    const linkToRecipe = document.getElementById('linkToRecipe');
 
     // Tab switching
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -602,7 +610,15 @@
       const domain = urlObj.hostname;
       const path = urlObj.pathname + urlObj.search;
       
-      return `<span class="syntax-bracket">![</span><span class="syntax-domain">${altText}</span><span class="syntax-bracket">](</span><span class="syntax-protocol">https://</span><span class="syntax-domain">${domain}</span><span class="syntax-path">${path}</span><span class="syntax-bracket">)</span>`;
+      const badgeMarkdown = `<span class="syntax-bracket">![</span><span class="syntax-domain">${altText}</span><span class="syntax-bracket">](</span><span class="syntax-protocol">https://</span><span class="syntax-domain">${domain}</span><span class="syntax-path">${path}</span><span class="syntax-bracket">)</span>`;
+      
+      if (linkToRecipe.checked) {
+        const recipeId = extractRecipeId(recipeInput.value);
+        const recipeUrl = `https://trmnl.com/recipes/${recipeId}`;
+        return `<span class="syntax-bracket">[</span>${badgeMarkdown}<span class="syntax-bracket">](</span><span class="syntax-protocol">https://</span><span class="syntax-domain">trmnl.com</span><span class="syntax-path">/recipes/${recipeId}</span><span class="syntax-bracket">)</span>`;
+      }
+      
+      return badgeMarkdown;
     }
 
     function generateSyntaxHighlightedHtml(url) {
@@ -613,7 +629,14 @@
       const domain = urlObj.hostname;
       const path = urlObj.pathname + urlObj.search;
       
-      return `<span class="syntax-bracket">&lt;</span><span class="syntax-path">img src=</span><span class="syntax-bracket">"</span><span class="syntax-protocol">https://</span><span class="syntax-domain">${domain}</span><span class="syntax-path">${path}</span><span class="syntax-bracket">"</span><span class="syntax-path"> alt=</span><span class="syntax-bracket">"</span>${altText}<span class="syntax-bracket">"</span><span class="syntax-bracket">&gt;</span>`;
+      const imgTag = `<span class="syntax-bracket">&lt;</span><span class="syntax-path">img src=</span><span class="syntax-bracket">"</span><span class="syntax-protocol">https://</span><span class="syntax-domain">${domain}</span><span class="syntax-path">${path}</span><span class="syntax-bracket">"</span><span class="syntax-path"> alt=</span><span class="syntax-bracket">"</span>${altText}<span class="syntax-bracket">"</span><span class="syntax-bracket">&gt;</span>`;
+      
+      if (linkToRecipe.checked) {
+        const recipeId = extractRecipeId(recipeInput.value);
+        return `<span class="syntax-bracket">&lt;</span><span class="syntax-path">a href=</span><span class="syntax-bracket">"</span><span class="syntax-protocol">https://</span><span class="syntax-domain">trmnl.com</span><span class="syntax-path">/recipes/${recipeId}</span><span class="syntax-bracket">"</span><span class="syntax-bracket">&gt;</span>${imgTag}<span class="syntax-bracket">&lt;/</span><span class="syntax-path">a</span><span class="syntax-bracket">&gt;</span>`;
+      }
+      
+      return imgTag;
     }
 
     function generateSyntaxHighlightedUrl(url) {
@@ -648,6 +671,7 @@
     badgeTypeRadios.forEach(radio => radio.addEventListener('change', update));
     customLabel.addEventListener('input', update);
     prettyFormat.addEventListener('change', update);
+    linkToRecipe.addEventListener('change', update);
 
     // Copy buttons - Updated to work with textarea content
     document.querySelectorAll('.copy-btn').forEach(btn => {
