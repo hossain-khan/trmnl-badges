@@ -1,9 +1,9 @@
 /**
  * TRMNL Recipe data returned from the TRMNL API
  * Represents a complete recipe/plugin available on the TRMNL platform
- * 
+ *
  * Sample URL: https://trmnl.com/recipes/240176.json
- * 
+ *
  * @example
  * {
  *   "id": 240176,
@@ -94,4 +94,4 @@ export type Bindings = {
    * Used to display a fun counter of how many badges have been generated
    */
   BADGE_COUNTER: KVNamespace;
-}
+};

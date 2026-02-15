@@ -16,5 +16,3 @@ export function formatNumber(value: number, pretty: boolean = false): string {
   }
   return value.toLocaleString('en-US');
 }
-
-

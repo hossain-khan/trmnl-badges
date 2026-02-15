@@ -21,7 +21,7 @@ export function generateBadge(options: BadgeOptions): string {
     message,
     color = 'F8654B', // TRMNL brand orange
     labelColor = '3D3D3E', // TRMNL dark gray
-    logo
+    logo,
   } = options;
 
   return badgen({

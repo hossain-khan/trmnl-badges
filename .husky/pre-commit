@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Format staged files
+npx lint-staged
+
+# Check TypeScript types
+npx tsc --noEmit

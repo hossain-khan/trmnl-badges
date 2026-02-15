@@ -8,18 +8,32 @@
   "scripts": {
     "deploy": "wrangler deploy --minify",
     "dev": "wrangler dev --minify",
-    "test": "vitest"
+    "test": "vitest",
+    "prepare": "husky"
   },
-  "keywords": ["cloudflare-workers", "trmnl", "badges", "recipes", "e-paper"],
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx,json}": [
+      "npx prettier --write"
+    ]
+  },
+  "keywords": [
+    "cloudflare-workers",
+    "trmnl",
+    "badges",
+    "recipes",
+    "e-paper"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260124.0",
     "@types/node": "^22.10.2",
     "@vitest/coverage-v8": "^4.0.18",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "typescript": "^5.7.2",
     "vitest": "^4.0.18",
-    "wrangler": "^4.60.0",
-    "typescript": "^5.7.2"
+    "wrangler": "^4.60.0"
   },
   "dependencies": {
     "badgen": "^3.2.3",
