@@ -56,6 +56,8 @@ https://trmnl.com/recipes/28496
 - **`label`** (optional) - Custom label text (eg. `?label=Downloads` or `?label=Download%20Count`)
 - **`pretty`** (optional) - Format numbers in compact notation (e.g., 1.2K)
 
+> ℹ️ Tip: Use the **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** to generate badge markup.
+
 ### HTML Usage
 ```html
 <img src="https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496" alt="Installs">
