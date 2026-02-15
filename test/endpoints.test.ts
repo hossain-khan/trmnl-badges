@@ -43,6 +43,20 @@ describe('TRMNL Badges API', () => {
     });
   });
 
+  describe('GET /health-badge', () => {
+    it('should return shields.io compatible health badge', async () => {
+      const response = await app.request('/health-badge');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('content-type')).toContain('application/json');
+      
+      const json = await response.json() as any;
+      expect(json).toHaveProperty('schemaVersion', 1);
+      expect(json).toHaveProperty('label', 'health');
+      expect(json).toHaveProperty('message', 'online');
+      expect(json).toHaveProperty('color', 'brightgreen');
+    });
+  });
+
   describe('GET /badge/installs', () => {
     it('should return 400 when recipe parameter is missing', async () => {
       const response = await app.request('/badge/installs');

@@ -22,6 +22,16 @@ app.get('/health', (c) => {
   });
 });
 
+// Health badge endpoint for shields.io
+app.get('/health-badge', (c) => {
+  return c.json({
+    schemaVersion: 1,
+    label: 'health',
+    message: 'online',
+    color: 'brightgreen',
+  });
+});
+
 // Badge endpoints for TRMNL recipes
 app.get('/badge/installs', async (c) => {
   const { recipe, label, pretty } = c.req.query();

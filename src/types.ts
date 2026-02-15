@@ -26,6 +26,13 @@ export interface BadgeOptions {
   logo?: string;
 }
 
+export interface HealthBadgeResponse {
+  schemaVersion: 1;
+  label: string;
+  message: string;
+  color: string;
+}
+
 export type Bindings = {
   NODE_ENV: string;
 }
