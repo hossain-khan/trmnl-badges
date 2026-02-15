@@ -118,8 +118,8 @@ app.get('/badge/forks', async (c) => {
 
 // 🎉 Fun tracking feature: Badge showing total badges served
 app.get('/badge/counter', async (c) => {
-  const counterKey = 'badges_served_total';
-  const counterValue = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY
+  const counterValue = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+  const count = counterValue ? parseInt(counterValue, 10) : 0;
   
   const badge = generateBadge({
     label: 'Badges Served',

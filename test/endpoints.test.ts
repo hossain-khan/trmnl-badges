@@ -230,4 +230,116 @@ describe('TRMNL Badges API', () => {
       });
     });
   });
+
+  describe('GET /badge/counter', () => {
+    // Helper to create a mock KV namespace
+    const createMockKV = (initialData: Record<string, string> = {}) => {
+      const data = { ...initialData };
+      return {
+        get: async (key: string) => data[key] ?? null,
+        put: async (key: string, value: string) => {
+          data[key] = value;
+        },
+      } as any;
+    };
+
+    it('should return a valid SVG badge', async () => {
+      const mockKV = createMockKV();
+      const response = await app.request('/badge/counter', {}, { NODE_ENV: 'production', BADGE_COUNTER: mockKV });
+      
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      
+      const svg = await response.text();
+      expect(svg).toContain('Badges Served');
+    });
+
+    it('should return count of 0 when counter is not set', async () => {
+      const mockKV = createMockKV();
+      const response = await app.request('/badge/counter', {}, { NODE_ENV: 'production', BADGE_COUNTER: mockKV });
+      
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('0'); // Formatted count should be 0
+    });
+
+    it('should display formatted count when counter has a value', async () => {
+      const mockKV = createMockKV({ 'badges_served_total': '1500' });
+      const response = await app.request('/badge/counter', {}, { NODE_ENV: 'production', BADGE_COUNTER: mockKV });
+      
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('1.5K'); // Pretty formatted number
+    });
+
+    it('should set cache header to 1 hour', async () => {
+      const mockKV = createMockKV();
+      const response = await app.request('/badge/counter', {}, { NODE_ENV: 'production', BADGE_COUNTER: mockKV });
+      
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
+    });
+
+    it('should use blueviolet color', async () => {
+      const mockKV = createMockKV();
+      const response = await app.request('/badge/counter', {}, { NODE_ENV: 'production', BADGE_COUNTER: mockKV });
+      
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('blueviolet');
+    });
+
+    it('should display large numbers with pretty formatting', async () => {
+      const mockKV = createMockKV({ 'badges_served_total': '12500' });
+      const response = await app.request('/badge/counter', {}, { NODE_ENV: 'production', BADGE_COUNTER: mockKV });
+      
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('12.5K');
+    });
+
+    it('should increment counter when /badge/installs is called', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+      
+      const mockKV = createMockKV();
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+      
+      // Make a badge request
+      await app.request('/badge/installs?recipe=240176', {}, bindings);
+      
+      // Check that counter was incremented
+      const counterValue = await mockKV.get('badges_served_total');
+      expect(counterValue).toBe('1');
+    });
+
+    it('should increment counter when /badge/forks is called', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+      
+      const mockKV = createMockKV();
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+      
+      // Make a badge request
+      await app.request('/badge/forks?recipe=240176', {}, bindings);
+      
+      // Check that counter was incremented
+      const counterValue = await mockKV.get('badges_served_total');
+      expect(counterValue).toBe('1');
+    });
+
+    it('should handle multiple increments correctly', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValue(mockRecipe);
+      
+      const mockKV = createMockKV();
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+      
+      // Make multiple badge requests
+      await app.request('/badge/installs?recipe=240176', {}, bindings);
+      await app.request('/badge/forks?recipe=240176', {}, bindings);
+      await app.request('/badge/installs?recipe=240176', {}, bindings);
+      
+      // Check that counter was incremented 3 times
+      const counterValue = await mockKV.get('badges_served_total');
+      expect(counterValue).toBe('3');
+    });
+  });
 });
