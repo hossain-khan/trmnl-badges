@@ -89,4 +89,9 @@ export interface HealthBadgeResponse {
 
 export type Bindings = {
   NODE_ENV: string;
+  /**
+   * 🎉 Fun tracking feature: KV store to track total badges served
+   * Used to display a fun counter of how many badges have been generated
+   */
+  BADGE_COUNTER: KVNamespace;
 }

@@ -2,3 +2,11 @@ name = "trmnl-badges"
 main = "./src/index.ts"
 compatibility_date = "2025-08-01"
 vars = { NODE_ENV = "production" }
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+
+[[kv_namespaces]]
+binding = "BADGE_COUNTER"
+id = "78174a7d02f045d884886f38e43964a9"
