@@ -6,6 +6,19 @@ import { formatNumber } from './utils';
 
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
+/**
+ * 🎉 Fun tracking feature: Increment and get the total badge counter
+ * This helps us track how popular the badge service is!
+ */
+async function incrementBadgeCounter(env: Bindings): Promise<number> {
+  const counterKey = 'badges_served_total';
+  const currentValue = await env.BADGE_COUNTER.get(counterKey);
+  const count = currentValue ? parseInt(currentValue, 10) : 0;
+  const newCount = count + 1;
+  await env.BADGE_COUNTER.put(counterKey, newCount.toString());
+  return newCount;
+}
+
 app.get('/', (c) => {
   if (c.env.NODE_ENV === 'production') {
     return c.redirect('https://github.com/hossain-khan/trmnl-badges');
@@ -52,6 +65,9 @@ app.get('/badge/installs', async (c) => {
     message: formatNumber(recipeData.stats.installs, isPretty),
   });
 
+  // 🎉 Fun tracking feature: Increment counter for this badge request
+  incrementBadgeCounter(c.env).catch(err => console.error('Failed to increment counter:', err));
+
   c.header('Content-Type', 'image/svg+xml');
   c.header('Cache-Control', 'public, max-age=3600');
   return c.body(badge);
@@ -76,8 +92,28 @@ app.get('/badge/forks', async (c) => {
     message: formatNumber(recipeData.stats.forks, isPretty),
   });
 
+  // 🎉 Fun tracking feature: Increment counter for this badge request
+  incrementBadgeCounter(c.env).catch(err => console.error('Failed to increment counter:', err));
+
   c.header('Content-Type', 'image/svg+xml');
   c.header('Cache-Control', 'public, max-age=3600');
+  return c.body(badge);
+});
+
+// 🎉 Fun tracking feature: Badge showing total badges served
+app.get('/badge/counter', async (c) => {
+  const counterKey = 'badges_served_total';
+  const counterValue = await c.env.BADGE_COUNTER.get(counterKey);
+  const count = counterValue ? parseInt(counterValue, 10) : 0;
+  
+  const badge = generateBadge({
+    label: 'Badges Served',
+    message: formatNumber(count, true),
+    color: 'blueviolet',
+  });
+
+  c.header('Content-Type', 'image/svg+xml');
+  c.header('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes to show updates
   return c.body(badge);
 });
 
