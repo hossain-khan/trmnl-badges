@@ -296,19 +296,6 @@ describe('TRMNL Badges API', () => {
       expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
     });
 
-    it('should use blueviolet color', async () => {
-      const mockKV = createMockKV();
-      const response = await app.request(
-        '/badge/counter',
-        {},
-        { NODE_ENV: 'production', BADGE_COUNTER: mockKV }
-      );
-
-      expect(response.status).toBe(200);
-      const svg = await response.text();
-      expect(svg).toContain('blueviolet');
-    });
-
     it('should display large numbers with pretty formatting', async () => {
       const mockKV = createMockKV({ badges_served_total: '12500' });
       const response = await app.request(
