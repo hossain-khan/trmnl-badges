@@ -50,6 +50,32 @@ trmnl-badges/
 - `label` (optional) - Custom label text for the badge
 - `pretty` (optional) - Format numbers in compact notation (e.g., 1.2K)
 
+### Health Badge Endpoint
+
+The `/health-badge` endpoint returns a [shields.io](https://shields.io/endpoint) compatible JSON response for monitoring service uptime:
+
+```
+GET /health-badge
+```
+
+Response format:
+```json
+{
+  "schemaVersion": 1,
+  "label": "health",
+  "message": "online",
+  "color": "brightgreen"
+}
+```
+
+Usage with shields.io:
+```markdown
+[![Health](https://img.shields.io/endpoint?url=https://trmnl-badges.gohk.xyz/health-badge)](https://trmnl-badges.gohk.xyz/health)
+```
+
+Related endpoints:
+- `GET /health` - JSON health status check (returns status, timestamp, projectUrl)
+
 ### API Examples
 
 #### Badge Endpoints
