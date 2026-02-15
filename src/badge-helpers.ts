@@ -6,15 +6,15 @@ import type { Context } from 'hono';
  * Return error badge response with proper headers
  */
 export function returnErrorBadge(
-  c: Context<{ Bindings: Bindings }>,
+  context: Context<{ Bindings: Bindings }>,
   label: string,
   message: string,
   cacheTime: number = 60
 ) {
   const errorBadge = generateErrorBadge(label, message);
-  c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', `public, max-age=${cacheTime}`);
-  return c.body(errorBadge);
+  context.header('Content-Type', 'image/svg+xml');
+  context.header('Cache-Control', `public, max-age=${cacheTime}`);
+  return context.body(errorBadge);
 }
 
 /**

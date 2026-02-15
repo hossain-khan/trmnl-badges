@@ -11,12 +11,12 @@ const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
 // Badge endpoints for TRMNL recipes
-app.get('/badge/installs', async (c) => {
+app.get('/badge/installs', async (context) => {
   try {
-    const { recipe, label, pretty } = c.req.query();
+    const { recipe, label, pretty } = context.req.query();
 
     if (!recipe) {
-      return returnErrorBadge(c, label || 'Installs', 'Missing recipe ID');
+      return returnErrorBadge(context, label || 'Installs', 'Missing recipe ID');
     }
 
     let recipeData;
@@ -24,11 +24,11 @@ app.get('/badge/installs', async (c) => {
       recipeData = await fetchRecipe(recipe);
     } catch (err) {
       console.error('[installs] Network error fetching recipe:', err);
-      return returnErrorBadge(c, label || 'Installs', 'Network Error');
+      return returnErrorBadge(context, label || 'Installs', 'Network Error');
     }
 
     if (!isRecipeValid(recipeData, 'installs')) {
-      return returnErrorBadge(c, label || 'Installs', 'Recipe Not Found');
+      return returnErrorBadge(context, label || 'Installs', 'Recipe Not Found');
     }
 
     const isPretty = pretty !== undefined;
@@ -39,9 +39,9 @@ app.get('/badge/installs', async (c) => {
 
     // 🎉 Fun tracking feature: Increment counter
     // Await the counter update synchronously to ensure it completes
-    if (c.env && c.env.BADGE_COUNTER) {
+    if (context.env && context.env.BADGE_COUNTER) {
       try {
-        const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
         const count = current ? parseInt(current, 10) : 0;
 
         // Validate that parseInt produced a valid number
@@ -50,27 +50,27 @@ app.get('/badge/installs', async (c) => {
         }
 
         const newCount = (Number.isFinite(count) ? count : 0) + 1;
-        await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+        await context.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
       } catch (err) {
         console.error('[installs] Counter error:', err);
       }
     }
 
-    c.header('Content-Type', 'image/svg+xml');
-    c.header('Cache-Control', 'public, max-age=3600');
-    return c.body(badge);
+    context.header('Content-Type', 'image/svg+xml');
+    context.header('Cache-Control', 'public, max-age=3600');
+    return context.body(badge);
   } catch (err) {
     console.error('[installs] Unexpected error:', err);
-    return returnErrorBadge(c, 'Installs', 'Service Error');
+    return returnErrorBadge(context, 'Installs', 'Service Error');
   }
 });
 
-app.get('/badge/forks', async (c) => {
+app.get('/badge/forks', async (context) => {
   try {
-    const { recipe, label, pretty } = c.req.query();
+    const { recipe, label, pretty } = context.req.query();
 
     if (!recipe) {
-      return returnErrorBadge(c, label || 'Forks', 'Missing recipe ID');
+      return returnErrorBadge(context, label || 'Forks', 'Missing recipe ID');
     }
 
     let recipeData;
@@ -78,11 +78,11 @@ app.get('/badge/forks', async (c) => {
       recipeData = await fetchRecipe(recipe);
     } catch (err) {
       console.error('[forks] Network error fetching recipe:', err);
-      return returnErrorBadge(c, label || 'Forks', 'Network Error');
+      return returnErrorBadge(context, label || 'Forks', 'Network Error');
     }
 
     if (!isRecipeValid(recipeData, 'forks')) {
-      return returnErrorBadge(c, label || 'Forks', 'Recipe Not Found');
+      return returnErrorBadge(context, label || 'Forks', 'Recipe Not Found');
     }
 
     const isPretty = pretty !== undefined;
@@ -93,9 +93,9 @@ app.get('/badge/forks', async (c) => {
 
     // 🎉 Fun tracking feature: Increment counter
     // Await the counter update synchronously to ensure it completes
-    if (c.env && c.env.BADGE_COUNTER) {
+    if (context.env && context.env.BADGE_COUNTER) {
       try {
-        const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
         const count = current ? parseInt(current, 10) : 0;
 
         // Validate that parseInt produced a valid number
@@ -104,27 +104,27 @@ app.get('/badge/forks', async (c) => {
         }
 
         const newCount = (Number.isFinite(count) ? count : 0) + 1;
-        await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+        await context.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
       } catch (err) {
         console.error('[forks] Counter error:', err);
       }
     }
 
-    c.header('Content-Type', 'image/svg+xml');
-    c.header('Cache-Control', 'public, max-age=3600');
-    return c.body(badge);
+    context.header('Content-Type', 'image/svg+xml');
+    context.header('Cache-Control', 'public, max-age=3600');
+    return context.body(badge);
   } catch (err) {
     console.error('[forks] Unexpected error:', err);
-    return returnErrorBadge(c, 'Forks', 'Service Error');
+    return returnErrorBadge(context, 'Forks', 'Service Error');
   }
 });
 
-app.get('/badge/connections', async (c) => {
+app.get('/badge/connections', async (context) => {
   try {
-    const { recipe, label, pretty } = c.req.query();
+    const { recipe, label, pretty } = context.req.query();
 
     if (!recipe) {
-      return returnErrorBadge(c, label || 'Connections', 'Missing recipe ID');
+      return returnErrorBadge(context, label || 'Connections', 'Missing recipe ID');
     }
 
     let recipeData;
@@ -132,7 +132,7 @@ app.get('/badge/connections', async (c) => {
       recipeData = await fetchRecipe(recipe);
     } catch (err) {
       console.error('[connections] Network error fetching recipe:', err);
-      return returnErrorBadge(c, label || 'Connections', 'Network Error');
+      return returnErrorBadge(context, label || 'Connections', 'Network Error');
     }
 
     if (
@@ -140,7 +140,7 @@ app.get('/badge/connections', async (c) => {
       recipeData.stats?.installs === undefined ||
       recipeData.stats?.forks === undefined
     ) {
-      return returnErrorBadge(c, label || 'Connections', 'Recipe Not Found');
+      return returnErrorBadge(context, label || 'Connections', 'Recipe Not Found');
     }
 
     const isPretty = pretty !== undefined;
@@ -152,9 +152,9 @@ app.get('/badge/connections', async (c) => {
 
     // 🎉 Fun tracking feature: Increment counter
     // Await the counter update synchronously to ensure it completes
-    if (c.env && c.env.BADGE_COUNTER) {
+    if (context.env && context.env.BADGE_COUNTER) {
       try {
-        const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
         const count = current ? parseInt(current, 10) : 0;
 
         // Validate that parseInt produced a valid number
@@ -163,33 +163,33 @@ app.get('/badge/connections', async (c) => {
         }
 
         const newCount = (Number.isFinite(count) ? count : 0) + 1;
-        await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+        await context.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
       } catch (err) {
         console.error('[connections] Counter error:', err);
       }
     }
 
-    c.header('Content-Type', 'image/svg+xml');
-    c.header('Cache-Control', 'public, max-age=3600');
-    return c.body(badge);
+    context.header('Content-Type', 'image/svg+xml');
+    context.header('Cache-Control', 'public, max-age=3600');
+    return context.body(badge);
   } catch (err) {
     console.error('[connections] Unexpected error:', err);
-    return returnErrorBadge(c, 'Connections', 'Service Error');
+    return returnErrorBadge(context, 'Connections', 'Service Error');
   }
 });
 
 // API endpoint for TRMNL recipe stats
-app.get('/api/stats', async (c) => {
-  const { recipe } = c.req.query();
+app.get('/api/stats', async (context) => {
+  const { recipe } = context.req.query();
 
   if (!recipe) {
-    return c.json({ error: 'Missing required parameter: recipe' }, 400);
+    return context.json({ error: 'Missing required parameter: recipe' }, 400);
   }
 
   const recipeData = await fetchRecipe(recipe);
 
   if (!recipeData) {
-    return c.json({ error: 'Recipe not found' }, 404);
+    return context.json({ error: 'Recipe not found' }, 404);
   }
 
   const stats = {
@@ -206,16 +206,16 @@ app.get('/api/stats', async (c) => {
     },
   };
 
-  c.header('Cache-Control', 'public, max-age=3600');
-  return c.json(stats);
+  context.header('Cache-Control', 'public, max-age=3600');
+  return context.json(stats);
 });
 
 ///////////////////////////////////////////////////////////
 // Utility endpoints for status, testing and development
 ///////////////////////////////////////////////////////////
 
-app.get('/health', (c) => {
-  return c.json({
+app.get('/health', (context) => {
+  return context.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     projectUrl: 'https://github.com/hossain-khan/trmnl-badges',
@@ -223,8 +223,8 @@ app.get('/health', (c) => {
 });
 
 // Health badge endpoint for shields.io
-app.get('/health-badge', (c) => {
-  return c.json({
+app.get('/health-badge', (context) => {
+  return context.json({
     schemaVersion: 1,
     label: 'TRMNL Badge Service',
     message: 'Online',
@@ -232,11 +232,11 @@ app.get('/health-badge', (c) => {
   });
 });
 
-app.get('/', (c) => {
-  if (c.env.NODE_ENV === 'production') {
-    return c.redirect('https://github.com/hossain-khan/trmnl-badges');
+app.get('/', (context) => {
+  if (context.env.NODE_ENV === 'production') {
+    return context.redirect('https://github.com/hossain-khan/trmnl-badges');
   } else {
-    return c.text('TRMNL Badges API - Development Mode');
+    return context.text('TRMNL Badges API - Development Mode');
   }
 });
 
@@ -246,8 +246,8 @@ app.get('/', (c) => {
  * NOTE: This counter uses approximate counting due to potential race conditions
  * in KV operations. Multiple concurrent requests may result in lost updates.
  */
-app.get('/badge/counter', async (c) => {
-  const counterValue = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+app.get('/badge/counter', async (context) => {
+  const counterValue = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
   const count = counterValue ? parseInt(counterValue, 10) : 0;
 
   // Validate that parseInt produced a valid number
@@ -262,9 +262,9 @@ app.get('/badge/counter', async (c) => {
     message: formatNumber(validCount, true),
   });
 
-  c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
-  return c.body(badge);
+  context.header('Content-Type', 'image/svg+xml');
+  context.header('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+  return context.body(badge);
 });
 
 export default app;
