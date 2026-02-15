@@ -46,16 +46,16 @@ https://trmnl.com/recipes/28496
 | **Installs** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496) |
 | **Forks** | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496)` | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496) |
 | **Connections** | `![Connections](https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496)` | ![Connections](https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496) |
-| **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty) |
-| **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads) |
+| **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=9917&pretty)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=9917&pretty) |
+| **Custom Label** | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count)` | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count) |
 | **Linked Badge** | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496) |
 
 
 ## Badge URL Query Parameters
 
-- **`recipe`** (required) - TRMNL recipe ID (e.g., 28496)
+- **`recipe`** (required) - TRMNL recipe ID (e.g., `28496`)
 - **`label`** (optional) - Custom label text (eg. `?label=Downloads` or `?label=Download%20Count`)
-- **`pretty`** (optional) - Format numbers in compact notation (e.g., 1.2K)
+- **`pretty`** (optional) - Format numbers in compact notation (e.g., `1.78K`)
 
 > [!TIP]
 > Use the **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** to generate badge markup.
@@ -91,7 +91,7 @@ https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty
 
 ### Custom Label
 ```
-https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads
+https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count
 ```
 
 ## Contributing
