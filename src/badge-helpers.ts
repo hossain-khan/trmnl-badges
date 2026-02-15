@@ -1,10 +1,16 @@
 import { generateErrorBadge } from './badge-generator';
-import type { TRMNLRecipe } from './types';
+import type { TRMNLRecipe, Bindings } from './types';
+import type { Context } from 'hono';
 
 /**
  * Return error badge response with proper headers
  */
-export function returnErrorBadge(c: any, label: string, message: string, cacheTime: number = 60) {
+export function returnErrorBadge(
+  c: Context<{ Bindings: Bindings }>,
+  label: string,
+  message: string,
+  cacheTime: number = 60
+) {
   const errorBadge = generateErrorBadge(label, message);
   c.header('Content-Type', 'image/svg+xml');
   c.header('Cache-Control', `public, max-age=${cacheTime}`);
