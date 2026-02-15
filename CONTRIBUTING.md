@@ -43,7 +43,9 @@ trmnl-badges/
 
 ### Utility Endpoints
 - `GET /health` - Health check endpoint
+- `GET /health-badge` - Health badge endpoint for shields.io monitoring
 - `GET /api/stats?recipe=<recipe_id>` - JSON stats for TRMNL recipes
+- `GET /badge/counter` - Fun tracking badge showing total badges served
 - `GET /` - Redirects to GitHub repository
 
 ### Query Parameters
@@ -89,6 +91,9 @@ https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496
 
 # Connections badge
 https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496
+
+# Total badges served counter
+https://trmnl-badges.gohk.xyz/badge/counter
 
 # With pretty formatting
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty
