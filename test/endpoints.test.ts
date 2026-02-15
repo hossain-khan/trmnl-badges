@@ -365,5 +365,43 @@ describe('TRMNL Badges API', () => {
       const counterValue = await mockKV.get('badges_served_total');
       expect(counterValue).toBe('3');
     });
+
+    it('should handle counter KV errors gracefully for installs badge', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // Mock KV that throws error
+      const failingKV = {
+        get: vi.fn().mockRejectedValue(new Error('KV error')),
+        put: vi.fn().mockRejectedValue(new Error('KV error')),
+      };
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: failingKV };
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      // Badge should still be returned despite counter error
+      const response = await app.request('/badge/installs?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      expect(consoleMock).toHaveBeenCalledWith('[installs] Counter error:', expect.any(Error));
+      consoleMock.mockRestore();
+    });
+
+    it('should handle counter KV errors gracefully for forks badge', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // Mock KV that throws error
+      const failingKV = {
+        get: vi.fn().mockRejectedValue(new Error('KV error')),
+        put: vi.fn().mockRejectedValue(new Error('KV error')),
+      };
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: failingKV };
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      // Badge should still be returned despite counter error
+      const response = await app.request('/badge/forks?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      expect(consoleMock).toHaveBeenCalledWith('[forks] Counter error:', expect.any(Error));
+      consoleMock.mockRestore();
+    });
   });
 });
