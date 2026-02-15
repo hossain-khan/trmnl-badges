@@ -3,6 +3,8 @@ import type { Bindings } from './types';
 import { fetchRecipe } from './trmnl-api';
 import { generateBadge } from './badge-generator';
 import { formatNumber } from './utils';
+import { parseBadgeQuery, parseStatsQuery, formatZodError } from './validation';
+import { ZodError } from 'zod';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
@@ -11,121 +13,134 @@ const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
 // Badge endpoints for TRMNL recipes
 app.get('/badge/installs', async (c) => {
-  const { recipe, label, pretty } = c.req.query();
+  try {
+    const query = parseBadgeQuery(c.req.query());
+    const recipeData = await fetchRecipe(query.recipe);
 
-  if (!recipe) {
-    return c.text('Missing required parameter: recipe', 400);
-  }
-
-  const recipeData = await fetchRecipe(recipe);
-
-  if (!recipeData) {
-    return c.text('Recipe not found', 404);
-  }
-
-  const isPretty = pretty !== undefined;
-  const badge = generateBadge({
-    label: label || 'Installs',
-    message: formatNumber(recipeData.stats.installs, isPretty),
-  });
-
-  // 🎉 Fun tracking feature: Increment counter
-  // Await the counter update synchronously to ensure it completes
-  if (c.env && c.env.BADGE_COUNTER) {
-    try {
-      const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
-      const count = current ? parseInt(current, 10) : 0;
-
-      // Validate that parseInt produced a valid number
-      if (!Number.isFinite(count)) {
-        console.warn(`Invalid counter value: ${current}, resetting to 0`);
-      }
-
-      const newCount = (Number.isFinite(count) ? count : 0) + 1;
-      await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
-    } catch (err) {
-      console.error('[installs] Counter error:', err);
+    if (!recipeData) {
+      return c.text('Recipe not found', 404);
     }
-  }
 
-  c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', 'public, max-age=3600');
-  return c.body(badge);
+    const badge = generateBadge({
+      label: query.label || 'Installs',
+      message: formatNumber(recipeData.stats.installs, query.pretty),
+    });
+
+    // 🎉 Fun tracking feature: Increment counter
+    // Await the counter update synchronously to ensure it completes
+    if (c.env && c.env.BADGE_COUNTER) {
+      try {
+        const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const count = current ? parseInt(current, 10) : 0;
+
+        // Validate that parseInt produced a valid number
+        if (!Number.isFinite(count)) {
+          console.warn(`Invalid counter value: ${current}, resetting to 0`);
+        }
+
+        const newCount = (Number.isFinite(count) ? count : 0) + 1;
+        await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+      } catch (err) {
+        console.error('[installs] Counter error:', err);
+      }
+    }
+
+    c.header('Content-Type', 'image/svg+xml');
+    c.header('Cache-Control', 'public, max-age=3600');
+    return c.body(badge);
+  } catch (err: unknown) {
+    // Handle Zod validation errors
+    if (err instanceof ZodError) {
+      const message = formatZodError(err);
+      return c.text(`Invalid parameters: ${message}`, 400);
+    }
+    console.error('[installs] Unexpected error:', err);
+    throw err;
+  }
 });
 
 app.get('/badge/forks', async (c) => {
-  const { recipe, label, pretty } = c.req.query();
+  try {
+    const query = parseBadgeQuery(c.req.query());
+    const recipeData = await fetchRecipe(query.recipe);
 
-  if (!recipe) {
-    return c.text('Missing required parameter: recipe', 400);
-  }
-
-  const recipeData = await fetchRecipe(recipe);
-
-  if (!recipeData) {
-    return c.text('Recipe not found', 404);
-  }
-
-  const isPretty = pretty !== undefined;
-  const badge = generateBadge({
-    label: label || 'Forks',
-    message: formatNumber(recipeData.stats.forks, isPretty),
-  });
-
-  // 🎉 Fun tracking feature: Increment counter
-  // Await the counter update synchronously to ensure it completes
-  if (c.env && c.env.BADGE_COUNTER) {
-    try {
-      const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
-      const count = current ? parseInt(current, 10) : 0;
-
-      // Validate that parseInt produced a valid number
-      if (!Number.isFinite(count)) {
-        console.warn(`Invalid counter value: ${current}, resetting to 0`);
-      }
-
-      const newCount = (Number.isFinite(count) ? count : 0) + 1;
-      await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
-    } catch (err) {
-      console.error('[forks] Counter error:', err);
+    if (!recipeData) {
+      return c.text('Recipe not found', 404);
     }
-  }
 
-  c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', 'public, max-age=3600');
-  return c.body(badge);
+    const badge = generateBadge({
+      label: query.label || 'Forks',
+      message: formatNumber(recipeData.stats.forks, query.pretty),
+    });
+
+    // 🎉 Fun tracking feature: Increment counter
+    // Await the counter update synchronously to ensure it completes
+    if (c.env && c.env.BADGE_COUNTER) {
+      try {
+        const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const count = current ? parseInt(current, 10) : 0;
+
+        // Validate that parseInt produced a valid number
+        if (!Number.isFinite(count)) {
+          console.warn(`Invalid counter value: ${current}, resetting to 0`);
+        }
+
+        const newCount = (Number.isFinite(count) ? count : 0) + 1;
+        await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+      } catch (err) {
+        console.error('[forks] Counter error:', err);
+      }
+    }
+
+    c.header('Content-Type', 'image/svg+xml');
+    c.header('Cache-Control', 'public, max-age=3600');
+    return c.body(badge);
+  } catch (err: unknown) {
+    // Handle Zod validation errors
+    if (err instanceof ZodError) {
+      const message = formatZodError(err);
+      return c.text(`Invalid parameters: ${message}`, 400);
+    }
+    console.error('[forks] Unexpected error:', err);
+    throw err;
+  }
 });
 
 // API endpoint for TRMNL recipe stats
 app.get('/api/stats', async (c) => {
-  const { recipe } = c.req.query();
+  try {
+    const query = parseStatsQuery(c.req.query());
+    const recipeData = await fetchRecipe(query.recipe);
 
-  if (!recipe) {
-    return c.json({ error: 'Missing required parameter: recipe' }, 400);
+    if (!recipeData) {
+      return c.json({ error: 'Recipe not found' }, 404);
+    }
+
+    const stats = {
+      id: recipeData.id,
+      name: recipeData.name,
+      published_at: recipeData.published_at,
+      stats: {
+        installs: recipeData.stats.installs,
+        forks: recipeData.stats.forks,
+      },
+      author: {
+        github_url: recipeData.author_bio?.github_url || null,
+        learn_more_url: recipeData.author_bio?.learn_more_url || null,
+      },
+    };
+
+    c.header('Cache-Control', 'public, max-age=3600');
+    return c.json(stats);
+  } catch (err: unknown) {
+    // Handle Zod validation errors
+    if (err instanceof ZodError) {
+      const message = formatZodError(err);
+      return c.json({ error: `Invalid parameters: ${message}` }, 400);
+    }
+    console.error('[stats] Unexpected error:', err);
+    throw err;
   }
-
-  const recipeData = await fetchRecipe(recipe);
-
-  if (!recipeData) {
-    return c.json({ error: 'Recipe not found' }, 404);
-  }
-
-  const stats = {
-    id: recipeData.id,
-    name: recipeData.name,
-    published_at: recipeData.published_at,
-    stats: {
-      installs: recipeData.stats.installs,
-      forks: recipeData.stats.forks,
-    },
-    author: {
-      github_url: recipeData.author_bio?.github_url || null,
-      learn_more_url: recipeData.author_bio?.learn_more_url || null,
-    },
-  };
-
-  c.header('Cache-Control', 'public, max-age=3600');
-  return c.json(stats);
 });
 
 ///////////////////////////////////////////////////////////

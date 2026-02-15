@@ -61,7 +61,9 @@ describe('TRMNL Badges API', () => {
     it('should return 400 when recipe parameter is missing', async () => {
       const response = await app.request('/badge/installs');
       expect(response.status).toBe(400);
-      expect(await response.text()).toBe('Missing required parameter: recipe');
+      const text = await response.text();
+      expect(text).toContain('Invalid parameters');
+      expect(text).toContain('Recipe ID is required');
     });
 
     it('should return 404 when recipe is not found', async () => {
@@ -123,7 +125,9 @@ describe('TRMNL Badges API', () => {
     it('should return 400 when recipe parameter is missing', async () => {
       const response = await app.request('/badge/forks');
       expect(response.status).toBe(400);
-      expect(await response.text()).toBe('Missing required parameter: recipe');
+      const text = await response.text();
+      expect(text).toContain('Invalid parameters');
+      expect(text).toContain('Recipe ID is required');
     });
 
     it('should return 404 when recipe is not found', async () => {
@@ -175,8 +179,9 @@ describe('TRMNL Badges API', () => {
       const response = await app.request('/api/stats');
       expect(response.status).toBe(400);
 
-      const json = await response.json();
-      expect(json).toHaveProperty('error', 'Missing required parameter: recipe');
+      const json = (await response.json()) as any;
+      expect(json.error).toContain('Invalid parameters');
+      expect(json.error).toContain('Recipe ID is required');
     });
 
     it('should return 404 when recipe is not found', async () => {
