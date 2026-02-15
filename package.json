@@ -9,7 +9,7 @@
     "deploy": "wrangler deploy --minify",
     "dev": "wrangler dev --minify",
     "test": "vitest",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx,json}": [
