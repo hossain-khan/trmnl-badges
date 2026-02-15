@@ -178,7 +178,6 @@ app.get('/badge/counter', async (c) => {
   const badge = generateBadge({
     label: 'Badges Served',
     message: formatNumber(validCount, true),
-    color: 'blueviolet',
   });
 
   c.header('Content-Type', 'image/svg+xml');
