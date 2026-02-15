@@ -22,9 +22,9 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 
 </details>
 
-### 🎨 **Try the Interactive Badge Builder** 🛠️
-
-> Don't want to manually construct URLs? Use our 👷 **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** 🧰 for an easy, visual way to create and customize badges with live previews.
+> [!NOTE]  
+> 🎨 **Try the Interactive Badge Builder** 🛠️  
+> Use our 👷 **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** 🧰 for an easy, visual way to create and customize badges with live previews.
 
 ## Usage
 
@@ -57,7 +57,8 @@ https://trmnl.com/recipes/28496
 - **`label`** (optional) - Custom label text (eg. `?label=Downloads` or `?label=Download%20Count`)
 - **`pretty`** (optional) - Format numbers in compact notation (e.g., 1.2K)
 
-> ℹ️ Tip: Use the **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** to generate badge markup.
+> [!TIP]
+> Use the **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** to generate badge markup.
 
 ### HTML Usage
 ```html
