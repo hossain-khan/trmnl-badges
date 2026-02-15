@@ -113,7 +113,7 @@ app.get('/badge/counter', async (c) => {
   });
 
   c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes to show updates
+  c.header('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
   return c.body(badge);
 });
 
