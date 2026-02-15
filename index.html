@@ -255,13 +255,21 @@
       margin-top: 4px;
     }
 
+    .hint-feedback-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
     .recipe-feedback {
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 12px;
-      margin-top: 4px;
       min-height: 18px;
+      flex-shrink: 0;
     }
 
     .recipe-feedback.success {
@@ -428,8 +436,10 @@
           placeholder="Enter recipe URL (e.g., https://trmnl.com/recipes/28496) or ID (28496)"
           required
         >
+        <div class="hint-feedback-row">
         <div class="url-hint">Tip: Paste the full URL or just the recipe ID</div>
         <div id="recipeFeedback" class="recipe-feedback"></div>
+      </div>
       </div>
 
       <!-- Custom Label - Full Width -->
