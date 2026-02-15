@@ -2,3 +2,7 @@ name = "trmnl-badges"
 main = "./src/index.ts"
 compatibility_date = "2025-08-01"
 vars = { NODE_ENV = "production" }
+
+[observability.logs]
+enabled = true
+invocation_logs = true
