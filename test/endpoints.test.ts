@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from '../src/index';
-import { mockRecipe, mockRecipeHighEngagement } from './fixtures';
+import { mockRecipe, mockRecipeHighEngagement, mockRecipeZeroStats, mockRecipeZeroForks } from './fixtures';
 
 // Mock the fetchRecipe function
 vi.mock('../src/trmnl-api', () => ({
@@ -160,6 +160,18 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('7');
       consoleMock.mockRestore();
     });
+
+    it('should handle 0 installs correctly', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipeZeroStats);
+
+      const response = await app.request('/badge/installs?recipe=231754');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Installs');
+      expect(svg).toContain('0');
+      expect(svg).not.toContain('Recipe Not Found');
+    });
   });
 
   describe('GET /badge/forks', () => {
@@ -253,6 +265,18 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('Forks');
       expect(svg).toContain('5');
       consoleMock.mockRestore();
+    });
+
+    it('should handle 0 forks correctly', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipeZeroForks);
+
+      const response = await app.request('/badge/forks?recipe=231754');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Forks');
+      expect(svg).toContain('0');
+      expect(svg).not.toContain('Recipe Not Found');
     });
   });
 
@@ -349,6 +373,18 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('Connections');
       expect(svg).toContain('12');
       consoleMock.mockRestore();
+    });
+
+    it('should handle 0 connections (0 installs and 0 forks)', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipeZeroStats);
+
+      const response = await app.request('/badge/connections?recipe=231754');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Connections');
+      expect(svg).toContain('0');
+      expect(svg).not.toContain('Recipe Not Found');
     });
 
     it('should increment counter when /badge/connections is called', async () => {

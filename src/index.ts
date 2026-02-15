@@ -39,7 +39,7 @@ app.get('/badge/installs', async (c) => {
       return c.body(errorBadge);
     }
 
-    if (!recipeData.stats?.installs) {
+    if (recipeData.stats?.installs === undefined) {
       const errorBadge = generateErrorBadge(label || 'Installs', 'Recipe Not Found');
       c.header('Content-Type', 'image/svg+xml');
       c.header('Cache-Control', 'public, max-age=60');
@@ -112,7 +112,7 @@ app.get('/badge/forks', async (c) => {
       return c.body(errorBadge);
     }
 
-    if (!recipeData.stats?.forks) {
+    if (recipeData.stats?.forks === undefined) {
       const errorBadge = generateErrorBadge(label || 'Forks', 'Recipe Not Found');
       c.header('Content-Type', 'image/svg+xml');
       c.header('Cache-Control', 'public, max-age=60');
@@ -185,7 +185,7 @@ app.get('/badge/connections', async (c) => {
       return c.body(errorBadge);
     }
 
-    if (!recipeData.stats?.installs || !recipeData.stats?.forks) {
+    if (recipeData.stats?.installs === undefined || recipeData.stats?.forks === undefined) {
       const errorBadge = generateErrorBadge(label || 'Connections', 'Recipe Not Found');
       c.header('Content-Type', 'image/svg+xml');
       c.header('Cache-Control', 'public, max-age=60');
