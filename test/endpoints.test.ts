@@ -58,18 +58,22 @@ describe('TRMNL Badges API', () => {
   });
 
   describe('GET /badge/installs', () => {
-    it('should return 400 when recipe parameter is missing', async () => {
+    it('should return error badge when recipe parameter is missing', async () => {
       const response = await app.request('/badge/installs');
-      expect(response.status).toBe(400);
-      expect(await response.text()).toBe('Missing required parameter: recipe');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Missing recipe ID');
     });
 
-    it('should return 404 when recipe is not found', async () => {
+    it('should return error badge when recipe is not found', async () => {
       vi.mocked(fetchRecipe).mockResolvedValueOnce(null);
 
       const response = await app.request('/badge/installs?recipe=999999');
-      expect(response.status).toBe(404);
-      expect(await response.text()).toBe('Recipe not found');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Recipe Not Found');
     });
 
     it('should generate an installs badge with default label', async () => {
@@ -120,18 +124,22 @@ describe('TRMNL Badges API', () => {
   });
 
   describe('GET /badge/forks', () => {
-    it('should return 400 when recipe parameter is missing', async () => {
+    it('should return error badge when recipe parameter is missing', async () => {
       const response = await app.request('/badge/forks');
-      expect(response.status).toBe(400);
-      expect(await response.text()).toBe('Missing required parameter: recipe');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Missing recipe ID');
     });
 
-    it('should return 404 when recipe is not found', async () => {
+    it('should return error badge when recipe is not found', async () => {
       vi.mocked(fetchRecipe).mockResolvedValueOnce(null);
 
       const response = await app.request('/badge/forks?recipe=999999');
-      expect(response.status).toBe(404);
-      expect(await response.text()).toBe('Recipe not found');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Recipe Not Found');
     });
 
     it('should generate a forks badge with default label', async () => {
