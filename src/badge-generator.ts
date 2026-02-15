@@ -32,3 +32,17 @@ export function generateBadge(options: BadgeOptions): string {
     icon: logo || trmnlLogoDataUri,
   });
 }
+
+/**
+ * Generate an error badge with a red/warning color
+ * Used when recipe is not found or API call fails
+ */
+export function generateErrorBadge(label: string, errorMessage: string): string {
+  return badgen({
+    label,
+    status: errorMessage,
+    color: 'red',
+    labelColor: '3D3D3E', // TRMNL dark gray
+    icon: trmnlLogoDataUri,
+  });
+}

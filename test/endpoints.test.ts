@@ -58,18 +58,39 @@ describe('TRMNL Badges API', () => {
   });
 
   describe('GET /badge/installs', () => {
-    it('should return 400 when recipe parameter is missing', async () => {
+    it('should return error badge when recipe parameter is missing', async () => {
       const response = await app.request('/badge/installs');
-      expect(response.status).toBe(400);
-      expect(await response.text()).toBe('Missing required parameter: recipe');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Missing recipe ID');
     });
 
-    it('should return 404 when recipe is not found', async () => {
+    it('should return error badge when recipe is not found', async () => {
       vi.mocked(fetchRecipe).mockResolvedValueOnce(null);
 
       const response = await app.request('/badge/installs?recipe=999999');
-      expect(response.status).toBe(404);
-      expect(await response.text()).toBe('Recipe not found');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Recipe Not Found');
+    });
+
+    it('should return error badge when network error occurs', async () => {
+      vi.mocked(fetchRecipe).mockRejectedValueOnce(new Error('Network error'));
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const response = await app.request('/badge/installs?recipe=240176');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=60');
+      const svg = await response.text();
+      expect(svg).toContain('Network Error');
+      expect(consoleMock).toHaveBeenCalledWith(
+        '[installs] Network error fetching recipe:',
+        expect.any(Error)
+      );
+      consoleMock.mockRestore();
     });
 
     it('should generate an installs badge with default label', async () => {
@@ -117,21 +138,64 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('Installs');
       expect(svg).toContain('1,500');
     });
+
+    it('should return service error badge for unexpected errors', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      // Mock KV that throws unexpected error during counter increment
+      const failingKV = {
+        get: vi.fn().mockRejectedValue(new Error('KV error')),
+        put: vi.fn().mockRejectedValue(new Error('KV error')),
+      };
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: failingKV };
+
+      const response = await app.request('/badge/installs?recipe=240176', {}, bindings);
+
+      // Should still return 200 with badge despite KV error
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Installs');
+      expect(svg).toContain('7');
+      consoleMock.mockRestore();
+    });
   });
 
   describe('GET /badge/forks', () => {
-    it('should return 400 when recipe parameter is missing', async () => {
+    it('should return error badge when recipe parameter is missing', async () => {
       const response = await app.request('/badge/forks');
-      expect(response.status).toBe(400);
-      expect(await response.text()).toBe('Missing required parameter: recipe');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Missing recipe ID');
     });
 
-    it('should return 404 when recipe is not found', async () => {
+    it('should return error badge when recipe is not found', async () => {
       vi.mocked(fetchRecipe).mockResolvedValueOnce(null);
 
       const response = await app.request('/badge/forks?recipe=999999');
-      expect(response.status).toBe(404);
-      expect(await response.text()).toBe('Recipe not found');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Recipe Not Found');
+    });
+
+    it('should return error badge when network error occurs', async () => {
+      vi.mocked(fetchRecipe).mockRejectedValueOnce(new Error('Network error'));
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const response = await app.request('/badge/forks?recipe=240176');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=60');
+      const svg = await response.text();
+      expect(svg).toContain('Network Error');
+      expect(consoleMock).toHaveBeenCalledWith(
+        '[forks] Network error fetching recipe:',
+        expect.any(Error)
+      );
+      consoleMock.mockRestore();
     });
 
     it('should generate a forks badge with default label', async () => {
@@ -167,6 +231,28 @@ describe('TRMNL Badges API', () => {
       const svg = await response.text();
       expect(svg).toContain('Forks');
       expect(svg).toContain('250');
+    });
+
+    it('should return service error badge for unexpected errors', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      // Mock KV that throws unexpected error during counter increment
+      const failingKV = {
+        get: vi.fn().mockRejectedValue(new Error('KV error')),
+        put: vi.fn().mockRejectedValue(new Error('KV error')),
+      };
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: failingKV };
+
+      const response = await app.request('/badge/forks?recipe=240176', {}, bindings);
+
+      // Should still return 200 with badge despite KV error
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      const svg = await response.text();
+      expect(svg).toContain('Forks');
+      expect(svg).toContain('5');
+      consoleMock.mockRestore();
     });
   });
 

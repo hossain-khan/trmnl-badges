@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import type { Bindings } from './types';
 import { fetchRecipe } from './trmnl-api';
-import { generateBadge } from './badge-generator';
+import { generateBadge, generateErrorBadge } from './badge-generator';
 import { formatNumber } from './utils';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
@@ -11,89 +11,135 @@ const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
 // Badge endpoints for TRMNL recipes
 app.get('/badge/installs', async (c) => {
-  const { recipe, label, pretty } = c.req.query();
+  try {
+    const { recipe, label, pretty } = c.req.query();
 
-  if (!recipe) {
-    return c.text('Missing required parameter: recipe', 400);
-  }
-
-  const recipeData = await fetchRecipe(recipe);
-
-  if (!recipeData) {
-    return c.text('Recipe not found', 404);
-  }
-
-  const isPretty = pretty !== undefined;
-  const badge = generateBadge({
-    label: label || 'Installs',
-    message: formatNumber(recipeData.stats.installs, isPretty),
-  });
-
-  // 🎉 Fun tracking feature: Increment counter
-  // Await the counter update synchronously to ensure it completes
-  if (c.env && c.env.BADGE_COUNTER) {
-    try {
-      const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
-      const count = current ? parseInt(current, 10) : 0;
-
-      // Validate that parseInt produced a valid number
-      if (!Number.isFinite(count)) {
-        console.warn(`Invalid counter value: ${current}, resetting to 0`);
-      }
-
-      const newCount = (Number.isFinite(count) ? count : 0) + 1;
-      await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
-    } catch (err) {
-      console.error('[installs] Counter error:', err);
+    if (!recipe) {
+      const errorBadge = generateErrorBadge(label || 'Installs', 'Missing recipe ID');
+      c.header('Content-Type', 'image/svg+xml');
+      c.header('Cache-Control', 'public, max-age=60');
+      return c.body(errorBadge);
     }
-  }
 
-  c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', 'public, max-age=3600');
-  return c.body(badge);
+    let recipeData;
+    try {
+      recipeData = await fetchRecipe(recipe);
+    } catch (err) {
+      console.error('[installs] Network error fetching recipe:', err);
+      const errorBadge = generateErrorBadge(label || 'Installs', 'Network Error');
+      c.header('Content-Type', 'image/svg+xml');
+      c.header('Cache-Control', 'public, max-age=60');
+      return c.body(errorBadge);
+    }
+
+    if (!recipeData) {
+      const errorBadge = generateErrorBadge(label || 'Installs', 'Recipe Not Found');
+      c.header('Content-Type', 'image/svg+xml');
+      c.header('Cache-Control', 'public, max-age=60');
+      return c.body(errorBadge);
+    }
+
+    const isPretty = pretty !== undefined;
+    const badge = generateBadge({
+      label: label || 'Installs',
+      message: formatNumber(recipeData.stats.installs, isPretty),
+    });
+
+    // 🎉 Fun tracking feature: Increment counter
+    // Await the counter update synchronously to ensure it completes
+    if (c.env && c.env.BADGE_COUNTER) {
+      try {
+        const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const count = current ? parseInt(current, 10) : 0;
+
+        // Validate that parseInt produced a valid number
+        if (!Number.isFinite(count)) {
+          console.warn(`Invalid counter value: ${current}, resetting to 0`);
+        }
+
+        const newCount = (Number.isFinite(count) ? count : 0) + 1;
+        await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+      } catch (err) {
+        console.error('[installs] Counter error:', err);
+      }
+    }
+
+    c.header('Content-Type', 'image/svg+xml');
+    c.header('Cache-Control', 'public, max-age=3600');
+    return c.body(badge);
+  } catch (err) {
+    console.error('[installs] Unexpected error:', err);
+    const errorBadge = generateErrorBadge('Installs', 'Service Error');
+    c.header('Content-Type', 'image/svg+xml');
+    c.header('Cache-Control', 'public, max-age=60');
+    return c.body(errorBadge);
+  }
 });
 
 app.get('/badge/forks', async (c) => {
-  const { recipe, label, pretty } = c.req.query();
+  try {
+    const { recipe, label, pretty } = c.req.query();
 
-  if (!recipe) {
-    return c.text('Missing required parameter: recipe', 400);
-  }
-
-  const recipeData = await fetchRecipe(recipe);
-
-  if (!recipeData) {
-    return c.text('Recipe not found', 404);
-  }
-
-  const isPretty = pretty !== undefined;
-  const badge = generateBadge({
-    label: label || 'Forks',
-    message: formatNumber(recipeData.stats.forks, isPretty),
-  });
-
-  // 🎉 Fun tracking feature: Increment counter
-  // Await the counter update synchronously to ensure it completes
-  if (c.env && c.env.BADGE_COUNTER) {
-    try {
-      const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
-      const count = current ? parseInt(current, 10) : 0;
-
-      // Validate that parseInt produced a valid number
-      if (!Number.isFinite(count)) {
-        console.warn(`Invalid counter value: ${current}, resetting to 0`);
-      }
-
-      const newCount = (Number.isFinite(count) ? count : 0) + 1;
-      await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
-    } catch (err) {
-      console.error('[forks] Counter error:', err);
+    if (!recipe) {
+      const errorBadge = generateErrorBadge(label || 'Forks', 'Missing recipe ID');
+      c.header('Content-Type', 'image/svg+xml');
+      c.header('Cache-Control', 'public, max-age=60');
+      return c.body(errorBadge);
     }
-  }
 
-  c.header('Content-Type', 'image/svg+xml');
-  c.header('Cache-Control', 'public, max-age=3600');
-  return c.body(badge);
+    let recipeData;
+    try {
+      recipeData = await fetchRecipe(recipe);
+    } catch (err) {
+      console.error('[forks] Network error fetching recipe:', err);
+      const errorBadge = generateErrorBadge(label || 'Forks', 'Network Error');
+      c.header('Content-Type', 'image/svg+xml');
+      c.header('Cache-Control', 'public, max-age=60');
+      return c.body(errorBadge);
+    }
+
+    if (!recipeData) {
+      const errorBadge = generateErrorBadge(label || 'Forks', 'Recipe Not Found');
+      c.header('Content-Type', 'image/svg+xml');
+      c.header('Cache-Control', 'public, max-age=60');
+      return c.body(errorBadge);
+    }
+
+    const isPretty = pretty !== undefined;
+    const badge = generateBadge({
+      label: label || 'Forks',
+      message: formatNumber(recipeData.stats.forks, isPretty),
+    });
+
+    // 🎉 Fun tracking feature: Increment counter
+    // Await the counter update synchronously to ensure it completes
+    if (c.env && c.env.BADGE_COUNTER) {
+      try {
+        const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const count = current ? parseInt(current, 10) : 0;
+
+        // Validate that parseInt produced a valid number
+        if (!Number.isFinite(count)) {
+          console.warn(`Invalid counter value: ${current}, resetting to 0`);
+        }
+
+        const newCount = (Number.isFinite(count) ? count : 0) + 1;
+        await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+      } catch (err) {
+        console.error('[forks] Counter error:', err);
+      }
+    }
+
+    c.header('Content-Type', 'image/svg+xml');
+    c.header('Cache-Control', 'public, max-age=3600');
+    return c.body(badge);
+  } catch (err) {
+    console.error('[forks] Unexpected error:', err);
+    const errorBadge = generateErrorBadge('Forks', 'Service Error');
+    c.header('Content-Type', 'image/svg+xml');
+    c.header('Cache-Control', 'public, max-age=60');
+    return c.body(errorBadge);
+  }
 });
 
 // API endpoint for TRMNL recipe stats
