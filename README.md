@@ -32,7 +32,7 @@ Add badges to your TRMNL recipe documentation using Markdown or HTML.
 
 ### Finding Your Recipe ID
 
-Your recipe ID can be found in the URL of your recipe page on TRMNL:
+Your recipe ID can be found in the URL of your [recipe page](https://trmnl.com/recipes) on TRMNL:
 ```
 https://trmnl.com/recipes/28496
                           ^^^^^
