@@ -619,6 +619,18 @@
     const recipeFeedback = document.getElementById('recipeFeedback');
     const linkToRecipe = document.getElementById('linkToRecipe');
 
+    // Debounce utility function
+    function debounce(func, delay) {
+      let timeoutId;
+      return function (...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    // Create debounced update function for label input (300ms delay)
+    const debouncedUpdate = debounce(update, 300);
+
     // Tab switching
     const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(btn => {
@@ -768,7 +780,7 @@
     // Event listeners
     recipeInput.addEventListener('input', update);
     badgeTypeRadios.forEach(radio => radio.addEventListener('change', update));
-    customLabel.addEventListener('input', update);
+    customLabel.addEventListener('input', debouncedUpdate); // Debounced to prevent excessive requests
     prettyFormat.addEventListener('change', update);
     linkToRecipe.addEventListener('change', update);
 
