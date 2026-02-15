@@ -38,11 +38,11 @@ fi
 
 # Badge installs endpoint - missing recipe
 echo "Testing GET /badge/installs (missing recipe)"
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8787/badge/installs)
-if [ "$STATUS" == "400" ]; then
-  echo "✓ Returns 400 for missing recipe"
+RESPONSE=$(curl -s http://localhost:8787/badge/installs)
+if echo "$RESPONSE" | grep -q '<svg' && echo "$RESPONSE" | grep -q 'Missing recipe ID'; then
+  echo "✓ Returns error badge for missing recipe"
 else
-  echo "✗ Expected 400, got $STATUS"
+  echo "✗ Expected error badge with 'Missing recipe ID' message"
   kill $DEV_PID || true
   exit 1
 fi
