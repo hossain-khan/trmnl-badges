@@ -29,8 +29,18 @@ app.get('/badge/installs', async (c) => {
     message: formatNumber(recipeData.stats.installs, isPretty),
   });
 
-  // 🎉 Fun tracking feature: Increment counter for this badge request
-  incrementBadgeCounter(c.env).catch((err) => console.error('Failed to increment counter:', err));
+  // 🎉 Fun tracking feature: Increment counter
+  // Await the counter update synchronously to ensure it completes
+  if (c.env && c.env.BADGE_COUNTER) {
+    try {
+      const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+      const count = current ? parseInt(current, 10) : 0;
+      const newCount = count + 1;
+      await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+    } catch (err) {
+      console.error('[installs] Counter error:', err);
+    }
+  }
 
   c.header('Content-Type', 'image/svg+xml');
   c.header('Cache-Control', 'public, max-age=3600');
@@ -56,8 +66,18 @@ app.get('/badge/forks', async (c) => {
     message: formatNumber(recipeData.stats.forks, isPretty),
   });
 
-  // 🎉 Fun tracking feature: Increment counter for this badge request
-  incrementBadgeCounter(c.env).catch((err) => console.error('Failed to increment counter:', err));
+  // 🎉 Fun tracking feature: Increment counter
+  // Await the counter update synchronously to ensure it completes
+  if (c.env && c.env.BADGE_COUNTER) {
+    try {
+      const current = await c.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+      const count = current ? parseInt(current, 10) : 0;
+      const newCount = count + 1;
+      await c.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+    } catch (err) {
+      console.error('[forks] Counter error:', err);
+    }
+  }
 
   c.header('Content-Type', 'image/svg+xml');
   c.header('Cache-Control', 'public, max-age=3600');
@@ -119,30 +139,11 @@ app.get('/health-badge', (c) => {
 });
 
 /**
- * 🎉 Fun tracking feature: Increment the total badge counter
+ * 🎉 Fun tracking feature: Badge showing total badges served
  *
  * NOTE: This counter uses approximate counting due to potential race conditions
  * in KV operations. Multiple concurrent requests may result in lost updates.
- *
- * Example race condition:
- * - Request A reads count = 5
- * - Request B reads count = 5 (before A writes)
- * - Request A writes count = 6
- * - Request B writes count = 6 (instead of 7)
- *
- * This is acceptable for a fun, non-critical metric. For production counting,
- * consider using Durable Objects with strong consistency guarantees.
- *
- * @param env Cloudflare Workers bindings
- * @returns The new count value (approximate)
  */
-async function incrementBadgeCounter(env: Bindings): Promise<number> {
-  const currentValue = await env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
-  const count = currentValue ? parseInt(currentValue, 10) : 0;
-  const newCount = count + 1;
-  await env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
-  return newCount;
-}
 
 app.get('/', (c) => {
   if (c.env.NODE_ENV === 'production') {
