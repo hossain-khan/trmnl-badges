@@ -50,7 +50,7 @@ https://trmnl.com/recipes/28496
 ## Badge URL Query Parameters
 
 - **`recipe`** (required) - TRMNL recipe ID (e.g., 28496)
-- **`label`** (optional) - Custom label text
+- **`label`** (optional) - Custom label text (eg. `?label=Downloads` or `?label=Download%20Count`)
 - **`pretty`** (optional) - Format numbers in compact notation (e.g., 1.2K)
 
 ### HTML Usage
