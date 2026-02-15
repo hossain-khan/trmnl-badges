@@ -68,6 +68,23 @@
       font-size: 14px;
     }
 
+    .label-hint {
+      font-weight: 400;
+      color: #999;
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    .label-hint a {
+      color: #667eea;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .label-hint a:hover {
+      text-decoration: underline;
+    }
+
     input[type="text"],
     select {
       width: 100%;
@@ -469,7 +486,7 @@
     <form id="badgeForm">
       <!-- Recipe Input -->
       <div class="form-group">
-        <label for="recipeInput">Recipe URL or ID</label>
+        <label for="recipeInput">Recipe URL or ID <span class="label-hint">(find your <a href="https://trmnl.com/recipes" target="_blank">recipe</a>)</span></label>
         <input
           type="text"
           id="recipeInput"
