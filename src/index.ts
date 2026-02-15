@@ -26,8 +26,8 @@ app.get('/health', (c) => {
 app.get('/health-badge', (c) => {
   return c.json({
     schemaVersion: 1,
-    label: 'health',
-    message: 'online',
+    label: 'TRMNL Badge Service',
+    message: 'Online',
     color: 'brightgreen',
   });
 });

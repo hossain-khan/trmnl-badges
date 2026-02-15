@@ -51,8 +51,8 @@ describe('TRMNL Badges API', () => {
       
       const json = await response.json() as any;
       expect(json).toHaveProperty('schemaVersion', 1);
-      expect(json).toHaveProperty('label', 'health');
-      expect(json).toHaveProperty('message', 'online');
+      expect(json).toHaveProperty('label', 'TRMNL Badge Service');
+      expect(json).toHaveProperty('message', 'Online');
       expect(json).toHaveProperty('color', 'brightgreen');
     });
   });

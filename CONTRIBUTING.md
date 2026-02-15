@@ -62,8 +62,8 @@ Response format:
 ```json
 {
   "schemaVersion": 1,
-  "label": "health",
-  "message": "online",
+  "label": "TRMNL Badge Service",
+  "message": "Online",
   "color": "brightgreen"
 }
 ```
