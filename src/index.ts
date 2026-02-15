@@ -10,8 +10,22 @@ const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
 /**
- * 🎉 Fun tracking feature: Increment and get the total badge counter
- * This helps us track how popular the badge service is!
+ * 🎉 Fun tracking feature: Increment the total badge counter
+ * 
+ * NOTE: This counter uses approximate counting due to potential race conditions
+ * in KV operations. Multiple concurrent requests may result in lost updates.
+ * 
+ * Example race condition:
+ * - Request A reads count = 5
+ * - Request B reads count = 5 (before A writes)
+ * - Request A writes count = 6
+ * - Request B writes count = 6 (instead of 7)
+ * 
+ * This is acceptable for a fun, non-critical metric. For production counting,
+ * consider using Durable Objects with strong consistency guarantees.
+ * 
+ * @param env Cloudflare Workers bindings
+ * @returns The new count value (approximate)
  */
 async function incrementBadgeCounter(env: Bindings): Promise<number> {
   const currentValue = await env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
