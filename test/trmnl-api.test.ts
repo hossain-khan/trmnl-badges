@@ -1,13 +1,17 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fetchRecipe } from '../src/trmnl-api';
 import { mockRecipe } from './fixtures';
 
-// Mock the global fetch function
-global.fetch = vi.fn();
-
 describe('fetchRecipe', () => {
+  let mockFetch: ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
-    vi.clearAllMocks();
+    mockFetch = vi.fn();
+    vi.stubGlobal('fetch', mockFetch);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it('should return recipe data when API returns valid JSON', async () => {
@@ -18,12 +22,12 @@ describe('fetchRecipe', () => {
       json: async () => ({ data: mockRecipe }),
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce(mockResponse as any);
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
 
     const result = await fetchRecipe('227153');
 
     expect(result).toEqual(mockRecipe);
-    expect(global.fetch).toHaveBeenCalledWith('https://trmnl.com/recipes/227153.json', {
+    expect(mockFetch).toHaveBeenCalledWith('https://trmnl.com/recipes/227153.json', {
       headers: {
         Accept: 'application/json',
         'User-Agent': 'trmnl-badges',
@@ -38,7 +42,7 @@ describe('fetchRecipe', () => {
       headers: new Map([['content-type', 'text/html; charset=utf-8']]),
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce(mockResponse as any);
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
 
     const result = await fetchRecipe('22715322');
 
@@ -52,7 +56,7 @@ describe('fetchRecipe', () => {
       headers: new Map([['content-type', 'text/html']]),
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce(mockResponse as any);
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
 
     const result = await fetchRecipe('12345');
 
@@ -67,7 +71,7 @@ describe('fetchRecipe', () => {
       headers: new Map([['content-type', 'application/json']]),
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce(mockResponse as any);
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
 
     const result = await fetchRecipe('999999');
 
@@ -77,7 +81,7 @@ describe('fetchRecipe', () => {
   it('should return null and log error when fetch fails', async () => {
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    vi.mocked(global.fetch).mockRejectedValueOnce(new Error('Network error'));
+    mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
     const result = await fetchRecipe('227153');
 
@@ -98,7 +102,7 @@ describe('fetchRecipe', () => {
       },
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce(mockResponse as any);
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
 
     const result = await fetchRecipe('227153');
 
@@ -115,7 +119,7 @@ describe('fetchRecipe', () => {
       json: async () => ({ data: mockRecipe }),
     };
 
-    vi.mocked(global.fetch).mockResolvedValueOnce(mockResponse as any);
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
 
     const result = await fetchRecipe('227153');
 
