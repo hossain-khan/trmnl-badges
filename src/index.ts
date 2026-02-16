@@ -5,6 +5,9 @@ import { generateBadge } from './badge-generator';
 import { formatNumber } from './utils';
 import { returnErrorBadge, isRecipeValid, returnSuccessBadge } from './badge-helpers';
 
+// App version - https://github.com/hossain-khan/trmnl-badges/releases
+const APP_VERSION = '1.2.0';
+
 // 🎉 Fun tracking feature: KV store key for total badges served counter
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
 
@@ -211,6 +214,7 @@ app.get('/api/stats', async (context) => {
 app.get('/health', (context) => {
   return context.json({
     status: 'ok',
+    version: APP_VERSION,
     timestamp: new Date().toISOString(),
     projectUrl: 'https://github.com/hossain-khan/trmnl-badges',
   });

@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import app from '../src/index';
-import { mockRecipe, mockRecipeHighEngagement, mockRecipeZeroStats, mockRecipeZeroForks } from './fixtures';
+import {
+  mockRecipe,
+  mockRecipeHighEngagement,
+  mockRecipeZeroStats,
+  mockRecipeZeroForks,
+} from './fixtures';
 
 // Mock the fetchRecipe function
 vi.mock('../src/trmnl-api', () => ({

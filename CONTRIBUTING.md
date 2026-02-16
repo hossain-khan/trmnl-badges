@@ -37,11 +37,13 @@ trmnl-badges/
 ## API Endpoints
 
 ### Badge Endpoints
+
 - `GET /badge/installs?recipe=<recipe_id>` - Recipe install count badge
 - `GET /badge/forks?recipe=<recipe_id>` - Recipe fork count badge
 - `GET /badge/connections?recipe=<recipe_id>` - Recipe connections count badge (sum of installs and forks)
 
 ### Utility Endpoints
+
 - `GET /health` - Health check endpoint
 - `GET /health-badge` - Health badge endpoint for shields.io monitoring
 - `GET /api/stats?recipe=<recipe_id>` - JSON stats for TRMNL recipes
@@ -49,6 +51,7 @@ trmnl-badges/
 - `GET /` - Redirects to GitHub repository
 
 ### Query Parameters
+
 - `recipe` (required) - TRMNL recipe ID
 - `label` (optional) - Custom label text for the badge
 - `pretty` (optional) - Format numbers in compact notation (e.g., 1.2K)
@@ -62,6 +65,7 @@ GET /health-badge
 ```
 
 Response format:
+
 ```json
 {
   "schemaVersion": 1,
@@ -72,16 +76,19 @@ Response format:
 ```
 
 Usage with shields.io:
+
 ```markdown
 [![Health](https://img.shields.io/endpoint?url=https://trmnl-badges.gohk.xyz/health-badge)](https://trmnl-badges.gohk.xyz/health)
 ```
 
 Related endpoints:
+
 - `GET /health` - JSON health status check (returns status, timestamp, projectUrl)
 
 ### API Examples
 
 #### Badge Endpoints
+
 ```
 # Installs badge
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496
@@ -103,11 +110,13 @@ https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads
 ```
 
 #### Stats API
+
 ```
 https://trmnl-badges.gohk.xyz/api/stats?recipe=28496
 ```
 
 Returns:
+
 ```json
 {
   "id": 28496,
@@ -165,6 +174,7 @@ https://trmnl.com/recipes/{recipe_id}.json
 ```
 
 Response includes:
+
 - Recipe metadata (id, name, published_at)
 - Statistics (installs, forks)
 - Author information
@@ -172,8 +182,9 @@ Response includes:
 ## Badge Generation
 
 Badges are generated using the `badgen` library with:
+
 - **TRMNL Logo**: Official TRMNL glyph SVG
-- **Brand Colors**: 
+- **Brand Colors**:
   - Primary: `#F8654B` (orange)
   - Dark: `#3D3D3E` (dark gray)
   - Light: `#E7E7E7` (light gray)
@@ -189,10 +200,12 @@ Badges are generated using the `badgen` library with:
 ## Performance Optimizations
 
 ### Client-Side
+
 - **Input debouncing**: Custom label input is debounced (300ms) to prevent excessive requests while typing
 - This significantly reduces server load when users are actively composing labels
 
 ### Server-Side
+
 - **HTTP Caching**: All badge endpoints return appropriate cache headers:
   - Error responses: `Cache-Control: public, max-age=60` (1 minute)
   - Success responses: `Cache-Control: public, max-age=3600` (1 hour)
