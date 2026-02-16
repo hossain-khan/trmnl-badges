@@ -18,6 +18,16 @@ export function returnErrorBadge(
 }
 
 /**
+ * Return success badge response with proper headers
+ * Used for successful badge generation responses
+ */
+export function returnSuccessBadge(context: Context<{ Bindings: Bindings }>, badge: string) {
+  context.header('Content-Type', 'image/svg+xml');
+  context.header('Cache-Control', 'public, max-age=3600');
+  return context.body(badge);
+}
+
+/**
  * Validate recipe data and its stats
  * Returns true if valid, false if should show error
  * Serves as a type guard to ensure recipeData is not null/undefined

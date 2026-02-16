@@ -3,7 +3,7 @@ import type { Bindings } from './types';
 import { fetchRecipe } from './trmnl-api';
 import { generateBadge } from './badge-generator';
 import { formatNumber } from './utils';
-import { returnErrorBadge, isRecipeValid } from './badge-helpers';
+import { returnErrorBadge, isRecipeValid, returnSuccessBadge } from './badge-helpers';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
@@ -56,9 +56,7 @@ app.get('/badge/installs', async (context) => {
       }
     }
 
-    context.header('Content-Type', 'image/svg+xml');
-    context.header('Cache-Control', 'public, max-age=3600');
-    return context.body(badge);
+    return returnSuccessBadge(context, badge);
   } catch (err) {
     console.error('[installs] Unexpected error:', err);
     return returnErrorBadge(context, 'Installs', 'Service Error');
@@ -110,9 +108,7 @@ app.get('/badge/forks', async (context) => {
       }
     }
 
-    context.header('Content-Type', 'image/svg+xml');
-    context.header('Cache-Control', 'public, max-age=3600');
-    return context.body(badge);
+    return returnSuccessBadge(context, badge);
   } catch (err) {
     console.error('[forks] Unexpected error:', err);
     return returnErrorBadge(context, 'Forks', 'Service Error');
@@ -169,9 +165,7 @@ app.get('/badge/connections', async (context) => {
       }
     }
 
-    context.header('Content-Type', 'image/svg+xml');
-    context.header('Cache-Control', 'public, max-age=3600');
-    return context.body(badge);
+    return returnSuccessBadge(context, badge);
   } catch (err) {
     console.error('[connections] Unexpected error:', err);
     return returnErrorBadge(context, 'Connections', 'Service Error');
@@ -262,9 +256,7 @@ app.get('/badge/counter', async (context) => {
     message: formatNumber(validCount, true),
   });
 
-  context.header('Content-Type', 'image/svg+xml');
-  context.header('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
-  return context.body(badge);
+  return returnSuccessBadge(context, badge);
 });
 
 export default app;
