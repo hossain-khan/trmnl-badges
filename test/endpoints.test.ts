@@ -629,5 +629,188 @@ describe('TRMNL Badges API', () => {
       expect(consoleMock).toHaveBeenCalledWith('[forks] Counter error:', expect.any(Error));
       consoleMock.mockRestore();
     });
+
+    it('should handle invalid counter value (non-numeric string) and reset to 0', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // Mock KV with invalid counter value
+      const mockKV = {
+        get: async () => 'invalid-string',
+        put: vi.fn().mockResolvedValue(undefined),
+      } as any;
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const response = await app.request('/badge/installs?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      expect(warnMock).toHaveBeenCalledWith(
+        'Invalid counter value: invalid-string, resetting to 0'
+      );
+      // Should increment from 0 to 1
+      expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '1');
+      warnMock.mockRestore();
+    });
+
+    it('should handle null counter value and treat as 0', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // Mock KV with null counter value
+      const mockKV = {
+        get: async () => null,
+        put: vi.fn().mockResolvedValue(undefined),
+      } as any;
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+
+      const response = await app.request('/badge/forks?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      // Should increment from 0 to 1
+      expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '1');
+    });
+
+    it('should handle empty string counter value and reset to 0', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // Mock KV with empty string
+      const mockKV = {
+        get: async () => '',
+        put: vi.fn().mockResolvedValue(undefined),
+      } as any;
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+
+      const response = await app.request('/badge/installs?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      // Empty string parses to 0, so should increment to 1
+      expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '1');
+    });
+
+    it('should handle Infinity counter value and reset to 0', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // Mock KV with string that parses to Infinity
+      const mockKV = {
+        get: async () => 'Infinity',
+        put: vi.fn().mockResolvedValue(undefined),
+      } as any;
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const response = await app.request('/badge/connections?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      expect(warnMock).toHaveBeenCalledWith('Invalid counter value: Infinity, resetting to 0');
+      expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '1');
+      warnMock.mockRestore();
+    });
+
+    it('should handle counter badge with invalid value and reset', async () => {
+      const mockKV = createMockKV({ badges_served_total: 'not-a-number' });
+      const consoleWarnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const response = await app.request(
+        '/badge/counter',
+        {},
+        { NODE_ENV: 'production', BADGE_COUNTER: mockKV }
+      );
+
+      expect(response.status).toBe(200);
+      expect(consoleWarnMock).toHaveBeenCalledWith(
+        'Invalid counter value: not-a-number, resetting to 0'
+      );
+      consoleWarnMock.mockRestore();
+    });
+
+    it('should handle negative numbers in counter gracefully', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // Negative numbers are technically valid finite numbers, so they should increment
+      const mockKV = {
+        get: async () => '-5',
+        put: vi.fn().mockResolvedValue(undefined),
+      } as any;
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+
+      const response = await app.request('/badge/installs?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      // -5 + 1 = -4
+      expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '-4');
+    });
+
+    it('should handle floating point numbers in counter by truncating with parseInt', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // parseInt truncates the decimal part, so 5.5 becomes 5
+      const mockKV = {
+        get: async () => '5.5',
+        put: vi.fn().mockResolvedValue(undefined),
+      } as any;
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+
+      const response = await app.request('/badge/forks?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      // parseInt('5.5') = 5, so 5 + 1 = 6
+      expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '6');
+    });
+  });
+
+  describe('Counter edge cases and validation', () => {
+    const createMockKV = (initialData: Record<string, string> = {}) => {
+      const data = { ...initialData };
+      return {
+        get: async (key: string) => data[key] ?? null,
+        put: async (key: string, value: string) => {
+          data[key] = value;
+        },
+      } as any;
+    };
+
+    it('should handle leading/trailing whitespace in counter value', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      // parseInt handles whitespace and parses the number
+      const mockKV = {
+        get: async () => '  100  ',
+        put: vi.fn().mockResolvedValue(undefined),
+      } as any;
+      const bindings = { NODE_ENV: 'production', BADGE_COUNTER: mockKV };
+
+      const response = await app.request('/badge/installs?recipe=240176', {}, bindings);
+
+      expect(response.status).toBe(200);
+      // parseInt('  100  ') = 100, so 100 + 1 = 101
+      expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '101');
+    });
+
+    it('should handle very large numbers in counter', async () => {
+      const mockKV = createMockKV({ badges_served_total: '999999999' });
+      const response = await app.request(
+        '/badge/counter',
+        {},
+        { NODE_ENV: 'production', BADGE_COUNTER: mockKV }
+      );
+
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('1B'); // 1 billion formatted
+    });
+
+    it('should handle NaN in counter value and reset', async () => {
+      const mockKV = createMockKV({ badges_served_total: 'NaN' });
+      const consoleWarnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const response = await app.request(
+        '/badge/counter',
+        {},
+        { NODE_ENV: 'production', BADGE_COUNTER: mockKV }
+      );
+
+      expect(response.status).toBe(200);
+      expect(consoleWarnMock).toHaveBeenCalledWith('Invalid counter value: NaN, resetting to 0');
+      consoleWarnMock.mockRestore();
+    });
   });
 });
