@@ -12,7 +12,7 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,json}": [
+    "**/*.{ts,tsx,js,jsx,json,html}": [
       "npx prettier --write"
     ]
   },
