@@ -245,6 +245,33 @@
       image-rendering: crisp-edges;
     }
 
+    .recipe-info {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 6px;
+      text-align: left;
+      display: none;
+    }
+
+    .recipe-info.show {
+      display: block;
+    }
+
+    .recipe-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #3D3D3E;
+      margin-bottom: 6px;
+    }
+
+    .recipe-stats {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+    }
+
     .code-section {
       margin-top: 30px;
     }
@@ -601,6 +628,10 @@
       <div class="preview-image" id="previewImage">
         <p style="color: #999; font-size: 12px;">Enter recipe ID to preview</p>
       </div>
+      <div class="recipe-info" id="recipeInfo">
+        <div class="recipe-name" id="recipeName"></div>
+        <div class="recipe-stats" id="recipeStats"></div>
+      </div>
     </div>
 
     <!-- Generated Code with Tabs -->
@@ -674,6 +705,9 @@
     const urlCode = document.getElementById('urlCode');
     const recipeFeedback = document.getElementById('recipeFeedback');
     const linkToRecipe = document.getElementById('linkToRecipe');
+    const recipeInfo = document.getElementById('recipeInfo');
+    const recipeName = document.getElementById('recipeName');
+    const recipeStats = document.getElementById('recipeStats');
 
     // Debounce utility function
     function debounce(func, delay) {
@@ -733,7 +767,35 @@
       } else {
         recipeFeedback.className = 'recipe-feedback error';
         recipeFeedback.innerHTML = '<span class="icon">✗</span><span>Invalid recipe URL or ID</span>';
+        // Hide recipe info when invalid
+        recipeInfo.classList.remove('show');
       }
+    }
+
+    async function fetchRecipeInfo(recipeId) {
+      try {
+        const response = await fetch(`${BASE_URL}/api/stats?recipe=${recipeId}`);
+        if (!response.ok) throw new Error('Failed to fetch recipe info');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching recipe info:', error);
+        return null;
+      }
+    }
+
+    function updateRecipeInfo(data) {
+      if (!data || !data.recipe) {
+        recipeInfo.classList.remove('show');
+        return;
+      }
+
+      const { recipe } = data;
+      const totalConnections = (recipe.installs || 0) + (recipe.forks || 0);
+      
+      recipeName.textContent = recipe.name;
+      recipeStats.textContent = `📊 ${recipe.installs || 0} installs • ${recipe.forks || 0} forks • ${totalConnections} Connections`;
+      
+      recipeInfo.classList.add('show');
     }
 
     function generateBadgeUrl() {
@@ -828,9 +890,18 @@
       urlCode.innerHTML = generateSyntaxHighlightedUrl(url);
     }
 
-    function update() {
+    async function update() {
       updatePreview();
       updateCode();
+      
+      // Fetch and display recipe info if valid ID
+      const recipeId = extractRecipeId(recipeInput.value);
+      if (recipeId) {
+        const data = await fetchRecipeInfo(recipeId);
+        updateRecipeInfo(data);
+      } else {
+        recipeInfo.classList.remove('show');
+      }
     }
 
     // Event listeners
