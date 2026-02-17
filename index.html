@@ -784,16 +784,15 @@
     }
 
     function updateRecipeInfo(data) {
-      if (!data || !data.recipe) {
+      if (!data || !data.name || !data.stats) {
         recipeInfo.classList.remove('show');
         return;
       }
 
-      const { recipe } = data;
-      const totalConnections = (recipe.installs || 0) + (recipe.forks || 0);
+      const totalConnections = (data.stats.installs || 0) + (data.stats.forks || 0);
       
-      recipeName.textContent = recipe.name;
-      recipeStats.textContent = `📊 ${recipe.installs || 0} installs • ${recipe.forks || 0} forks • ${totalConnections} Connections`;
+      recipeName.textContent = data.name;
+      recipeStats.textContent = `📊 ${data.stats.installs || 0} installs • ${data.stats.forks || 0} forks • ${totalConnections} Connections`;
       
       recipeInfo.classList.add('show');
     }
