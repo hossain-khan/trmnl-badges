@@ -7,7 +7,7 @@ import { formatNumber } from './utils';
 import { returnErrorBadge, isRecipeValid, returnSuccessBadge } from './badge-helpers';
 
 // App version - https://github.com/hossain-khan/trmnl-badges/releases
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.3.0';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
