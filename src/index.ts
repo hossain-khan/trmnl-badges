@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import type { Bindings } from './types';
 import { fetchRecipe } from './trmnl-api';
 import { generateBadge } from './badge-generator';
@@ -12,6 +13,14 @@ const APP_VERSION = '1.2.0';
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
 
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
+
+// Enable CORS for GitHub Pages and other origins
+app.use('*', cors({
+  origin: ['https://hossain-khan.github.io', 'http://localhost:8787'],
+  allowMethods: ['GET', 'OPTIONS'],
+  allowHeaders: ['Content-Type'],
+  maxAge: 600,
+}));
 
 // Badge endpoints for TRMNL recipes
 app.get('/badge/installs', async (context) => {
