@@ -73,12 +73,20 @@
       property="og:description"
       content="Create customized badges for your TRMNL recipes. Display installation counts, fork statistics, and total connection metrics on your GitHub README."
     />
+    <meta
+      property="og:image"
+      content="https://hossain-khan.github.io/trmnl-badges/assets/banner/trmnl-recipe-badge-open-graph-banner-web.jpg"
+    />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="TRMNL Badge Builder" />
     <meta
       name="twitter:description"
       content="Create customized badges for your TRMNL recipes with our interactive GitHub badge builder."
+    />
+    <meta
+      name="twitter:image"
+      content="https://hossain-khan.github.io/trmnl-badges/assets/banner/trmnl-recipe-badge-open-graph-banner-web.jpg"
     />
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="assets/trmnl/trmnl-glyph--brand.svg" />
@@ -633,7 +641,17 @@
         <!-- Recipe Input -->
         <div class="form-group">
           <label for="recipeInput"
-            ><svg class="label-icon" height="800" viewBox="0 0 32 32" width="800" xmlns="http://www.w3.org/2000/svg"><path d="m23.807 19.398h-1.758v.586h1.758zm-6.559 1.758v.586h1.758v.586h.586v-2.344h-.586v1.172zm0 2.344h1.172v-.586h-1.172zm1.172-.586h.586v-.586h-.586zm-1.172-2.93h-.586v1.172h.586zm-3.248-11.984h-2v10h2zm2 0h-1v10h1zm6.049 15.5h1.758v-.586h-1.758zm-3.043-4.102h-1.758v.586h1.758zm5.387 3.516v-2.93h-.586v2.93zm.607-14.914h-1v10h1zm-12.552 14.328h-.586v.586h.586zm7.552-14.328h-2v10h2zm2 0h-1v10h1zm-.537 14.914h.586v-2.93h-.586zm-14.401.586h2.93v-.586h-2.344v-.586h-.586zm0-2.93h.586v-.586h-.586zm1.172 1.172h1.172v-.586h-1.172zm4.8-.586v.586h1.172v-.586zm-5.386-1.758v.586h1.758v-.586zm.352-11.398h-1v10h1zm22-4h-28c-1.104 0-2 .896-2 2v20c0 1.104.896 2 2 2h28c1.104 0 2-.896 2-2v-20c0-1.104-.896-2-2-2zm0 22h-28v-20h28zm-24-18h-2v16h2zm1.648 14.328h.586v-.586h-.586zm7.144-2.344h-.586v1.172h.586zm-2.344-.586v.586h1.758v-.586zm-2.456 1.758v-1.172h-.586v1.172zm1.87-.586h.586v-.586h-.586zm-.862-12.57h-1v10h1zm3.792 13.742h-.586v1.172h.586zm-.586 1.758v-.586h-1.758v.586zm13.794-15.5h-2v16h2z"/></svg>Recipe URL or ID
+            ><svg
+              class="label-icon"
+              height="800"
+              viewBox="0 0 32 32"
+              width="800"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m23.807 19.398h-1.758v.586h1.758zm-6.559 1.758v.586h1.758v.586h.586v-2.344h-.586v1.172zm0 2.344h1.172v-.586h-1.172zm1.172-.586h.586v-.586h-.586zm-1.172-2.93h-.586v1.172h.586zm-3.248-11.984h-2v10h2zm2 0h-1v10h1zm6.049 15.5h1.758v-.586h-1.758zm-3.043-4.102h-1.758v.586h1.758zm5.387 3.516v-2.93h-.586v2.93zm.607-14.914h-1v10h1zm-12.552 14.328h-.586v.586h.586zm7.552-14.328h-2v10h2zm2 0h-1v10h1zm-.537 14.914h.586v-2.93h-.586zm-14.401.586h2.93v-.586h-2.344v-.586h-.586zm0-2.93h.586v-.586h-.586zm1.172 1.172h1.172v-.586h-1.172zm4.8-.586v.586h1.172v-.586zm-5.386-1.758v.586h1.758v-.586zm.352-11.398h-1v10h1zm22-4h-28c-1.104 0-2 .896-2 2v20c0 1.104.896 2 2 2h28c1.104 0 2-.896 2-2v-20c0-1.104-.896-2-2-2zm0 22h-28v-20h28zm-24-18h-2v16h2zm1.648 14.328h.586v-.586h-.586zm7.144-2.344h-.586v1.172h.586zm-2.344-.586v.586h1.758v-.586zm-2.456 1.758v-1.172h-.586v1.172zm1.87-.586h.586v-.586h-.586zm-.862-12.57h-1v10h1zm3.792 13.742h-.586v1.172h.586zm-.586 1.758v-.586h-1.758v.586zm13.794-15.5h-2v16h2z"
+              /></svg
+            >Recipe URL or ID
             <span class="label-hint"
               >(find your <a href="https://trmnl.com/recipes" target="_blank">recipe</a>)</span
             ></label
@@ -652,7 +670,21 @@
 
         <!-- Custom Label - Full Width -->
         <div class="form-group">
-          <label for="customLabel"><svg class="label-icon" height="800" viewBox="0 0 512 512" width="800" xmlns="http://www.w3.org/2000/svg"><path d="m448 0v298.666667h-341.333333l-106.666667-149.333334 106.666667-149.333333zm-42.666667 42.6666667h-276.736l-76.181333 106.6666663 76.202667 106.666667h276.714666zm-266.666666 74.6666663c17.673112 0 32 14.326888 32 32s-14.326888 32-32 32-32-14.326888-32-32 14.326888-32 32-32zm74.666666 53.333334h149.333334v42.666666h-149.333334zm0-85.3333337h149.333334v42.6666667h-149.333334z" fill-rule="evenodd" transform="translate(21.333333 106.666667)"/></svg>Custom Label (optional)</label>
+          <label for="customLabel"
+            ><svg
+              class="label-icon"
+              height="800"
+              viewBox="0 0 512 512"
+              width="800"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m448 0v298.666667h-341.333333l-106.666667-149.333334 106.666667-149.333333zm-42.666667 42.6666667h-276.736l-76.181333 106.6666663 76.202667 106.666667h276.714666zm-266.666666 74.6666663c17.673112 0 32 14.326888 32 32s-14.326888 32-32 32-32-14.326888-32-32 14.326888-32 32-32zm74.666666 53.333334h149.333334v42.666666h-149.333334zm0-85.3333337h149.333334v42.6666667h-149.333334z"
+                fill-rule="evenodd"
+                transform="translate(21.333333 106.666667)"
+              /></svg
+            >Custom Label (optional)</label
+          >
           <input
             type="text"
             id="customLabel"
@@ -663,7 +695,26 @@
         <!-- Badge Type and Pretty Format Row -->
         <div class="row">
           <div class="form-group">
-            <label><svg class="label-icon" height="800" viewBox="0 0 48 48" width="800" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h48v48h-48z" fill="none"/><path d="m24 7.7 5.3 8.3h-10.7zm0-5.7a2.1 2.1 0 0 0 -1.7 1l-9.1 14a2.3 2.3 0 0 0 0 2 1.9 1.9 0 0 0 1.7 1h18.1a2.1 2.1 0 0 0 1.7-1 1.8 1.8 0 0 0 0-2l-9-14a1.9 1.9 0 0 0 -1.7-1z"/><path d="m43 43h-14a2 2 0 0 1 -2-2v-14a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2zm-12-4h10v-10h-10z"/><path d="m13 28a6 6 0 1 1 -6 6 6 6 0 0 1 6-6m0-4a10 10 0 1 0 10 10 10 10 0 0 0 -10-10z"/></svg>Badge Type</label>
+            <label
+              ><svg
+                class="label-icon"
+                height="800"
+                viewBox="0 0 48 48"
+                width="800"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="m0 0h48v48h-48z" fill="none" />
+                <path
+                  d="m24 7.7 5.3 8.3h-10.7zm0-5.7a2.1 2.1 0 0 0 -1.7 1l-9.1 14a2.3 2.3 0 0 0 0 2 1.9 1.9 0 0 0 1.7 1h18.1a2.1 2.1 0 0 0 1.7-1 1.8 1.8 0 0 0 0-2l-9-14a1.9 1.9 0 0 0 -1.7-1z"
+                />
+                <path
+                  d="m43 43h-14a2 2 0 0 1 -2-2v-14a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2zm-12-4h10v-10h-10z"
+                />
+                <path
+                  d="m13 28a6 6 0 1 1 -6 6 6 6 0 0 1 6-6m0-4a10 10 0 1 0 10 10 10 10 0 0 0 -10-10z"
+                /></svg
+              >Badge Type</label
+            >
             <div class="radio-group">
               <div class="radio-option">
                 <input type="radio" id="typeInstalls" name="badgeType" value="installs" checked />
@@ -719,7 +770,27 @@
         <div class="tab-content active" id="markdown-tab">
           <div class="code-header">
             <div class="code-header-left">
-              <span class="code-type"><svg class="label-icon" height="800" viewBox="0 0 24 24" width="800" xmlns="http://www.w3.org/2000/svg"><g><path d="m8 7.5c-2.48528 0-4.5 2.01472-4.5 4.5 0 2.4853 2.01472 4.5 4.5 4.5h1.5c.5523 0 1 .4477 1 1v1c0 .5523-.4477 1-1 1h-1.5c-4.14214 0-7.5-3.3579-7.5-7.5 0-4.14214 3.35786-7.5 7.5-7.5h1.5c.5523 0 1 .44772 1 1v1c0 .55228-.4477 1-1 1z"/><path d="m6.5 11.5c0-.5523.44771-1 1-1h9c.5523 0 1 .4477 1 1v1c0 .5523-.4477 1-1 1h-9c-.55228 0-1-.4477-1-1z"/><path d="m20.5 12c0-2.48528-2.0147-4.5-4.5-4.5h-1.5c-.5523 0-1-.44772-1-1v-1c0-.55228.4477-1 1-1h1.5c4.1421 0 7.5 3.35786 7.5 7.5 0 4.1421-3.3579 7.5-7.5 7.5h-1.5c-.5523 0-1-.4477-1-1v-1c0-.5523.4477-1 1-1h1.5c2.4853 0 4.5-2.0147 4.5-4.5z"/></g></svg>Copy Markdown code</span>
+              <span class="code-type"
+                ><svg
+                  class="label-icon"
+                  height="800"
+                  viewBox="0 0 24 24"
+                  width="800"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g>
+                    <path
+                      d="m8 7.5c-2.48528 0-4.5 2.01472-4.5 4.5 0 2.4853 2.01472 4.5 4.5 4.5h1.5c.5523 0 1 .4477 1 1v1c0 .5523-.4477 1-1 1h-1.5c-4.14214 0-7.5-3.3579-7.5-7.5 0-4.14214 3.35786-7.5 7.5-7.5h1.5c.5523 0 1 .44772 1 1v1c0 .55228-.4477 1-1 1z"
+                    />
+                    <path
+                      d="m6.5 11.5c0-.5523.44771-1 1-1h9c.5523 0 1 .4477 1 1v1c0 .5523-.4477 1-1 1h-9c-.55228 0-1-.4477-1-1z"
+                    />
+                    <path
+                      d="m20.5 12c0-2.48528-2.0147-4.5-4.5-4.5h-1.5c-.5523 0-1-.44772-1-1v-1c0-.55228.4477-1 1-1h1.5c4.1421 0 7.5 3.35786 7.5 7.5 0 4.1421-3.3579 7.5-7.5 7.5h-1.5c-.5523 0-1-.4477-1-1v-1c0-.5523.4477-1 1-1h1.5c2.4853 0 4.5-2.0147 4.5-4.5z"
+                    />
+                  </g></svg
+                >Copy Markdown code</span
+              >
               <div class="checkbox-group">
                 <input type="checkbox" id="linkToRecipe" />
                 <label for="linkToRecipe" class="checkbox-label">Link to recipe</label>
