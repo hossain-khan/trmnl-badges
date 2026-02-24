@@ -1034,16 +1034,16 @@
       function generateDirectUrls(stats) {
         const lines = [];
         lines.push(
-          `${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+          `• Recipes: ${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
         );
         lines.push(
-          `${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+          `• Total Installs: ${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
         );
         lines.push(
-          `${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+          `• Total Forks: ${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
         );
         lines.push(
-          `${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+          `• Total Connections: ${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
         );
         return lines.join('\n');
       }
