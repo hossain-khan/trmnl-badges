@@ -70,19 +70,18 @@
         font-size: 14px;
       }
 
-      .nav-link {
-        margin-bottom: 20px;
-        text-align: right;
-      }
-
-      .nav-link a {
+      .nav-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: 8px;
         color: #667eea;
         text-decoration: none;
         font-size: 12px;
         transition: color 0.2s;
       }
 
-      .nav-link a:hover {
+      .nav-pill:hover {
         text-decoration: underline;
       }
 
@@ -757,12 +756,12 @@
         </div>
         <div class="header-text">
           <h1>Author Badge Builder</h1>
-          <p class="subtitle">Generate badges for all your TRMNL recipes</p>
+          <p class="subtitle">
+            Generate badges for all your TRMNL recipes |<a href="index.html" class="nav-pill"
+              >Single recipe</a
+            >
+          </p>
         </div>
-      </div>
-
-      <div class="nav-link">
-        <a href="index.html">← Single recipe builder</a>
       </div>
 
       <form id="authorBadgeForm">
