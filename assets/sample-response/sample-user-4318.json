@@ -1,0 +1,362 @@
+{
+    "data": [
+        {
+            "id": 243525,
+            "user_id": 4318,
+            "name": "Heyokyay",
+            "published_at": "2026-02-23T21:22:08.199Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/mumxxuruzagdfiiqunjmglsluu49",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/x7xcdgujo249luv1ggy6svz1n2g1?response-content-disposition=inline%3B%20filename%3D%22plugin-51873c%22%3B%20filename%2A%3DUTF-8%27%27plugin-51873c\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260224%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260224T021638Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=db9754d9beaeb7d62c146fd71b7a7318946c60d01ed30fe5f23b32525921a5e5",
+            "author_bio": {
+                "keyname": "author_bio",
+                "field_type": "author_bio",
+                "name": "About This Plugin",
+                "description": "Displays Comics from heyokyay/islieb/isfies",
+                "category": "comics,humor",
+                "learn_more_url": "https://heyokyay.com/",
+                "email_address": "michael.kurath@gmail.com"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "field_type": "author_bio",
+                    "name": "About This Plugin",
+                    "description": "Displays Comics from heyokyay/islieb/isfies",
+                    "category": "comics,humor",
+                    "learn_more_url": "https://heyokyay.com/",
+                    "email_address": "michael.kurath@gmail.com"
+                },
+                {
+                    "keyname": "feed",
+                    "field_type": "select",
+                    "name": "Comic Feed",
+                    "default": "heyokyay",
+                    "options": [
+                        {
+                            "EN (heyokyay)": "heyokyay"
+                        },
+                        {
+                            "DE (islieb)": "islieb"
+                        },
+                        {
+                            "DE (isfies)": "isfies"
+                        }
+                    ]
+                },
+                {
+                    "keyname": "mode",
+                    "field_type": "select",
+                    "name": "Comic mode",
+                    "default": "latest",
+                    "options": [
+                        {
+                            "Latest": "latest"
+                        },
+                        {
+                            "Random": "random"
+                        }
+                    ]
+                }
+            ],
+            "stats": {
+                "installs": 1,
+                "forks": 3
+            }
+        },
+        {
+            "id": 238152,
+            "user_id": 4318,
+            "name": "Alert.Swiss",
+            "published_at": "2026-02-20T00:10:39.568Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/53p4p5rpqnreugj41djmgcwslct4",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/hmpy4mmksubthps412rkfzct0iuc",
+            "author_bio": {
+                "keyname": "author_bio",
+                "field_type": "author_bio",
+                "name": "About This Plugin",
+                "description": "Shows alerts from \u003ca href=\"https://www.alert.swiss/\" target=\"_blank\" rel=\"noopener\"\u003eAlert.Swiss\u003c/a\u003e.",
+                "category": "environment,news",
+                "email_address": "michael.kurath@gmail.com",
+                "learn_more_url": "https://www.alert.swiss/"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "field_type": "author_bio",
+                    "name": "About This Plugin",
+                    "description": "Shows alerts from \u003ca href=\"https://www.alert.swiss/\" target=\"_blank\" rel=\"noopener\"\u003eAlert.Swiss\u003c/a\u003e.",
+                    "category": "environment,news",
+                    "email_address": "michael.kurath@gmail.com",
+                    "learn_more_url": "https://www.alert.swiss/"
+                },
+                {
+                    "keyname": "cantons",
+                    "field_type": "string",
+                    "name": "Cantons (comma-separated)",
+                    "description": "Choose from which Canton you want alerts. Use CH to show alerts from all cantons. Nationwide alerts are always shown. Example: ZH,SG,SH",
+                    "placeholder": "ZH,SG,SH",
+                    "default": "CH",
+                    "optional": true
+                },
+                {
+                    "keyname": "limit",
+                    "field_type": "number",
+                    "name": "Max alerts",
+                    "description": "Maximum number of matching alerts to display",
+                    "default": 5,
+                    "optional": true
+                }
+            ],
+            "stats": {
+                "installs": 1,
+                "forks": 8
+            }
+        },
+        {
+            "id": 233002,
+            "user_id": 4318,
+            "name": "Doomsday Clock",
+            "published_at": "2026-02-03T04:42:15.978Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/zikk5lysonghc42kfq44ufiump96",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/90wl6bbjnn5lh1jyli5fxsecrykg",
+            "author_bio": {
+                "keyname": "author_bio",
+                "field_type": "author_bio",
+                "name": "About This Plugin",
+                "category": "life",
+                "description": "The Doomsday Clock is a symbol that represents the estimated likelihood of a human-made global catastrophe.",
+                "email_address": "michael.kurath@gmail.com",
+                "learn_more_url": "https://en.wikipedia.org/wiki/Doomsday_Clock"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "field_type": "author_bio",
+                    "name": "About This Plugin",
+                    "category": "life",
+                    "description": "The Doomsday Clock is a symbol that represents the estimated likelihood of a human-made global catastrophe.",
+                    "email_address": "michael.kurath@gmail.com",
+                    "learn_more_url": "https://en.wikipedia.org/wiki/Doomsday_Clock"
+                }
+            ],
+            "stats": {
+                "installs": 12,
+                "forks": 0
+            }
+        },
+        {
+            "id": 227561,
+            "user_id": 4318,
+            "name": "Random Joke",
+            "published_at": "2026-01-23T02:04:40.814Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/tpocwgl6y0ijj22sy12kk90xceat",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/3gu3me4sfv5egvm9fm6dh2rycx76",
+            "author_bio": {
+                "keyname": "author_bio",
+                "field_type": "author_bio",
+                "name": "About This Plugin",
+                "description": "A random Joke. Available in English, German and French.",
+                "category": "humor,entertainment",
+                "email_address": "michael.kurath@gmail.com"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "field_type": "author_bio",
+                    "name": "About This Plugin",
+                    "description": "A random Joke. Available in English, German and French.",
+                    "category": "humor,entertainment",
+                    "email_address": "michael.kurath@gmail.com"
+                },
+                {
+                    "keyname": "lang",
+                    "field_type": "select",
+                    "name": "Language",
+                    "description": "Choose the joke language",
+                    "default": "en",
+                    "options": [
+                        {
+                            "English": "en"
+                        },
+                        {
+                            "German": "de"
+                        },
+                        {
+                            "French": "fr"
+                        }
+                    ]
+                },
+                {
+                    "keyname": "safe_mode",
+                    "field_type": "select",
+                    "name": "Safe mode",
+                    "description": "Enable safe mode if you are easily offended",
+                    "default": "On",
+                    "options": [
+                        "On",
+                        "Off"
+                    ]
+                }
+            ],
+            "stats": {
+                "installs": 1,
+                "forks": 49
+            }
+        },
+        {
+            "id": 191420,
+            "user_id": 4318,
+            "name": "Apple Note",
+            "published_at": "2025-12-11T21:56:25.670Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/s51taeygr4giw3ksig42bgvksrun",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/vmq1l0j0c8h88kj6f3xel6oxf3ef",
+            "author_bio": {
+                "keyname": "author_bio",
+                "field_type": "author_bio",
+                "name": "About This Plugin",
+                "category": "custom,personal",
+                "description": "Send any Apple Note to your TRMNL. Text size automatically adjusts to fit the amount of content. Questions or Feedback? Just send me an e-mail.",
+                "email_address": "michael.kurath@gmail.com"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "field_type": "author_bio",
+                    "name": "About This Plugin",
+                    "category": "custom,personal",
+                    "description": "Send any Apple Note to your TRMNL. Text size automatically adjusts to fit the amount of content. Questions or Feedback? Just send me an e-mail.",
+                    "email_address": "michael.kurath@gmail.com"
+                },
+                {
+                    "keyname": "copyable_8153",
+                    "field_type": "copyable",
+                    "name": "Shortcut URL",
+                    "description": "Download and import this shortcut on your iPhone, iPad or macOS device. You will need to enter the UUID of this plugin instance during first time setup. Then you can send any Apple Note to your TRMNL by invoking the shortcut from the ShareSheet.",
+                    "value": "https://www.icloud.com/shortcuts/f9cb583e81af4946a0cec64ebd0fea49"
+                }
+            ],
+            "stats": {
+                "installs": 0,
+                "forks": 86
+            }
+        },
+        {
+            "id": 30089,
+            "user_id": 4318,
+            "name": "Weekly Meal Planner",
+            "published_at": "2025-03-25T02:06:00.000Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/ouxpmvutv0mjzgzjgqfe5016gl0j",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/drxnfmyu9v7psrnhp2jl3ix3z9pd",
+            "author_bio": {
+                "keyname": "doesnt_matter",
+                "field_type": "author_bio",
+                "name": "About This Plugin",
+                "category": "custom,calendar",
+                "description": "Simple plugin to plan next/this weeks Dinner. Questions or Feedback? Just send me an e-mail.",
+                "email_address": "michael.kurath@gmail.com"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "doesnt_matter",
+                    "field_type": "author_bio",
+                    "name": "About This Plugin",
+                    "category": "custom,calendar",
+                    "description": "Simple plugin to plan next/this weeks Dinner. Questions or Feedback? Just send me an e-mail.",
+                    "email_address": "michael.kurath@gmail.com"
+                },
+                {
+                    "keyname": "locale",
+                    "field_type": "select",
+                    "name": "Language",
+                    "description": "Day names displayed in what language?",
+                    "default": "default_-_follow_trmnl_ui",
+                    "options": [
+                        "default - Follow TRMNL UI",
+                        "da - Danish",
+                        "de-AT - German (Austria)",
+                        "de - German",
+                        "en - English",
+                        "es-ES - Spanish (Spain)",
+                        "fr - French",
+                        "he - Hebrew",
+                        "id - Indonesian",
+                        "it - Italian",
+                        "ja - Japanese",
+                        "ko - Korean",
+                        "nl - Dutch",
+                        "pt-BR - Portuguese (Brazil)",
+                        "uk - Ukrainian",
+                        "zh-CN - Simplified Chinese (China)",
+                        "zh-HK - Traditional Chinese (Hong Kong)"
+                    ]
+                },
+                {
+                    "keyname": "monday",
+                    "field_type": "text",
+                    "name": "Monday",
+                    "description": "What's for Dinner?",
+                    "placeholder": "What's for Dinner?"
+                },
+                {
+                    "keyname": "tuesday",
+                    "field_type": "text",
+                    "name": "Tuesday",
+                    "description": "What's for Dinner?",
+                    "placeholder": "What's for Dinner?"
+                },
+                {
+                    "keyname": "wednesday",
+                    "field_type": "text",
+                    "name": "Wednesday",
+                    "description": "What's for Dinner?",
+                    "placeholder": "What's for Dinner?"
+                },
+                {
+                    "keyname": "thursday",
+                    "field_type": "text",
+                    "name": "Thursday",
+                    "description": "What's for Dinner?",
+                    "placeholder": "What's for Dinner?"
+                },
+                {
+                    "keyname": "friday",
+                    "field_type": "text",
+                    "name": "Friday",
+                    "description": "What's for Dinner?",
+                    "placeholder": "What's for Dinner?"
+                },
+                {
+                    "keyname": "saturday",
+                    "field_type": "text",
+                    "name": "Saturday",
+                    "description": "What's for Dinner?",
+                    "placeholder": "What's for Dinner?"
+                },
+                {
+                    "keyname": "sunday",
+                    "field_type": "text",
+                    "name": "Sunday",
+                    "description": "What's for Dinner?",
+                    "placeholder": "What's for Dinner?"
+                }
+            ],
+            "stats": {
+                "installs": 1,
+                "forks": 58
+            }
+        }
+    ],
+    "total": 6,
+    "from": 1,
+    "to": 6,
+    "per_page": 25,
+    "current_page": 1,
+    "prev_page_url": null,
+    "next_page_url": null
+}
