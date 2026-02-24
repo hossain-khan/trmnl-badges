@@ -944,10 +944,10 @@
       /**
        * Load badge SVG into container
        */
-      async function loadBadgePreview(containerId, badgeType, userId) {
+      async function loadBadgePreview(containerId, badgeType, userId, isPretty = false) {
         try {
           const container = document.getElementById(containerId);
-          const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}`;
+          const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}${isPretty ? '&pretty' : ''}`;
           const response = await fetch(badgeUrl);
           const svgText = await response.text();
           container.innerHTML = svgText;
@@ -962,6 +962,7 @@
       async function loadBadgePreviews(userId) {
         const badgeTypes = ['recipes', 'installs', 'forks', 'connections'];
         const previewContainers = ['markdownBadgePreview', 'urlBadgePreview'];
+        const isPretty = prettyFormat.checked;
 
         for (const containerId of previewContainers) {
           const container = document.getElementById(containerId);
@@ -969,7 +970,7 @@
 
           for (const badgeType of badgeTypes) {
             try {
-              const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}`;
+              const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}${isPretty ? '&pretty' : ''}`;
               const response = await fetch(badgeUrl);
               const svgText = await response.text();
               container.innerHTML += svgText;
@@ -1001,10 +1002,10 @@
 
         // Load badge previews if we have a current user ID
         if (currentUserId) {
-          loadBadgePreview('recipesBadgeContainer', 'recipes', currentUserId);
-          loadBadgePreview('installsBadgeContainer', 'installs', currentUserId);
-          loadBadgePreview('forksBadgeContainer', 'forks', currentUserId);
-          loadBadgePreview('connectionsBadgeContainer', 'connections', currentUserId);
+          loadBadgePreview('recipesBadgeContainer', 'recipes', currentUserId, isPretty);
+          loadBadgePreview('installsBadgeContainer', 'installs', currentUserId, isPretty);
+          loadBadgePreview('forksBadgeContainer', 'forks', currentUserId, isPretty);
+          loadBadgePreview('connectionsBadgeContainer', 'connections', currentUserId, isPretty);
         }
       }
 
