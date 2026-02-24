@@ -37,3 +37,38 @@ export async function fetchRecipe(recipeId: string): Promise<TRMNLRecipe | null>
     return null;
   }
 }
+
+/**
+ * Fetch all recipes for a specific user/author
+ * Returns recipes with their stats (installs, forks)
+ */
+export async function fetchUserRecipes(userId: string): Promise<{ data: TRMNLRecipe[] } | null> {
+  const url = `${TRMNL_API_BASE}/recipes.json?user_id=${encodeURIComponent(userId)}`;
+
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    'User-Agent': 'trmnl-badges',
+  };
+
+  try {
+    const response = await fetch(url, { headers });
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType?.includes('application/json')) {
+      return null;
+    }
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error(`TRMNL API error: ${response.status} ${response.statusText}`);
+    }
+
+    const result = (await response.json()) as { data: TRMNLRecipe[] };
+    return result;
+  } catch (error) {
+    console.error('Error fetching user recipes:', error);
+    return null;
+  }
+}
