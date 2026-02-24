@@ -4,7 +4,7 @@ import type { Context } from 'hono';
 import type { Bindings, TRMNLRecipe } from './types';
 import { fetchRecipe, fetchUserRecipes } from './trmnl-api';
 import { generateBadge } from './badge-generator';
-import { formatNumber } from './utils';
+import { formatNumber, aggregateAuthorStats, isValidUserId, incrementBadgeCounter } from './utils';
 import { returnErrorBadge, isRecipeValid, returnSuccessBadge } from './badge-helpers';
 
 // App version - https://github.com/hossain-khan/trmnl-badges/releases
@@ -25,54 +25,6 @@ app.use(
     maxAge: 600,
   })
 );
-
-/**
- * Helper function to aggregate author statistics from multiple recipes
- */
-function aggregateAuthorStats(recipes: TRMNLRecipe[]) {
-  let totalInstalls = 0;
-  let totalForks = 0;
-
-  recipes.forEach((recipe) => {
-    totalInstalls += recipe.stats?.installs || 0;
-    totalForks += recipe.stats?.forks || 0;
-  });
-
-  return {
-    recipes: recipes.length,
-    installs: totalInstalls,
-    forks: totalForks,
-    connections: totalInstalls + totalForks,
-  };
-}
-
-/**
- * Helper function to safely check if userId is a valid non-empty string
- */
-function isValidUserId(userId: string | string[] | undefined): boolean {
-  return typeof userId === 'string' && userId.trim().length > 0;
-}
-
-/**
- * Helper function to increment badge counter
- */
-async function incrementBadgeCounter(context: Context<{ Bindings: Bindings }>) {
-  if (context.env && context.env.BADGE_COUNTER) {
-    try {
-      const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
-      const count = current ? parseInt(current, 10) : 0;
-
-      if (!Number.isFinite(count)) {
-        console.warn(`Invalid counter value: ${current}, resetting to 0`);
-      }
-
-      const newCount = (Number.isFinite(count) ? count : 0) + 1;
-      await context.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
-    } catch (err) {
-      console.error('Counter error:', err);
-    }
-  }
-}
 
 // Badge endpoints for TRMNL recipes
 app.get('/badge/installs', async (context) => {
@@ -100,7 +52,8 @@ app.get('/badge/installs', async (context) => {
         message: formatNumber(recipeData.stats.installs, isPretty),
       });
 
-      await incrementBadgeCounter(context);
+      await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
+      return returnSuccessBadge(context, badge);
     } else if (isValidUserId(userId)) {
       // Author badge - combined stats
       const userRecipes = await fetchUserRecipes(userId as string);
@@ -115,7 +68,7 @@ app.get('/badge/installs', async (context) => {
         message: formatNumber(stats.installs, isPretty),
       });
 
-      await incrementBadgeCounter(context);
+      await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
       return returnSuccessBadge(context, badge);
     } else {
       return returnErrorBadge(context, label || defaultLabel, 'Missing recipe or userId');
@@ -151,7 +104,7 @@ app.get('/badge/forks', async (context) => {
         message: formatNumber(recipeData.stats.forks, isPretty),
       });
 
-      await incrementBadgeCounter(context);
+      await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
       return returnSuccessBadge(context, badge);
     } else if (isValidUserId(userId)) {
       // Author badge - combined stats
@@ -167,7 +120,7 @@ app.get('/badge/forks', async (context) => {
         message: formatNumber(stats.forks, isPretty),
       });
 
-      await incrementBadgeCounter(context);
+      await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
       return returnSuccessBadge(context, badge);
     } else {
       return returnErrorBadge(context, label || defaultLabel, 'Missing recipe or userId');
@@ -200,7 +153,7 @@ app.get('/badge/recipes', async (context) => {
       message: formatNumber(stats.recipes, isPretty),
     });
 
-    await incrementBadgeCounter(context);
+    await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
     return returnSuccessBadge(context, badge);
   } catch (err) {
     console.error('[badge/recipes] Unexpected error:', err);
@@ -238,7 +191,7 @@ app.get('/badge/connections', async (context) => {
         message: formatNumber(totalConnections, isPretty),
       });
 
-      await incrementBadgeCounter(context);
+      await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
       return returnSuccessBadge(context, badge);
     } else if (isValidUserId(userId)) {
       // Author badge - combined stats
@@ -254,7 +207,7 @@ app.get('/badge/connections', async (context) => {
         message: formatNumber(stats.connections, isPretty),
       });
 
-      await incrementBadgeCounter(context);
+      await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
       return returnSuccessBadge(context, badge);
     } else {
       return returnErrorBadge(context, label || defaultLabel, 'Missing recipe or userId');
