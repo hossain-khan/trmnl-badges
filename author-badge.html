@@ -410,7 +410,36 @@
       }
 
       .show-badges-btn.expanded {
-        background: #667eea;
+        background: #6b7280;
+      }
+
+      .show-badges-btn.expanded:hover {
+        background: #4b5563;
+      }
+
+      .show-badges-btn.loading {
+        background: #9ca3af;
+        cursor: wait;
+        pointer-events: none;
+      }
+
+      .show-badges-btn.loading::after {
+        content: '';
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-left: 6px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: btn-spinner 0.6s linear infinite;
+        vertical-align: middle;
+      }
+
+      @keyframes btn-spinner {
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       /* Recipe Badges Preview Section */
@@ -1265,6 +1294,10 @@
             const isExpanded = badgesContainer.classList.contains('expanded');
 
             if (!isExpanded) {
+              // Show loading state
+              showBtn.classList.add('loading');
+              showBtn.textContent = 'Loading';
+
               // Load badge previews when expanding
               const isPretty = prettyFormat.checked;
               for (const badge of badgeTypes) {
@@ -1275,6 +1308,8 @@
                   isPretty
                 );
               }
+
+              showBtn.classList.remove('loading');
               badgesContainer.classList.add('expanded');
               showBtn.classList.add('expanded');
               showBtn.textContent = 'Hide Badges';
