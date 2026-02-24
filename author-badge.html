@@ -1356,6 +1356,7 @@
           showValidation(false, 'An error occurred. Please try again.');
         } finally {
           generateBtn.disabled = false;
+          generateBtn.textContent = 'Generate Author Badges';
         }
       }
 
@@ -1434,8 +1435,11 @@
         const userIdFromUrl = params.get('userId');
 
         if (userIdFromUrl) {
-          // Prefill the input with the userId
+          // Prefill the input and show immediate loading feedback
           authorInput.value = userIdFromUrl;
+          generateBtn.disabled = true;
+          generateBtn.textContent = 'Loading author badges...';
+          showValidation(false, 'Auto-detected author ID, loading badges...');
           // Auto-generate the author badges
           generateAuthorBadges();
         }
