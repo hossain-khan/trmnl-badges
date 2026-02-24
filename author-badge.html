@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Create customized badges for all your TRMNL recipes by author. Display combined statistics and individual recipe metrics on your GitHub README."
+    />
+    <meta name="keywords" content="TRMNL, badges, recipes, author, markdown, github, statistical badges" />
+    <meta name="author" content="Hossain Khan, TRMNL Community Member" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hossain-khan.github.io/trmnl-badges/author-badge.html" />
+    <meta property="og:title" content="TRMNL Author Badge Builder" />
+    <meta
+      property="og:description"
+      content="Create customized badges for all your TRMNL recipes by author. Display combined statistics and individual recipe metrics on your GitHub README."
+    />
+    <meta
+      property="og:image"
+      content="https://hossain-khan.github.io/trmnl-badges/assets/banner/trmnl-recipe-badge-open-graph-banner-web.jpg"
+    />
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/trmnl/trmnl-glyph--brand.svg" />
+    <title>TRMNL Author Badge Builder</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          sans-serif;
+        background-color: #3d3d3e;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 700px;
+        width: 100%;
+        padding: 40px;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 28px;
+      }
+
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      .nav-link {
+        margin-bottom: 20px;
+        text-align: right;
+      }
+
+      .nav-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-size: 12px;
+        transition: color 0.2s;
+      }
+
+      .nav-link a:hover {
+        text-decoration: underline;
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      svg.label-icon {
+        display: inline-block;
+        width: 1.2em;
+        height: 1.2em;
+        vertical-align: text-top;
+        margin-right: 6px;
+        fill: #c73d2a;
+      }
+
+      .label-hint {
+        font-weight: 400;
+        color: #999;
+        font-size: 12px;
+        margin-left: 4px;
+      }
+
+      .label-hint a {
+        color: #667eea;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .label-hint a:hover {
+        text-decoration: underline;
+      }
+
+      input[type='text'],
+      select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.2s;
+      }
+
+      input[type='text']:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      input[type='checkbox'] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      .checkbox-label {
+        margin: 0;
+        font-weight: 400;
+        cursor: pointer;
+      }
+
+      .hint-feedback-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: 4px;
+      }
+
+      .url-hint {
+        font-size: 12px;
+        color: #999;
+      }
+
+      .author-feedback {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        min-height: 18px;
+        flex-shrink: 0;
+      }
+
+      .author-feedback.success {
+        color: #388e3c;
+      }
+
+      .author-feedback.error {
+        color: #d32f2f;
+      }
+
+      .author-feedback .icon {
+        font-size: 14px;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .generate-btn {
+        background: #f8654b;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex: 1;
+      }
+
+      .generate-btn:hover {
+        background: #e8523a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(248, 101, 75, 0.3);
+      }
+
+      .generate-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Author Stats Section */
+      .author-stats-section {
+        background: #fff5f3;
+        border: 2px solid #f5e0db;
+        border-radius: 8px;
+        padding: 24px;
+        margin: 24px 0;
+        display: none;
+      }
+
+      .author-stats-section.show {
+        display: block;
+      }
+
+      .stats-header {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .stat-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 28px;
+        font-weight: 700;
+        color: #f8654b;
+        margin-bottom: 4px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: #999;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      .combined-badges {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .badge-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f5f5f5;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .badge-item-name {
+        color: #333;
+      }
+
+      .badge-item-value {
+        background: #f8654b;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+
+      /* Individual Recipes Section */
+      .individual-recipes-section {
+        margin: 24px 0;
+        display: none;
+      }
+
+      .individual-recipes-section.show {
+        display: block;
+      }
+
+      .recipes-header {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 16px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .recipes-header::before {
+        content: '📋';
+        position: absolute;
+        left: 0;
+        font-size: 18px;
+      }
+
+      .recipes-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .recipe-item {
+        background: #f9f9f9;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 12px;
+      }
+
+      .recipe-item-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .recipe-item-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .recipe-badge-link {
+        display: inline-flex;
+        align-items: center;
+        background: white;
+        border: 1px solid #ddd;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        color: #667eea;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+
+      .recipe-badge-link:hover {
+        background: #f0f0f0;
+        border-color: #667eea;
+      }
+
+      .code-section {
+        margin-top: 24px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin: 20px 0 12px 0;
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      .tab-btn {
+        background: none;
+        border: none;
+        padding: 12px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #999;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+      }
+
+      .tab-btn:hover {
+        color: #667eea;
+      }
+
+      .tab-btn.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .code-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .code-type {
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .copy-btn {
+        background: #f8654b;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .copy-btn:hover {
+        background: #e8523a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(248, 101, 75, 0.3);
+      }
+
+      .copy-btn.copied {
+        background: #4caf50;
+      }
+
+      .copy-btn::before {
+        content: '📋';
+        font-size: 14px;
+      }
+
+      .copy-btn.copied::before {
+        content: '✓';
+      }
+
+      code {
+        display: block;
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 12px;
+        font-family: 'Monaco', 'Courier New', monospace;
+        font-size: 12px;
+        color: #333;
+        word-break: break-all;
+        overflow-x: auto;
+        line-height: 1.5;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .logo {
+        flex-shrink: 0;
+      }
+
+      .logo svg {
+        width: 48px;
+        height: 48px;
+      }
+
+      .header-text h1 {
+        margin: 0;
+        margin-bottom: 8px;
+      }
+
+      .header-text .subtitle {
+        margin: 0;
+      }
+
+      .footer {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 14px;
+        color: #999;
+      }
+
+      .footer-text {
+        margin: 0;
+      }
+
+      .footer a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #999;
+        text-decoration: none;
+        transition:
+          transform 0.2s,
+          color 0.2s;
+        font-size: 14px;
+      }
+
+      .footer a:hover {
+        transform: scale(1.1);
+        color: #f8654b;
+      }
+
+      .footer svg {
+        width: 1em;
+        height: 1em;
+        flex-shrink: 0;
+        fill: currentColor;
+      }
+
+      .syntax-protocol {
+        color: #667eea;
+        font-weight: 500;
+      }
+
+      .syntax-domain {
+        color: #d32f2f;
+        font-weight: 500;
+      }
+
+      .syntax-path {
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo">
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 160 162"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z"
+              fill="#F8654B"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
+              fill="#F8654B"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M157.609 56.0668L132.682 93.8519L113.971 81.5078L138.898 43.7227L157.609 56.0668Z"
+              fill="#F8654B"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M147.533 123.466L102.449 127.536L100.434 105.211L145.517 101.141L147.533 123.466Z"
+              fill="#F8654B"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M88.5468 157.611L57.2559 124.901L73.4541 109.406L104.745 142.116L88.5468 157.611Z"
+              fill="#F8654B"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M25.0723 132.804L31.1366 87.9453L53.3508 90.9484L47.2865 135.808L25.0723 132.804Z"
+              fill="#F8654B"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M4.9082 67.6809L43.7612 44.4531L55.2636 63.6933L16.4107 86.921L4.9082 67.6809Z"
+              fill="#F8654B"
+            />
+          </svg>
+        </div>
+        <div class="header-text">
+          <h1>Author Badge Builder</h1>
+          <p class="subtitle">Generate badges for all your TRMNL recipes</p>
+        </div>
+      </div>
+
+      <div class="nav-link">
+        <a href="index.html">← Single recipe builder</a>
+      </div>
+
+      <form id="authorBadgeForm">
+        <!-- Author Input -->
+        <div class="form-group">
+          <label for="authorInput"
+            ><svg
+              class="label-icon"
+              height="800"
+              viewBox="0 0 24 24"
+              width="800"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M12 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg
+            >Recipe URL, Recipe ID, or Author ID
+            <span class="label-hint"
+              >(paste any recipe URL to auto-detect author)</span
+            ></label
+          >
+          <input
+            type="text"
+            id="authorInput"
+            placeholder="Enter recipe URL or author ID"
+            required
+          />
+          <div class="hint-feedback-row">
+            <div class="url-hint">Tip: Paste the full URL and we'll find the author automatically</div>
+            <div id="authorFeedback" class="author-feedback"></div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="generate-btn" id="generateBtn">Generate Author Badges</button>
+          <div class="checkbox-group">
+            <input type="checkbox" id="prettyFormat" />
+            <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
+          </div>
+        </div>
+      </form>
+
+      <!-- Author Stats Section -->
+      <div id="authorStatsSection" class="author-stats-section">
+        <div class="stats-header">📊 Combined Author Stats</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalRecipes">0</div>
+            <div class="stat-label">Recipes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="totalInstalls">0</div>
+            <div class="stat-label">Total Installs</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="totalForks">0</div>
+            <div class="stat-label">Total Forks</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="totalConnections">0</div>
+            <div class="stat-label">Total Connections</div>
+          </div>
+        </div>
+
+        <div class="code-section">
+          <div class="tabs">
+            <button type="button" class="tab-btn active" data-tab="markdown">Markdown (all combined badges)</button>
+            <button type="button" class="tab-btn" data-tab="url">Direct URL</button>
+          </div>
+
+          <!-- Markdown Tab -->
+          <div class="tab-content active" id="markdown-tab">
+            <div class="code-header">
+              <span class="code-type">Copy Markdown code</span>
+              <button type="button" class="copy-btn" data-target="markdownCode">Copy</button>
+            </div>
+            <code id="markdownCode"></code>
+          </div>
+
+          <!-- Direct URL Tab -->
+          <div class="tab-content" id="url-tab">
+            <div class="code-header">
+              <span class="code-type">Copy direct URLs</span>
+            </div>
+            <code id="urlCode"></code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Individual Recipes Section -->
+      <div id="individualRecipesSection" class="individual-recipes-section">
+        <div class="recipes-header">Individual Recipe Badges (<span id="recipeCount">0</span> recipes)</div>
+        <div class="recipes-list" id="recipesList"></div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p class="footer-text">
+          Made with ❤️ for
+          <a href="https://trmnl.com/developers" target="_blank" rel="noopener noreferrer">TRMNL</a>
+          Community
+        </p>
+        |
+        <a
+          href="https://github.com/hossain-khan/trmnl-badges"
+          title="View on GitHub"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg height="24" viewBox="0 0 20 20" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="m94 7399c5.523 0 10 4.59 10 10.253 0 4.529-2.862 8.371-6.833 9.728-.507.101-.687-.219-.687-.492 0-.338.012-1.442.012-2.814 0-.956-.32-1.58-.679-1.898 2.227-.254 4.567-1.121 4.567-5.059 0-1.12-.388-2.034-1.03-2.752.104-.259.447-1.302-.098-2.714 0 0-.838-.275-2.747 1.051-.799-.227-1.655-.341-2.505-.345-.85.004-1.705.118-2.503.345-1.911-1.326-2.751-1.051-2.751-1.051-.543 1.412-.2 2.455-.097 2.714-.639.718-1.03 1.632-1.03 2.752 0 3.928 2.335 4.808 4.556 5.067-.286.256-.545.708-.635 1.371-.57.262-2.018.715-2.91-.852 0 0-.529-.985-1.533-1.057 0 0-.975-.013-.068.623 0 0 .655.315 1.11 1.5 0 0 .587 1.83 3.369 1.21.005.857.014 1.665.014 1.909 0 .271-.184.588-.683.493-3.974-1.355-6.839-5.199-6.839-9.729 0-5.663 4.478-10.253 10-10.253"
+              fill-rule="evenodd"
+              transform="translate(-84 -7399)"
+            />
+          </svg>
+          View on GitHub
+        </a>
+      </footer>
+    </div>
+
+    <script>
+      const BASE_URL = 'https://trmnl-badges.gohk.xyz';
+
+      const authorInput = document.getElementById('authorInput');
+      const generateBtn = document.getElementById('generateBtn');
+      const authorFeedback = document.getElementById('authorFeedback');
+      const prettyFormat = document.getElementById('prettyFormat');
+      const authorStatsSection = document.getElementById('authorStatsSection');
+      const individualRecipesSection = document.getElementById('individualRecipesSection');
+      const markdownCode = document.getElementById('markdownCode');
+      const urlCode = document.getElementById('urlCode');
+
+      // Tab switching
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      tabBtns.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const tabName = btn.getAttribute('data-tab');
+          document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach((c) => c.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(tabName + '-tab').classList.add('active');
+        });
+      });
+
+      /**
+       * Extract user_id from recipe URL or return input if it's already a user ID
+       */
+      function extractUserIdFromRecipe(input) {
+        input = input.trim();
+
+        // If it's a URL, extract the recipe ID and fetch its user_id
+        if (input.includes('/')) {
+          const match = input.match(/\/recipes\/(\d+)/);
+          return match ? match[1] : null;
+        }
+
+        // If it's just a number, could be recipe ID or user ID - we'll try to use it as is
+        if (/^\d+$/.test(input)) {
+          return input;
+        }
+
+        return null;
+      }
+
+      /**
+       * Get user_id from recipe, then fetch all recipes for that user
+       */
+      async function fetchUserRecipesFromRecipe(recipeId) {
+        try {
+          // First fetch the recipe to get its user_id
+          const recipeResponse = await fetch(`${BASE_URL}/api/stats?recipe=${recipeId}`);
+          if (!recipeResponse.ok) {
+            return null;
+          }
+
+          const recipeData = await recipeResponse.json();
+          if (!recipeData || !recipeData.stats) {
+            return null;
+          }
+
+          // Now fetch all recipes for this user
+          return await fetchUserRecipes(recipeData.user_id);
+        } catch (error) {
+          console.error('Error fetching user recipes from recipe:', error);
+          return null;
+        }
+      }
+
+      /**
+       * Fetch all recipes for a given user ID
+       */
+      async function fetchUserRecipes(userId) {
+        try {
+          const response = await fetch(`${BASE_URL}/api/recipes?user_id=${userId}`);
+          if (!response.ok) {
+            return null;
+          }
+          return await response.json();
+        } catch (error) {
+          console.error('Error fetching user recipes:', error);
+          return null;
+        }
+      }
+
+      /**
+       * Show validation feedback
+       */
+      function showValidation(isValid, message) {
+        if (isValid) {
+          authorFeedback.className = 'author-feedback success';
+          authorFeedback.innerHTML = `<span class="icon">✓</span><span>${message}</span>`;
+        } else {
+          authorFeedback.className = 'author-feedback error';
+          authorFeedback.innerHTML = `<span class="icon">✗</span><span>${message}</span>`;
+        }
+      }
+
+      /**
+       * Format number with pretty format option
+       */
+      function formatNumber(num, usePretty) {
+        if (!usePretty) return num.toString();
+        if (num >= 1000000) return (num / 1000000).toFixed(2).replace(/\.?0+$/, '') + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(2).replace(/\.?0+$/, '') + 'K';
+        return num.toString();
+      }
+
+      /**
+       * Aggregate statistics from recipes
+       */
+      function aggregateStats(recipes) {
+        let totalInstalls = 0;
+        let totalForks = 0;
+
+        recipes.forEach((recipe) => {
+          totalInstalls += recipe.stats.installs || 0;
+          totalForks += recipe.stats.forks || 0;
+        });
+
+        return {
+          totalRecipes: recipes.length,
+          totalInstalls,
+          totalForks,
+          totalConnections: totalInstalls + totalForks,
+        };
+      }
+
+      /**
+       * Update the stats display
+       */
+      function updateStatsDisplay(stats) {
+        const isPretty = prettyFormat.checked;
+        document.getElementById('totalRecipes').textContent = stats.totalRecipes;
+        document.getElementById('totalInstalls').textContent = formatNumber(stats.totalInstalls, isPretty);
+        document.getElementById('totalForks').textContent = formatNumber(stats.totalForks, isPretty);
+        document.getElementById('totalConnections').textContent = formatNumber(stats.totalConnections, isPretty);
+      }
+
+      /**
+       * Generate markdown code for all combined badges
+       */
+      function generateMarkdownCode(stats) {
+        const lines = [];
+        lines.push(`![Recipes](${BASE_URL}/badge/author/recipes?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(`![Total Installs](${BASE_URL}/badge/author/installs?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(`![Total Forks](${BASE_URL}/badge/author/forks?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(`![Total Connections](${BASE_URL}/badge/author/connections?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        return lines.join('\n');
+      }
+
+      /**
+       * Generate direct URLs for all badges
+       */
+      function generateDirectUrls(stats) {
+        const lines = [];
+        lines.push(`# Recipes: ${BASE_URL}/badge/author/recipes?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(`# Total Installs: ${BASE_URL}/badge/author/installs?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(`# Total Forks: ${BASE_URL}/badge/author/forks?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(`# Total Connections: ${BASE_URL}/badge/author/connections?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        return lines.join('\n');
+      }
+
+      /**
+       * Render individual recipe badges
+       */
+      function renderIndividualRecipes(recipes) {
+        const recipesList = document.getElementById('recipesList');
+        recipesList.innerHTML = '';
+
+        recipes.forEach((recipe) => {
+          const recipeItem = document.createElement('div');
+          recipeItem.className = 'recipe-item';
+
+          const nameDiv = document.createElement('div');
+          nameDiv.className = 'recipe-item-name';
+          nameDiv.textContent = recipe.name;
+
+          const badgesDiv = document.createElement('div');
+          badgesDiv.className = 'recipe-item-badges';
+
+          // Create badge links for each type
+          const badgeTypes = [
+            { type: 'installs', label: 'Installs', icon: '📥' },
+            { type: 'forks', label: 'Forks', icon: '🍴' },
+            { type: 'connections', label: 'Connections', icon: '🔗' },
+          ];
+
+          badgeTypes.forEach(({ type, label, icon }) => {
+            const link = document.createElement('a');
+            link.href = `#`;
+            link.className = 'recipe-badge-link';
+            link.textContent = `${icon} ${label}`;
+            link.title = `View ${label.toLowerCase()} badge`;
+            badgesDiv.appendChild(link);
+          });
+
+          recipeItem.appendChild(nameDiv);
+          recipeItem.appendChild(badgesDiv);
+          recipesList.appendChild(recipeItem);
+        });
+
+        document.getElementById('recipeCount').textContent = recipes.length;
+      }
+
+      let currentUserId = null;
+
+      /**
+       * Main generate function
+       */
+      async function generateAuthorBadges() {
+        const input = authorInput.value.trim();
+
+        if (!input) {
+          showValidation(false, 'Please enter a recipe URL, recipe ID, or author ID');
+          return;
+        }
+
+        generateBtn.disabled = true;
+        showValidation(false, 'Loading...');
+
+        try {
+          let result = null;
+          const potentialId = extractUserIdFromRecipe(input);
+
+          if (!potentialId) {
+            showValidation(false, 'Invalid input format');
+            generateBtn.disabled = false;
+            return;
+          }
+
+          // Try to fetch as recipe ID first
+          result = await fetchUserRecipesFromRecipe(potentialId);
+
+          // If that fails, try as user ID directly
+          if (!result) {
+            result = await fetchUserRecipes(potentialId);
+          }
+
+          if (!result || !result.data || result.data.length === 0) {
+            showValidation(false, 'No recipes found. Please check the input.');
+            generateBtn.disabled = false;
+            return;
+          }
+
+          currentUserId = result.data[0].user_id;
+          const stats = aggregateStats(result.data);
+          currentRecipes = result.data;
+
+          // Show success
+          showValidation(true, `Found author ID: ${currentUserId} (${result.data.length} recipes)`);
+
+          // Update displays
+          updateStatsDisplay(stats);
+          renderIndividualRecipes(result.data);
+
+          // Generate code
+          markdownCode.textContent = generateMarkdownCode(stats);
+          urlCode.textContent = generateDirectUrls(stats);
+
+          // Show sections
+          authorStatsSection.classList.add('show');
+          individualRecipesSection.classList.add('show');
+        } catch (error) {
+          console.error('Error:', error);
+          showValidation(false, 'An error occurred. Please try again.');
+        } finally {
+          generateBtn.disabled = false;
+        }
+      }
+
+      // Event listeners
+      generateBtn.addEventListener('click', generateAuthorBadges);
+      authorInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          generateAuthorBadges();
+        }
+      });
+
+      prettyFormat.addEventListener('change', () => {
+        if (currentUserId) {
+          // Re-render with new format
+          const stats = aggregateStats(currentRecipes);
+          updateStatsDisplay(stats);
+        }
+      });
+
+      let currentRecipes = [];
+
+      // Copy buttons
+      document.querySelectorAll('.copy-btn').forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const targetId = btn.getAttribute('data-target');
+          const codeElement = document.getElementById(targetId);
+          const text = codeElement.textContent;
+
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.classList.add('copied');
+            setTimeout(() => btn.classList.remove('copied'), 2000);
+          } catch (err) {
+            console.error('Failed to copy:', err);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
