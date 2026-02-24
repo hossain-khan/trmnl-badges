@@ -649,6 +649,48 @@ describe('TRMNL Badges API', () => {
     });
   });
 
+  describe('GET /api/recipes', () => {
+    it('should return 400 when user_id parameter is missing', async () => {
+      const response = await app.request('/api/recipes');
+      expect(response.status).toBe(400);
+
+      const json = await response.json();
+      expect(json).toHaveProperty('error', 'Missing required parameter: user_id');
+    });
+
+    it('should return 404 when no recipes are found for user', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce({ data: [] });
+
+      const response = await app.request('/api/recipes?user_id=9999');
+      expect(response.status).toBe(404);
+
+      const json = await response.json();
+      expect(json).toHaveProperty('error', 'No recipes found for this user');
+    });
+
+    it('should return user recipes with cache header for valid user', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/api/recipes?user_id=29');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
+
+      const json = (await response.json()) as any;
+      expect(json.data).toHaveLength(3);
+      expect(json.data[0].name).toBe('Kung Fu Panda Quotes');
+    });
+
+    it('should return 404 when fetchUserRecipes returns null', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(null);
+
+      const response = await app.request('/api/recipes?user_id=29');
+      expect(response.status).toBe(404);
+
+      const json = await response.json();
+      expect(json).toHaveProperty('error', 'No recipes found for this user');
+    });
+  });
+
   describe('GET /badge/counter', () => {
     // Helper to create a mock KV namespace
     const createMockKV = (initialData: Record<string, string> = {}) => {

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { fetchRecipe } from '../src/trmnl-api';
-import { mockRecipe } from './fixtures';
+import { fetchRecipe, fetchUserRecipes } from '../src/trmnl-api';
+import { mockRecipe, mockUserRecipesResponse } from './fixtures';
 
 describe('fetchRecipe', () => {
   let mockFetch: ReturnType<typeof vi.fn>;
@@ -124,5 +124,115 @@ describe('fetchRecipe', () => {
     const result = await fetchRecipe('227153');
 
     expect(result).toBeNull();
+  });
+});
+
+describe('fetchUserRecipes', () => {
+  let mockFetch: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    mockFetch = vi.fn();
+    vi.stubGlobal('fetch', mockFetch);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('should return user recipes when API returns valid JSON', async () => {
+    const mockResponse = {
+      ok: true,
+      status: 200,
+      headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+      json: async () => mockUserRecipesResponse,
+    };
+
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
+
+    const result = await fetchUserRecipes('29');
+
+    expect(result).toEqual(mockUserRecipesResponse);
+    expect(mockFetch).toHaveBeenCalledWith('https://trmnl.com/recipes.json?user_id=29', {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'trmnl-badges',
+      },
+    });
+  });
+
+  it('should return null when content-type is not JSON', async () => {
+    const mockResponse = {
+      ok: true,
+      status: 200,
+      headers: new Map([['content-type', 'text/html']]),
+    };
+
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
+
+    const result = await fetchUserRecipes('29');
+
+    expect(result).toBeNull();
+  });
+
+  it('should return null when API returns 404', async () => {
+    const mockResponse = {
+      ok: false,
+      status: 404,
+      statusText: 'Not Found',
+      headers: new Map([['content-type', 'application/json']]),
+    };
+
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
+
+    const result = await fetchUserRecipes('99999');
+
+    expect(result).toBeNull();
+  });
+
+  it('should return null and log error when fetch fails', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    mockFetch.mockRejectedValueOnce(new Error('Network error'));
+
+    const result = await fetchUserRecipes('29');
+
+    expect(result).toBeNull();
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching user recipes:', expect.any(Error));
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('should return null when content-type header is missing', async () => {
+    const mockResponse = {
+      ok: true,
+      status: 200,
+      headers: new Map(),
+      json: async () => mockUserRecipesResponse,
+    };
+
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
+
+    const result = await fetchUserRecipes('29');
+
+    expect(result).toBeNull();
+  });
+
+  it('should encode userId in the URL', async () => {
+    const mockResponse = {
+      ok: true,
+      status: 200,
+      headers: new Map([['content-type', 'application/json']]),
+      json: async () => ({ data: [] }),
+    };
+
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
+
+    await fetchUserRecipes('user 123');
+
+    expect(mockFetch).toHaveBeenCalledWith('https://trmnl.com/recipes.json?user_id=user%20123', {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'trmnl-badges',
+      },
+    });
   });
 });

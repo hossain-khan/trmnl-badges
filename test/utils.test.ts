@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { formatNumber, compactNumberFormatter } from '../src/utils';
+import {
+  formatNumber,
+  compactNumberFormatter,
+  aggregateAuthorStats,
+  isValidUserId,
+} from '../src/utils';
+import type { TRMNLRecipe } from '../src/types';
+import { mockRecipe, mockRecipeZeroStats } from './fixtures';
 
 describe('Utils', () => {
   describe('formatNumber', () => {
@@ -87,6 +94,77 @@ describe('Utils', () => {
         const result = compactNumberFormatter.format(1500000);
         expect(result).toBe('1.5M');
       });
+    });
+  });
+
+  describe('aggregateAuthorStats', () => {
+    it('should return zeros for an empty recipe array', () => {
+      const result = aggregateAuthorStats([]);
+      expect(result).toEqual({ recipes: 0, installs: 0, forks: 0, connections: 0 });
+    });
+
+    it('should aggregate stats from a single recipe', () => {
+      const result = aggregateAuthorStats([mockRecipe]);
+      expect(result).toEqual({ recipes: 1, installs: 7, forks: 5, connections: 12 });
+    });
+
+    it('should aggregate stats from multiple recipes', () => {
+      const recipes: TRMNLRecipe[] = [
+        { ...mockRecipe, stats: { installs: 100, forks: 50 } },
+        { ...mockRecipe, stats: { installs: 75, forks: 30 } },
+        { ...mockRecipe, stats: { installs: 50, forks: 20 } },
+      ];
+      const result = aggregateAuthorStats(recipes);
+      expect(result).toEqual({ recipes: 3, installs: 225, forks: 100, connections: 325 });
+    });
+
+    it('should handle recipes with zero stats', () => {
+      const result = aggregateAuthorStats([mockRecipeZeroStats]);
+      expect(result).toEqual({ recipes: 1, installs: 0, forks: 0, connections: 0 });
+    });
+
+    it('should handle recipes with undefined stats gracefully', () => {
+      const recipeNoStats = { ...mockRecipe, stats: undefined } as any;
+      const result = aggregateAuthorStats([recipeNoStats]);
+      expect(result).toEqual({ recipes: 1, installs: 0, forks: 0, connections: 0 });
+    });
+
+    it('should handle recipes with partial stats (missing forks)', () => {
+      const recipePartial = { ...mockRecipe, stats: { installs: 10 } } as any;
+      const result = aggregateAuthorStats([recipePartial]);
+      expect(result).toEqual({ recipes: 1, installs: 10, forks: 0, connections: 10 });
+    });
+
+    it('should handle recipes with partial stats (missing installs)', () => {
+      const recipePartial = { ...mockRecipe, stats: { forks: 5 } } as any;
+      const result = aggregateAuthorStats([recipePartial]);
+      expect(result).toEqual({ recipes: 1, installs: 0, forks: 5, connections: 5 });
+    });
+  });
+
+  describe('isValidUserId', () => {
+    it('should return true for a valid string userId', () => {
+      expect(isValidUserId('29')).toBe(true);
+    });
+
+    it('should return true for a non-numeric string', () => {
+      expect(isValidUserId('abc')).toBe(true);
+    });
+
+    it('should return false for undefined', () => {
+      expect(isValidUserId(undefined)).toBe(false);
+    });
+
+    it('should return false for an empty string', () => {
+      expect(isValidUserId('')).toBe(false);
+    });
+
+    it('should return false for a whitespace-only string', () => {
+      expect(isValidUserId('   ')).toBe(false);
+    });
+
+    it('should return false for an array of strings', () => {
+      expect(isValidUserId(['29', '30'] as any)).toBe(false);
     });
   });
 });
