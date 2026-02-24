@@ -359,41 +359,128 @@
       }
 
       .recipe-item {
-        background: #f9f9f9;
+        background: white;
         border: 1px solid #e0e0e0;
-        border-radius: 6px;
-        padding: 12px;
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .recipe-item-info {
+        flex: 1;
+        min-width: 0;
       }
 
       .recipe-item-name {
         font-weight: 600;
         color: #333;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         font-size: 14px;
       }
 
-      .recipe-item-badges {
+      .recipe-item-stats {
+        font-size: 13px;
+        color: #999;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .recipe-item-action {
+        flex-shrink: 0;
+      }
+
+      .show-badges-btn {
+        background: #f8654b;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+
+      .show-badges-btn:hover {
+        background: #e8523a;
+      }
+
+      .show-badges-btn.expanded {
+        background: #667eea;
+      }
+
+      /* Recipe Badges Preview Section */
+      .recipe-badges-container {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+
+      .recipe-badges-container.expanded {
+        max-height: 1000px;
+        transition: max-height 0.3s ease-in;
+      }
+
+      .recipe-badges-content {
+        padding: 16px;
+        border-top: 1px solid #e0e0e0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+      }
+
+      .recipe-badge-preview {
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
         gap: 8px;
       }
 
-      .recipe-badge-link {
-        display: inline-flex;
-        align-items: center;
-        background: white;
-        border: 1px solid #ddd;
-        padding: 4px 8px;
+      .recipe-badge-image {
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
         border-radius: 4px;
-        font-size: 11px;
-        color: #667eea;
-        text-decoration: none;
-        transition: all 0.2s;
+        padding: 12px;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
       }
 
-      .recipe-badge-link:hover {
+      .recipe-badge-image svg {
+        max-width: 100%;
+        height: auto;
+        max-height: 32px;
+      }
+
+      .recipe-badge-copy-btn {
         background: #f0f0f0;
-        border-color: #667eea;
+        color: #333;
+        border: 1px solid #ddd;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+      }
+
+      .recipe-badge-copy-btn:hover {
+        background: #e0e0e0;
+        border-color: #999;
+      }
+
+      .recipe-badge-copy-btn.copied {
+        background: #4caf50;
+        color: white;
+        border-color: #4caf50;
       }
 
       .code-section {
@@ -1051,42 +1138,153 @@
       }
 
       /**
-       * Render individual recipe badges
+       * Load individual recipe badge preview
+       */
+      async function loadRecipeBadgePreview(containerId, recipeId, badgeType, isPretty = false) {
+        try {
+          const container = document.getElementById(containerId);
+          const badgeUrl = `${BASE_URL}/badge/${badgeType}?recipe=${recipeId}${isPretty ? '&pretty' : ''}`;
+          const response = await fetch(badgeUrl);
+          const svgText = await response.text();
+          container.innerHTML = svgText;
+        } catch (error) {
+          console.error(`Error loading ${badgeType} badge for recipe ${recipeId}:`, error);
+        }
+      }
+
+      /**
+       * Generate markdown code for a single recipe badge
+       */
+      function generateRecipeBadgeMarkdown(recipeId, badgeType, badgeLabel) {
+        const url = `${BASE_URL}/badge/${badgeType}?recipe=${recipeId}${prettyFormat.checked ? '&pretty' : ''}`;
+        return `![${badgeLabel}](${url})`;
+      }
+
+      /**
+       * Render individual recipe badges with collapsible sections
        */
       function renderIndividualRecipes(recipes) {
         const recipesList = document.getElementById('recipesList');
         recipesList.innerHTML = '';
 
-        recipes.forEach((recipe) => {
+        recipes.forEach((recipe, index) => {
+          const recipeWrapper = document.createElement('div');
+          recipeWrapper.style.borderRadius = '8px';
+          recipeWrapper.style.overflow = 'hidden';
+          recipeWrapper.style.border = '1px solid #e0e0e0';
+          recipeWrapper.style.marginBottom = '0';
+
+          // Main recipe item
           const recipeItem = document.createElement('div');
           recipeItem.className = 'recipe-item';
+
+          const infoDiv = document.createElement('div');
+          infoDiv.className = 'recipe-item-info';
 
           const nameDiv = document.createElement('div');
           nameDiv.className = 'recipe-item-name';
           nameDiv.textContent = recipe.name;
 
-          const badgesDiv = document.createElement('div');
-          badgesDiv.className = 'recipe-item-badges';
+          const statsDiv = document.createElement('div');
+          statsDiv.className = 'recipe-item-stats';
+          const isPretty = prettyFormat.checked;
+          statsDiv.textContent = `${formatNumber(recipe.stats.installs, isPretty)} installs • ${formatNumber(recipe.stats.forks, isPretty)} forks • ${formatNumber(recipe.stats.installs + recipe.stats.forks, isPretty)} connections`;
 
-          // Create badge links for each type
+          infoDiv.appendChild(nameDiv);
+          infoDiv.appendChild(statsDiv);
+
+          const actionDiv = document.createElement('div');
+          actionDiv.className = 'recipe-item-action';
+
+          const showBtn = document.createElement('button');
+          showBtn.className = 'show-badges-btn';
+          showBtn.textContent = 'Show Badges';
+          showBtn.type = 'button';
+
+          actionDiv.appendChild(showBtn);
+
+          recipeItem.appendChild(infoDiv);
+          recipeItem.appendChild(actionDiv);
+
+          // Collapsible badges container
+          const badgesContainer = document.createElement('div');
+          badgesContainer.className = 'recipe-badges-container';
+          badgesContainer.id = `badges-container-${index}`;
+
+          const badgesContent = document.createElement('div');
+          badgesContent.className = 'recipe-badges-content';
+
+          // Create badge preview sections
           const badgeTypes = [
-            { type: 'installs', label: 'Installs', icon: '📥' },
-            { type: 'forks', label: 'Forks', icon: '🍴' },
-            { type: 'connections', label: 'Connections', icon: '🔗' },
+            { type: 'installs', label: 'Installs' },
+            { type: 'forks', label: 'Forks' },
+            { type: 'connections', label: 'Connections' },
           ];
 
-          badgeTypes.forEach(({ type, label, icon }) => {
-            const link = document.createElement('a');
-            link.href = `#`;
-            link.className = 'recipe-badge-link';
-            link.textContent = `${icon} ${label}`;
-            link.title = `View ${label.toLowerCase()} badge`;
-            badgesDiv.appendChild(link);
+          badgeTypes.forEach((badge) => {
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'recipe-badge-preview';
+
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'recipe-badge-image';
+            imageDiv.id = `recipe-badge-${index}-${badge.type}`;
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'recipe-badge-copy-btn';
+            copyBtn.textContent = 'Copy Markdown';
+            copyBtn.type = 'button';
+            copyBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              const markdown = generateRecipeBadgeMarkdown(recipe.id, badge.type, badge.label);
+              try {
+                await navigator.clipboard.writeText(markdown);
+                copyBtn.classList.add('copied');
+                copyBtn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                  copyBtn.classList.remove('copied');
+                  copyBtn.textContent = 'Copy Markdown';
+                }, 2000);
+              } catch (err) {
+                console.error('Failed to copy:', err);
+              }
+            });
+
+            previewDiv.appendChild(imageDiv);
+            previewDiv.appendChild(copyBtn);
+            badgesContent.appendChild(previewDiv);
           });
 
-          recipeItem.appendChild(nameDiv);
-          recipeItem.appendChild(badgesDiv);
-          recipesList.appendChild(recipeItem);
+          badgesContainer.appendChild(badgesContent);
+
+          // Toggle button handler
+          showBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const isExpanded = badgesContainer.classList.contains('expanded');
+
+            if (!isExpanded) {
+              // Load badge previews when expanding
+              const isPretty = prettyFormat.checked;
+              for (const badge of badgeTypes) {
+                await loadRecipeBadgePreview(
+                  `recipe-badge-${index}-${badge.type}`,
+                  recipe.id,
+                  badge.type,
+                  isPretty
+                );
+              }
+              badgesContainer.classList.add('expanded');
+              showBtn.classList.add('expanded');
+              showBtn.textContent = 'Hide Badges';
+            } else {
+              badgesContainer.classList.remove('expanded');
+              showBtn.classList.remove('expanded');
+              showBtn.textContent = 'Show Badges';
+            }
+          });
+
+          recipeWrapper.appendChild(recipeItem);
+          recipeWrapper.appendChild(badgesContainer);
+          recipesList.appendChild(recipeWrapper);
         });
 
         document.getElementById('recipeCount').textContent = recipes.length;
@@ -1169,7 +1367,7 @@
         }
       });
 
-      prettyFormat.addEventListener('change', () => {
+      prettyFormat.addEventListener('change', async () => {
         if (currentUserId) {
           // Re-render with new format
           const stats = aggregateStats(currentRecipes);
@@ -1179,6 +1377,34 @@
           urlCode.textContent = generateDirectUrls(stats);
           // Reload badge previews with new format
           loadBadgePreviews(currentUserId);
+
+          // Update individual recipe badge previews that are expanded
+          const isPretty = prettyFormat.checked;
+          for (let index = 0; index < currentRecipes.length; index++) {
+            const recipe = currentRecipes[index];
+            const badgesContainer = document.getElementById(`badges-container-${index}`);
+            if (badgesContainer && badgesContainer.classList.contains('expanded')) {
+              // Reload badge previews for expanded recipes
+              await loadRecipeBadgePreview(
+                `recipe-badge-${index}-installs`,
+                recipe.id,
+                'installs',
+                isPretty
+              );
+              await loadRecipeBadgePreview(
+                `recipe-badge-${index}-forks`,
+                recipe.id,
+                'forks',
+                isPretty
+              );
+              await loadRecipeBadgePreview(
+                `recipe-badge-${index}-connections`,
+                recipe.id,
+                'connections',
+                isPretty
+              );
+            }
+          }
         }
       });
 
