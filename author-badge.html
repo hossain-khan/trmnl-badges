@@ -1172,6 +1172,9 @@
           // Re-render with new format
           const stats = aggregateStats(currentRecipes);
           updateStatsDisplay(stats);
+          // Regenerate code with new format
+          markdownCode.textContent = generateMarkdownCode(stats);
+          urlCode.textContent = generateDirectUrls(stats);
           // Reload badge previews with new format
           loadBadgePreviews(currentUserId);
         }
