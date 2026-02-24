@@ -200,6 +200,7 @@ app.get('/api/stats', async (context) => {
 
   const stats = {
     id: recipeData.id,
+    user_id: recipeData.user_id,
     name: recipeData.name,
     published_at: recipeData.published_at,
     stats: {
