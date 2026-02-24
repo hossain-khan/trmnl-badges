@@ -23,13 +23,20 @@ trmnl-badges/
 ├── src/
 │   ├── index.ts              # Main Hono app with route handlers
 │   ├── badge-generator.ts    # SVG badge generation with TRMNL branding
-│   ├── trmnl-api.ts          # TRMNL API client for fetching recipe data
+│   ├── badge-helpers.ts      # Response helpers (error/success badges, validation)
+│   ├── trmnl-api.ts          # TRMNL API client for fetching recipe/user data
 │   ├── types.ts              # TypeScript interfaces
-│   ├── utils.ts              # Helper utilities (number formatting)
+│   ├── utils.ts              # Helper utilities (number formatting, aggregation)
 │   └── global.d.ts           # Cloudflare Workers global type declarations
 ├── test/
-│   ├── endpoints.test.ts     # API endpoint tests
+│   ├── endpoints.test.ts     # API endpoint integration tests
+│   ├── badge-generator.test.ts # Badge SVG generation tests
+│   ├── badge-helpers.test.ts # Badge helper function tests
+│   ├── trmnl-api.test.ts     # TRMNL API client tests
+│   ├── utils.test.ts         # Utility function tests
 │   └── fixtures.ts           # Mock data for testing
+├── index.html                # Single recipe badge builder (GitHub Pages)
+├── author-badge.html         # Author badge builder (GitHub Pages)
 └── assets/
     └── trmnl/                # TRMNL logo SVG files
 ```
@@ -38,23 +45,36 @@ trmnl-badges/
 
 ### Badge Endpoints
 
+#### Single Recipe Badges
+
 - `GET /badge/installs?recipe=<recipe_id>` - Recipe install count badge
 - `GET /badge/forks?recipe=<recipe_id>` - Recipe fork count badge
 - `GET /badge/connections?recipe=<recipe_id>` - Recipe connections count badge (sum of installs and forks)
+
+#### Author Badges (combined stats across all recipes)
+
+- `GET /badge/recipes?userId=<user_id>` - Total recipe count badge
+- `GET /badge/installs?userId=<user_id>` - Total installs badge
+- `GET /badge/forks?userId=<user_id>` - Total forks badge
+- `GET /badge/connections?userId=<user_id>` - Total connections badge
 
 ### Utility Endpoints
 
 - `GET /health` - Health check endpoint
 - `GET /health-badge` - Health badge endpoint for shields.io monitoring
 - `GET /api/stats?recipe=<recipe_id>` - JSON stats for TRMNL recipes
+- `GET /api/recipes?user_id=<user_id>` - JSON list of all recipes for a user
 - `GET /badge/counter` - Fun tracking badge showing total badges served
 - `GET /` - Redirects to GitHub repository
 
 ### Query Parameters
 
-- `recipe` (required) - TRMNL recipe ID
+- `recipe` (required\*) - TRMNL recipe ID
+- `userId` (required\*) - TRMNL author/user ID for combined stats
 - `label` (optional) - Custom label text for the badge
 - `pretty` (optional) - Format numbers in compact notation (e.g., 1.2K)
+
+\* Either `recipe` or `userId` is required for badge endpoints. `/badge/recipes` only supports `userId`.
 
 ### Health Badge Endpoint
 
@@ -107,6 +127,12 @@ https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty
 
 # With custom label
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Downloads
+
+# Author badges (combined stats)
+https://trmnl-badges.gohk.xyz/badge/recipes?userId=364
+https://trmnl-badges.gohk.xyz/badge/installs?userId=364
+https://trmnl-badges.gohk.xyz/badge/forks?userId=364
+https://trmnl-badges.gohk.xyz/badge/connections?userId=364
 ```
 
 #### Stats API
@@ -132,6 +158,14 @@ Returns:
   }
 }
 ```
+
+#### User Recipes API
+
+```
+https://trmnl-badges.gohk.xyz/api/recipes?user_id=364
+```
+
+Returns all recipes for the given user with their stats.
 
 ## Testing
 
@@ -170,7 +204,11 @@ npm run deploy
 The service fetches recipe data from the TRMNL API:
 
 ```
+# Single recipe
 https://trmnl.com/recipes/{recipe_id}.json
+
+# All recipes for a user
+https://trmnl.com/recipes.json?user_id={user_id}
 ```
 
 Response includes:
