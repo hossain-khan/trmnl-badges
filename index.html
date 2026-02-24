@@ -637,9 +637,14 @@
         </div>
       </div>
 
-      <div style="margin-bottom: 20px; text-align: right;">
-        <a href="author-badge.html" style="color: #667eea; text-decoration: none; font-size: 12px; transition: color 0.2s;" 
-           onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+      <div style="margin-bottom: 20px; text-align: right">
+        <a
+          id="authorBadgeLink"
+          href="author-badge.html"
+          style="color: #667eea; text-decoration: none; font-size: 12px; transition: color 0.2s"
+          onmouseover="this.style.textDecoration = 'underline'"
+          onmouseout="this.style.textDecoration = 'none'"
+        >
           → Author badge builder
         </a>
       </div>
@@ -655,10 +660,25 @@
               width="800"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g fill="none" stroke="#c73d2a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
-                <path d="m1.99023 8.56v8c0 1.0609.42143 2.0783 1.17157 2.8284.75015.7502 1.76757 1.1716 2.82843 1.1716h11.99997c1.0609 0 2.0783-.4214 2.8285-1.1716.7501-.7501 1.1715-1.7675 1.1715-2.8284v-8c0-1.06087-.4214-2.07829-1.1715-2.82843-.7502-.75015-1.7676-1.17157-2.8285-1.17157h-11.99997c-1.06086 0-2.07828.42142-2.82843 1.17157-.75014.75014-1.17157 1.76756-1.17157 2.82843z"/><path d="m5.99023 8.56v8"/><path d="m8.99023 12.56v4"/><path d="m8.99023 8.56v1"/><path d="m14.9902 8.56v8"/><path d="m12 16.5v.06"/><path d="m12 8.56v5"/><path d="m17.9902 13.56v3"/><path d="m17.9902 8.56v2"/>
-              </g>
-            </svg
+              <g
+                fill="none"
+                stroke="#c73d2a"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+              >
+                <path
+                  d="m1.99023 8.56v8c0 1.0609.42143 2.0783 1.17157 2.8284.75015.7502 1.76757 1.1716 2.82843 1.1716h11.99997c1.0609 0 2.0783-.4214 2.8285-1.1716.7501-.7501 1.1715-1.7675 1.1715-2.8284v-8c0-1.06087-.4214-2.07829-1.1715-2.82843-.7502-.75015-1.7676-1.17157-2.8285-1.17157h-11.99997c-1.06086 0-2.07828.42142-2.82843 1.17157-.75014.75014-1.17157 1.76756-1.17157 2.82843z"
+                />
+                <path d="m5.99023 8.56v8" />
+                <path d="m8.99023 12.56v4" />
+                <path d="m8.99023 8.56v1" />
+                <path d="m14.9902 8.56v8" />
+                <path d="m12 16.5v.06" />
+                <path d="m12 8.56v5" />
+                <path d="m17.9902 13.56v3" />
+                <path d="m17.9902 8.56v2" />
+              </g></svg
             >Recipe URL or ID
             <span class="label-hint"
               >(find your <a href="https://trmnl.com/recipes" target="_blank">recipe</a>)</span
@@ -976,6 +996,13 @@
 
         recipeName.textContent = data.name;
         recipeStats.textContent = `📊 ${data.stats.installs || 0} installs • ${data.stats.forks || 0} forks • ${totalConnections} Connections`;
+
+        // Save user_id to sessionStorage and update author badge link
+        if (data.user_id) {
+          sessionStorage.setItem('lastRecipeUserId', data.user_id);
+          const authorBadgeLink = document.getElementById('authorBadgeLink');
+          authorBadgeLink.href = `author-badge.html?userId=${data.user_id}`;
+        }
 
         recipeInfo.classList.add('show');
       }

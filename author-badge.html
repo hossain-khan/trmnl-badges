@@ -1428,6 +1428,22 @@
           }
         });
       });
+
+      // Check if userId is in URL query parameters and auto-prefill
+      function checkAndPrefillUserId() {
+        const params = new URLSearchParams(window.location.search);
+        const userIdFromUrl = params.get('userId');
+
+        if (userIdFromUrl) {
+          // Prefill the input with the userId
+          authorInput.value = userIdFromUrl;
+          // Auto-generate the author badges
+          generateAuthorBadges();
+        }
+      }
+
+      // Run on page load
+      checkAndPrefillUserId();
     </script>
   </body>
 </html>
