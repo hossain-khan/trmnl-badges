@@ -47,6 +47,13 @@ function aggregateAuthorStats(recipes: TRMNLRecipe[]) {
 }
 
 /**
+ * Helper function to safely check if userId is a valid non-empty string
+ */
+function isValidUserId(userId: string | string[] | undefined): boolean {
+  return typeof userId === 'string' && userId.trim().length > 0;
+}
+
+/**
  * Helper function to increment badge counter
  */
 async function incrementBadgeCounter(context: Context<{ Bindings: Bindings }>) {
@@ -71,7 +78,7 @@ async function incrementBadgeCounter(context: Context<{ Bindings: Bindings }>) {
 app.get('/badge/installs', async (context) => {
   try {
     const { recipe, userId, label, pretty } = context.req.query();
-    const defaultLabel = userId ? 'Total Installs' : 'Installs';
+    const defaultLabel = isValidUserId(userId) ? 'Total Installs' : 'Installs';
     const isPretty = pretty !== undefined;
 
     if (recipe) {
@@ -94,10 +101,9 @@ app.get('/badge/installs', async (context) => {
       });
 
       await incrementBadgeCounter(context);
-      return returnSuccessBadge(context, badge);
-    } else if (userId) {
+    } else if (isValidUserId(userId)) {
       // Author badge - combined stats
-      const userRecipes = await fetchUserRecipes(userId);
+      const userRecipes = await fetchUserRecipes(userId as string);
 
       if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
         return returnErrorBadge(context, label || defaultLabel, 'No recipes found');
@@ -123,7 +129,7 @@ app.get('/badge/installs', async (context) => {
 app.get('/badge/forks', async (context) => {
   try {
     const { recipe, userId, label, pretty } = context.req.query();
-    const defaultLabel = userId ? 'Total Forks' : 'Forks';
+    const defaultLabel = isValidUserId(userId) ? 'Total Forks' : 'Forks';
     const isPretty = pretty !== undefined;
 
     if (recipe) {
@@ -147,9 +153,9 @@ app.get('/badge/forks', async (context) => {
 
       await incrementBadgeCounter(context);
       return returnSuccessBadge(context, badge);
-    } else if (userId) {
+    } else if (isValidUserId(userId)) {
       // Author badge - combined stats
-      const userRecipes = await fetchUserRecipes(userId);
+      const userRecipes = await fetchUserRecipes(userId as string);
 
       if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
         return returnErrorBadge(context, label || defaultLabel, 'No recipes found');
@@ -205,7 +211,7 @@ app.get('/badge/recipes', async (context) => {
 app.get('/badge/connections', async (context) => {
   try {
     const { recipe, userId, label, pretty } = context.req.query();
-    const defaultLabel = userId ? 'Total Connections' : 'Connections';
+    const defaultLabel = isValidUserId(userId) ? 'Total Connections' : 'Connections';
     const isPretty = pretty !== undefined;
 
     if (recipe) {
@@ -234,9 +240,9 @@ app.get('/badge/connections', async (context) => {
 
       await incrementBadgeCounter(context);
       return returnSuccessBadge(context, badge);
-    } else if (userId) {
+    } else if (isValidUserId(userId)) {
       // Author badge - combined stats
-      const userRecipes = await fetchUserRecipes(userId);
+      const userRecipes = await fetchUserRecipes(userId as string);
 
       if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
         return returnErrorBadge(context, label || defaultLabel, 'No recipes found');
