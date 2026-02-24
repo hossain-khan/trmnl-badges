@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import type { Bindings } from './types';
-import { fetchRecipe } from './trmnl-api';
+import { fetchRecipe, fetchUserRecipes } from './trmnl-api';
 import { generateBadge } from './badge-generator';
 import { formatNumber } from './utils';
 import { returnErrorBadge, isRecipeValid, returnSuccessBadge } from './badge-helpers';
@@ -214,6 +214,24 @@ app.get('/api/stats', async (context) => {
 
   context.header('Cache-Control', 'public, max-age=3600');
   return context.json(stats);
+});
+
+// API endpoint for fetching all recipes for a specific user/author
+app.get('/api/recipes', async (context) => {
+  const { user_id } = context.req.query();
+
+  if (!user_id) {
+    return context.json({ error: 'Missing required parameter: user_id' }, 400);
+  }
+
+  const userRecipes = await fetchUserRecipes(user_id);
+
+  if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
+    return context.json({ error: 'No recipes found for this user' }, 404);
+  }
+
+  context.header('Cache-Control', 'public, max-age=3600');
+  return context.json(userRecipes);
 });
 
 ///////////////////////////////////////////////////////////
