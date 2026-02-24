@@ -235,6 +235,222 @@ app.get('/api/recipes', async (context) => {
   return context.json(userRecipes);
 });
 
+/**
+ * Helper function to aggregate author statistics from multiple recipes
+ */
+function aggregateAuthorStats(recipes: any[]) {
+  let totalInstalls = 0;
+  let totalForks = 0;
+
+  recipes.forEach((recipe) => {
+    totalInstalls += recipe.stats?.installs || 0;
+    totalForks += recipe.stats?.forks || 0;
+  });
+
+  return {
+    recipes: recipes.length,
+    installs: totalInstalls,
+    forks: totalForks,
+    connections: totalInstalls + totalForks,
+  };
+}
+
+/**
+ * Author badge endpoints - generate badges for all author's recipes combined
+ */
+
+// /author/recipes - badge showing total number of recipes by author
+app.get('/author/recipes', async (context) => {
+  try {
+    const { userId, label, pretty } = context.req.query();
+
+    if (!userId) {
+      return returnErrorBadge(context, label || 'Recipes', 'Missing userId');
+    }
+
+    let userRecipes;
+    try {
+      userRecipes = await fetchUserRecipes(userId);
+    } catch (err) {
+      console.error('[author/recipes] Network error fetching recipes:', err);
+      return returnErrorBadge(context, label || 'Recipes', 'Network Error');
+    }
+
+    if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
+      return returnErrorBadge(context, label || 'Recipes', 'No recipes found');
+    }
+
+    const stats = aggregateAuthorStats(userRecipes.data);
+    const isPretty = pretty !== undefined;
+    const badge = generateBadge({
+      label: label || 'Recipes',
+      message: formatNumber(stats.recipes, isPretty),
+    });
+
+    // 🎉 Fun tracking feature: Increment counter
+    if (context.env && context.env.BADGE_COUNTER) {
+      try {
+        const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const count = current ? parseInt(current, 10) : 0;
+        const newCount = (Number.isFinite(count) ? count : 0) + 1;
+        await context.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+      } catch (err) {
+        console.error('[author/recipes] Counter error:', err);
+      }
+    }
+
+    context.header('Cache-Control', 'public, max-age=3600');
+    return returnSuccessBadge(context, badge);
+  } catch (err) {
+    console.error('[author/recipes] Unexpected error:', err);
+    return returnErrorBadge(context, 'Recipes', 'Service Error');
+  }
+});
+
+// /author/installs - badge showing combined installs for all author's recipes
+app.get('/author/installs', async (context) => {
+  try {
+    const { userId, label, pretty } = context.req.query();
+
+    if (!userId) {
+      return returnErrorBadge(context, label || 'Installs', 'Missing userId');
+    }
+
+    let userRecipes;
+    try {
+      userRecipes = await fetchUserRecipes(userId);
+    } catch (err) {
+      console.error('[author/installs] Network error fetching recipes:', err);
+      return returnErrorBadge(context, label || 'Installs', 'Network Error');
+    }
+
+    if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
+      return returnErrorBadge(context, label || 'Installs', 'No recipes found');
+    }
+
+    const stats = aggregateAuthorStats(userRecipes.data);
+    const isPretty = pretty !== undefined;
+    const badge = generateBadge({
+      label: label || 'Installs',
+      message: formatNumber(stats.installs, isPretty),
+    });
+
+    // 🎉 Fun tracking feature: Increment counter
+    if (context.env && context.env.BADGE_COUNTER) {
+      try {
+        const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const count = current ? parseInt(current, 10) : 0;
+        const newCount = (Number.isFinite(count) ? count : 0) + 1;
+        await context.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+      } catch (err) {
+        console.error('[author/installs] Counter error:', err);
+      }
+    }
+
+    context.header('Cache-Control', 'public, max-age=3600');
+    return returnSuccessBadge(context, badge);
+  } catch (err) {
+    console.error('[author/installs] Unexpected error:', err);
+    return returnErrorBadge(context, 'Installs', 'Service Error');
+  }
+});
+
+// /author/forks - badge showing combined forks for all author's recipes
+app.get('/author/forks', async (context) => {
+  try {
+    const { userId, label, pretty } = context.req.query();
+
+    if (!userId) {
+      return returnErrorBadge(context, label || 'Forks', 'Missing userId');
+    }
+
+    let userRecipes;
+    try {
+      userRecipes = await fetchUserRecipes(userId);
+    } catch (err) {
+      console.error('[author/forks] Network error fetching recipes:', err);
+      return returnErrorBadge(context, label || 'Forks', 'Network Error');
+    }
+
+    if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
+      return returnErrorBadge(context, label || 'Forks', 'No recipes found');
+    }
+
+    const stats = aggregateAuthorStats(userRecipes.data);
+    const isPretty = pretty !== undefined;
+    const badge = generateBadge({
+      label: label || 'Forks',
+      message: formatNumber(stats.forks, isPretty),
+    });
+
+    // 🎉 Fun tracking feature: Increment counter
+    if (context.env && context.env.BADGE_COUNTER) {
+      try {
+        const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const count = current ? parseInt(current, 10) : 0;
+        const newCount = (Number.isFinite(count) ? count : 0) + 1;
+        await context.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+      } catch (err) {
+        console.error('[author/forks] Counter error:', err);
+      }
+    }
+
+    context.header('Cache-Control', 'public, max-age=3600');
+    return returnSuccessBadge(context, badge);
+  } catch (err) {
+    console.error('[author/forks] Unexpected error:', err);
+    return returnErrorBadge(context, 'Forks', 'Service Error');
+  }
+});
+
+// /author/connections - badge showing combined connections (installs + forks) for all author's recipes
+app.get('/author/connections', async (context) => {
+  try {
+    const { userId, label, pretty } = context.req.query();
+
+    if (!userId) {
+      return returnErrorBadge(context, label || 'Connections', 'Missing userId');
+    }
+
+    let userRecipes;
+    try {
+      userRecipes = await fetchUserRecipes(userId);
+    } catch (err) {
+      console.error('[author/connections] Network error fetching recipes:', err);
+      return returnErrorBadge(context, label || 'Connections', 'Network Error');
+    }
+
+    if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
+      return returnErrorBadge(context, label || 'Connections', 'No recipes found');
+    }
+
+    const stats = aggregateAuthorStats(userRecipes.data);
+    const isPretty = pretty !== undefined;
+    const badge = generateBadge({
+      label: label || 'Connections',
+      message: formatNumber(stats.connections, isPretty),
+    });
+
+    // 🎉 Fun tracking feature: Increment counter
+    if (context.env && context.env.BADGE_COUNTER) {
+      try {
+        const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
+        const count = current ? parseInt(current, 10) : 0;
+        const newCount = (Number.isFinite(count) ? count : 0) + 1;
+        await context.env.BADGE_COUNTER.put(BADGES_SERVED_COUNTER_KEY, newCount.toString());
+      } catch (err) {
+        console.error('[author/connections] Counter error:', err);
+      }
+    }
+
+    context.header('Cache-Control', 'public, max-age=3600');
+    return returnSuccessBadge(context, badge);
+  } catch (err) {
+    console.error('[author/connections] Unexpected error:', err);
+    return returnErrorBadge(context, 'Connections', 'Service Error');
+  }
+});
+
 ///////////////////////////////////////////////////////////
 // Utility endpoints for status, testing and development
 ///////////////////////////////////////////////////////////
