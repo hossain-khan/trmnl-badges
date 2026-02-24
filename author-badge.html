@@ -7,11 +7,17 @@
       name="description"
       content="Create customized badges for all your TRMNL recipes by author. Display combined statistics and individual recipe metrics on your GitHub README."
     />
-    <meta name="keywords" content="TRMNL, badges, recipes, author, markdown, github, statistical badges" />
+    <meta
+      name="keywords"
+      content="TRMNL, badges, recipes, author, markdown, github, statistical badges"
+    />
     <meta name="author" content="Hossain Khan, TRMNL Community Member" />
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://hossain-khan.github.io/trmnl-badges/author-badge.html" />
+    <meta
+      property="og:url"
+      content="https://hossain-khan.github.io/trmnl-badges/author-badge.html"
+    />
     <meta property="og:title" content="TRMNL Author Badge Builder" />
     <meta
       property="og:description"
@@ -681,12 +687,11 @@
               width="800"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M12 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-            </svg
+              <path
+                d="M12 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+              /></svg
             >Recipe URL, Recipe ID, or Author ID
-            <span class="label-hint"
-              >(paste any recipe URL to auto-detect author)</span
-            ></label
+            <span class="label-hint">(paste any recipe URL to auto-detect author)</span></label
           >
           <input
             type="text"
@@ -695,13 +700,17 @@
             required
           />
           <div class="hint-feedback-row">
-            <div class="url-hint">Tip: Paste the full URL and we'll find the author automatically</div>
+            <div class="url-hint">
+              Tip: Paste the full URL and we'll find the author automatically
+            </div>
             <div id="authorFeedback" class="author-feedback"></div>
           </div>
         </div>
 
         <div class="button-group">
-          <button type="button" class="generate-btn" id="generateBtn">Generate Author Badges</button>
+          <button type="button" class="generate-btn" id="generateBtn">
+            Generate Author Badges
+          </button>
           <div class="checkbox-group">
             <input type="checkbox" id="prettyFormat" />
             <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
@@ -737,7 +746,9 @@
 
         <div class="code-section">
           <div class="tabs">
-            <button type="button" class="tab-btn active" data-tab="markdown">Markdown (all combined badges)</button>
+            <button type="button" class="tab-btn active" data-tab="markdown">
+              Markdown (all combined badges)
+            </button>
             <button type="button" class="tab-btn" data-tab="url">Direct URL</button>
           </div>
 
@@ -770,7 +781,9 @@
 
       <!-- Individual Recipes Section -->
       <div id="individualRecipesSection" class="individual-recipes-section">
-        <div class="recipes-header">Individual Recipe Badges (<span id="recipeCount">0</span> recipes)</div>
+        <div class="recipes-header">
+          Individual Recipe Badges (<span id="recipeCount">0</span> recipes)
+        </div>
         <div class="recipes-list" id="recipesList"></div>
       </div>
 
@@ -949,11 +962,11 @@
       async function loadBadgePreviews(userId) {
         const badgeTypes = ['recipes', 'installs', 'forks', 'connections'];
         const previewContainers = ['markdownBadgePreview', 'urlBadgePreview'];
-        
+
         for (const containerId of previewContainers) {
           const container = document.getElementById(containerId);
           container.innerHTML = '';
-          
+
           for (const badgeType of badgeTypes) {
             try {
               const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}`;
@@ -973,10 +986,19 @@
       function updateStatsDisplay(stats) {
         const isPretty = prettyFormat.checked;
         document.getElementById('totalRecipes').textContent = stats.totalRecipes;
-        document.getElementById('totalInstalls').textContent = formatNumber(stats.totalInstalls, isPretty);
-        document.getElementById('totalForks').textContent = formatNumber(stats.totalForks, isPretty);
-        document.getElementById('totalConnections').textContent = formatNumber(stats.totalConnections, isPretty);
-        
+        document.getElementById('totalInstalls').textContent = formatNumber(
+          stats.totalInstalls,
+          isPretty
+        );
+        document.getElementById('totalForks').textContent = formatNumber(
+          stats.totalForks,
+          isPretty
+        );
+        document.getElementById('totalConnections').textContent = formatNumber(
+          stats.totalConnections,
+          isPretty
+        );
+
         // Load badge previews if we have a current user ID
         if (currentUserId) {
           loadBadgePreview('recipesBadgeContainer', 'recipes', currentUserId);
@@ -991,10 +1013,18 @@
        */
       function generateMarkdownCode(stats) {
         const lines = [];
-        lines.push(`![Total Recipes](${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
-        lines.push(`![Total Installs](${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
-        lines.push(`![Total Forks](${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
-        lines.push(`![Total Connections](${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(
+          `![Recipes](${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`
+        );
+        lines.push(
+          `![Total Installs](${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`
+        );
+        lines.push(
+          `![Total Forks](${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`
+        );
+        lines.push(
+          `![Total Connections](${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`
+        );
         return lines.join('\n');
       }
 
@@ -1003,10 +1033,18 @@
        */
       function generateDirectUrls(stats) {
         const lines = [];
-        lines.push(`# Total Recipes: ${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
-        lines.push(`# Total Installs: ${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
-        lines.push(`# Total Forks: ${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
-        lines.push(`# Total Connections: ${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(
+          `# Recipes: ${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+        );
+        lines.push(
+          `# Total Installs: ${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+        );
+        lines.push(
+          `# Total Forks: ${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+        );
+        lines.push(
+          `# Total Connections: ${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+        );
         return lines.join('\n');
       }
 
