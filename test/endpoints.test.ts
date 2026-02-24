@@ -234,19 +234,13 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('225');
     });
 
-    it('should handle network error when fetching user recipes', async () => {
-      vi.mocked(fetchUserRecipes).mockRejectedValueOnce(new Error('Network error'));
-      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+    it('should handle null response when fetching user recipes', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(null);
 
       const response = await app.request('/badge/installs?userId=29');
       expect(response.status).toBe(200);
       const svg = await response.text();
-      expect(svg).toContain('Network Error');
-      expect(consoleMock).toHaveBeenCalledWith(
-        '[badge/installs] Network error fetching user recipes:',
-        expect.any(Error)
-      );
-      consoleMock.mockRestore();
+      expect(svg).toContain('No recipes found');
     });
   });
 
@@ -584,19 +578,13 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('3');
     });
 
-    it('should handle network error when fetching recipes list', async () => {
-      vi.mocked(fetchUserRecipes).mockRejectedValueOnce(new Error('Network error'));
-      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+    it('should handle null response when fetching recipes list', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(null);
 
       const response = await app.request('/badge/recipes?userId=29');
       expect(response.status).toBe(200);
       const svg = await response.text();
-      expect(svg).toContain('Network Error');
-      expect(consoleMock).toHaveBeenCalledWith(
-        '[badge/recipes] Network error fetching user recipes:',
-        expect.any(Error)
-      );
-      consoleMock.mockRestore();
+      expect(svg).toContain('No recipes found');
     });
   });
 

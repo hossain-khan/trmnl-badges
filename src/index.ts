@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import type { Bindings } from './types';
+import type { Context } from 'hono';
+import type { Bindings, TRMNLRecipe } from './types';
 import { fetchRecipe, fetchUserRecipes } from './trmnl-api';
 import { generateBadge } from './badge-generator';
 import { formatNumber } from './utils';
@@ -15,17 +16,20 @@ const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
 // Enable CORS for GitHub Pages and other origins
-app.use('*', cors({
-  origin: ['https://hossain-khan.github.io', 'http://localhost:8787'],
-  allowMethods: ['GET', 'OPTIONS'],
-  allowHeaders: ['Content-Type'],
-  maxAge: 600,
-}));
+app.use(
+  '*',
+  cors({
+    origin: ['https://hossain-khan.github.io', 'http://localhost:8787'],
+    allowMethods: ['GET', 'OPTIONS'],
+    allowHeaders: ['Content-Type'],
+    maxAge: 600,
+  })
+);
 
 /**
  * Helper function to aggregate author statistics from multiple recipes
  */
-function aggregateAuthorStats(recipes: any[]) {
+function aggregateAuthorStats(recipes: TRMNLRecipe[]) {
   let totalInstalls = 0;
   let totalForks = 0;
 
@@ -45,7 +49,7 @@ function aggregateAuthorStats(recipes: any[]) {
 /**
  * Helper function to increment badge counter
  */
-async function incrementBadgeCounter(context: any) {
+async function incrementBadgeCounter(context: Context<{ Bindings: Bindings }>) {
   if (context.env && context.env.BADGE_COUNTER) {
     try {
       const current = await context.env.BADGE_COUNTER.get(BADGES_SERVED_COUNTER_KEY);
@@ -93,13 +97,7 @@ app.get('/badge/installs', async (context) => {
       return returnSuccessBadge(context, badge);
     } else if (userId) {
       // Author badge - combined stats
-      let userRecipes;
-      try {
-        userRecipes = await fetchUserRecipes(userId);
-      } catch (err) {
-        console.error('[badge/installs] Network error fetching user recipes:', err);
-        return returnErrorBadge(context, label || defaultLabel, 'Network Error');
-      }
+      const userRecipes = await fetchUserRecipes(userId);
 
       if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
         return returnErrorBadge(context, label || defaultLabel, 'No recipes found');
@@ -112,7 +110,6 @@ app.get('/badge/installs', async (context) => {
       });
 
       await incrementBadgeCounter(context);
-      context.header('Cache-Control', 'public, max-age=3600');
       return returnSuccessBadge(context, badge);
     } else {
       return returnErrorBadge(context, label || defaultLabel, 'Missing recipe or userId');
@@ -152,13 +149,7 @@ app.get('/badge/forks', async (context) => {
       return returnSuccessBadge(context, badge);
     } else if (userId) {
       // Author badge - combined stats
-      let userRecipes;
-      try {
-        userRecipes = await fetchUserRecipes(userId);
-      } catch (err) {
-        console.error('[badge/forks] Network error fetching user recipes:', err);
-        return returnErrorBadge(context, label || defaultLabel, 'Network Error');
-      }
+      const userRecipes = await fetchUserRecipes(userId);
 
       if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
         return returnErrorBadge(context, label || defaultLabel, 'No recipes found');
@@ -171,7 +162,6 @@ app.get('/badge/forks', async (context) => {
       });
 
       await incrementBadgeCounter(context);
-      context.header('Cache-Control', 'public, max-age=3600');
       return returnSuccessBadge(context, badge);
     } else {
       return returnErrorBadge(context, label || defaultLabel, 'Missing recipe or userId');
@@ -192,13 +182,7 @@ app.get('/badge/recipes', async (context) => {
       return returnErrorBadge(context, label || defaultLabel, 'Missing userId');
     }
 
-    let userRecipes;
-    try {
-      userRecipes = await fetchUserRecipes(userId);
-    } catch (err) {
-      console.error('[badge/recipes] Network error fetching user recipes:', err);
-      return returnErrorBadge(context, label || defaultLabel, 'Network Error');
-    }
+    const userRecipes = await fetchUserRecipes(userId);
 
     if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
       return returnErrorBadge(context, label || defaultLabel, 'No recipes found');
@@ -211,7 +195,6 @@ app.get('/badge/recipes', async (context) => {
     });
 
     await incrementBadgeCounter(context);
-    context.header('Cache-Control', 'public, max-age=3600');
     return returnSuccessBadge(context, badge);
   } catch (err) {
     console.error('[badge/recipes] Unexpected error:', err);
@@ -253,13 +236,7 @@ app.get('/badge/connections', async (context) => {
       return returnSuccessBadge(context, badge);
     } else if (userId) {
       // Author badge - combined stats
-      let userRecipes;
-      try {
-        userRecipes = await fetchUserRecipes(userId);
-      } catch (err) {
-        console.error('[badge/connections] Network error fetching user recipes:', err);
-        return returnErrorBadge(context, label || defaultLabel, 'Network Error');
-      }
+      const userRecipes = await fetchUserRecipes(userId);
 
       if (!userRecipes || !userRecipes.data || userRecipes.data.length === 0) {
         return returnErrorBadge(context, label || defaultLabel, 'No recipes found');
@@ -272,7 +249,6 @@ app.get('/badge/connections', async (context) => {
       });
 
       await incrementBadgeCounter(context);
-      context.header('Cache-Control', 'public, max-age=3600');
       return returnSuccessBadge(context, badge);
     } else {
       return returnErrorBadge(context, label || defaultLabel, 'Missing recipe or userId');
