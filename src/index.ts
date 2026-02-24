@@ -71,7 +71,7 @@ async function incrementBadgeCounter(context: Context<{ Bindings: Bindings }>) {
 app.get('/badge/installs', async (context) => {
   try {
     const { recipe, userId, label, pretty } = context.req.query();
-    const defaultLabel = 'Installs';
+    const defaultLabel = userId ? 'Total Installs' : 'Installs';
     const isPretty = pretty !== undefined;
 
     if (recipe) {
@@ -123,7 +123,7 @@ app.get('/badge/installs', async (context) => {
 app.get('/badge/forks', async (context) => {
   try {
     const { recipe, userId, label, pretty } = context.req.query();
-    const defaultLabel = 'Forks';
+    const defaultLabel = userId ? 'Total Forks' : 'Forks';
     const isPretty = pretty !== undefined;
 
     if (recipe) {
@@ -205,7 +205,7 @@ app.get('/badge/recipes', async (context) => {
 app.get('/badge/connections', async (context) => {
   try {
     const { recipe, userId, label, pretty } = context.req.query();
-    const defaultLabel = 'Connections';
+    const defaultLabel = userId ? 'Total Connections' : 'Connections';
     const isPretty = pretty !== undefined;
 
     if (recipe) {
