@@ -254,6 +254,23 @@
         border-radius: 6px;
         padding: 16px;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stat-badge-container {
+        height: 32px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .stat-badge-container svg {
+        max-width: 100%;
+        height: auto;
+        max-height: 32px;
       }
 
       .stat-number {
@@ -667,18 +684,22 @@
         <div class="stats-header">📊 Combined Author Stats</div>
         <div class="stats-grid">
           <div class="stat-card">
+            <div class="stat-badge-container" id="recipesBadgeContainer"></div>
             <div class="stat-number" id="totalRecipes">0</div>
             <div class="stat-label">Recipes</div>
           </div>
           <div class="stat-card">
+            <div class="stat-badge-container" id="installsBadgeContainer"></div>
             <div class="stat-number" id="totalInstalls">0</div>
             <div class="stat-label">Total Installs</div>
           </div>
           <div class="stat-card">
+            <div class="stat-badge-container" id="forksBadgeContainer"></div>
             <div class="stat-number" id="totalForks">0</div>
             <div class="stat-label">Total Forks</div>
           </div>
           <div class="stat-card">
+            <div class="stat-badge-container" id="connectionsBadgeContainer"></div>
             <div class="stat-number" id="totalConnections">0</div>
             <div class="stat-label">Total Connections</div>
           </div>
@@ -870,6 +891,21 @@
       }
 
       /**
+       * Load badge SVG into container
+       */
+      async function loadBadgePreview(containerId, badgeType, userId) {
+        try {
+          const container = document.getElementById(containerId);
+          const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}`;
+          const response = await fetch(badgeUrl);
+          const svgText = await response.text();
+          container.innerHTML = svgText;
+        } catch (error) {
+          console.error(`Error loading ${badgeType} badge:`, error);
+        }
+      }
+
+      /**
        * Update the stats display
        */
       function updateStatsDisplay(stats) {
@@ -878,6 +914,14 @@
         document.getElementById('totalInstalls').textContent = formatNumber(stats.totalInstalls, isPretty);
         document.getElementById('totalForks').textContent = formatNumber(stats.totalForks, isPretty);
         document.getElementById('totalConnections').textContent = formatNumber(stats.totalConnections, isPretty);
+        
+        // Load badge previews if we have a current user ID
+        if (currentUserId) {
+          loadBadgePreview('recipesBadgeContainer', 'recipes', currentUserId);
+          loadBadgePreview('installsBadgeContainer', 'installs', currentUserId);
+          loadBadgePreview('forksBadgeContainer', 'forks', currentUserId);
+          loadBadgePreview('connectionsBadgeContainer', 'connections', currentUserId);
+        }
       }
 
       /**
@@ -885,10 +929,10 @@
        */
       function generateMarkdownCode(stats) {
         const lines = [];
-        lines.push(`![Recipes](${BASE_URL}/badge/author/recipes?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
-        lines.push(`![Total Installs](${BASE_URL}/badge/author/installs?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
-        lines.push(`![Total Forks](${BASE_URL}/badge/author/forks?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
-        lines.push(`![Total Connections](${BASE_URL}/badge/author/connections?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(`![Recipes](${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(`![Total Installs](${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(`![Total Forks](${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(`![Total Connections](${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
         return lines.join('\n');
       }
 
@@ -897,10 +941,10 @@
        */
       function generateDirectUrls(stats) {
         const lines = [];
-        lines.push(`# Recipes: ${BASE_URL}/badge/author/recipes?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
-        lines.push(`# Total Installs: ${BASE_URL}/badge/author/installs?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
-        lines.push(`# Total Forks: ${BASE_URL}/badge/author/forks?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
-        lines.push(`# Total Connections: ${BASE_URL}/badge/author/connections?user_id=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(`# Recipes: ${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(`# Total Installs: ${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(`# Total Forks: ${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(`# Total Connections: ${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
         return lines.join('\n');
       }
 
