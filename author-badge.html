@@ -991,7 +991,7 @@
        */
       function generateMarkdownCode(stats) {
         const lines = [];
-        lines.push(`![Recipes](${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
+        lines.push(`![Total Recipes](${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
         lines.push(`![Total Installs](${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
         lines.push(`![Total Forks](${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
         lines.push(`![Total Connections](${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`);
@@ -1003,7 +1003,7 @@
        */
       function generateDirectUrls(stats) {
         const lines = [];
-        lines.push(`# Recipes: ${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
+        lines.push(`# Total Recipes: ${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
         lines.push(`# Total Installs: ${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
         lines.push(`# Total Forks: ${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
         lines.push(`# Total Connections: ${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`);
