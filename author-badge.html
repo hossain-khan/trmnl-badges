@@ -492,6 +492,36 @@
         word-break: break-all;
         overflow-x: auto;
         line-height: 1.5;
+        margin-bottom: 16px;
+      }
+
+      .badge-preview-section {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 2px solid #e0e0e0;
+      }
+
+      .preview-label {
+        font-weight: 600;
+        color: #333;
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+
+      .badge-preview {
+        background: #fafafa;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .badge-preview svg {
+        max-width: 100%;
+        height: auto;
       }
 
       .header {
@@ -718,6 +748,10 @@
               <button type="button" class="copy-btn" data-target="markdownCode">Copy</button>
             </div>
             <code id="markdownCode"></code>
+            <div class="badge-preview-section">
+              <div class="preview-label">Badge Preview</div>
+              <div class="badge-preview" id="markdownBadgePreview"></div>
+            </div>
           </div>
 
           <!-- Direct URL Tab -->
@@ -726,6 +760,10 @@
               <span class="code-type">Copy direct URLs</span>
             </div>
             <code id="urlCode"></code>
+            <div class="badge-preview-section">
+              <div class="preview-label">Badge Preview</div>
+              <div class="badge-preview" id="urlBadgePreview"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -906,6 +944,30 @@
       }
 
       /**
+       * Load all badges into preview containers
+       */
+      async function loadBadgePreviews(userId) {
+        const badgeTypes = ['recipes', 'installs', 'forks', 'connections'];
+        const previewContainers = ['markdownBadgePreview', 'urlBadgePreview'];
+        
+        for (const containerId of previewContainers) {
+          const container = document.getElementById(containerId);
+          container.innerHTML = '';
+          
+          for (const badgeType of badgeTypes) {
+            try {
+              const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}`;
+              const response = await fetch(badgeUrl);
+              const svgText = await response.text();
+              container.innerHTML += svgText;
+            } catch (error) {
+              console.error(`Error loading ${badgeType} badge:`, error);
+            }
+          }
+        }
+      }
+
+      /**
        * Update the stats display
        */
       function updateStatsDisplay(stats) {
@@ -1045,6 +1107,9 @@
           markdownCode.textContent = generateMarkdownCode(stats);
           urlCode.textContent = generateDirectUrls(stats);
 
+          // Load badge previews
+          await loadBadgePreviews(currentUserId);
+
           // Show sections
           authorStatsSection.classList.add('show');
           individualRecipesSection.classList.add('show');
@@ -1069,6 +1134,8 @@
           // Re-render with new format
           const stats = aggregateStats(currentRecipes);
           updateStatsDisplay(stats);
+          // Reload badge previews with new format
+          loadBadgePreviews(currentUserId);
         }
       });
 
