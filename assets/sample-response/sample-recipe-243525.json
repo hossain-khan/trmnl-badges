@@ -1,0 +1,66 @@
+{
+    "data": {
+        "id": 243525,
+        "user_id": 4318,
+        "name": "Heyokyay",
+        "published_at": "2026-02-23T21:22:08.199Z",
+        "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/mumxxuruzagdfiiqunjmglsluu49",
+        "icon_content_type": "image/png",
+        "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/x7xcdgujo249luv1ggy6svz1n2g1?response-content-disposition=inline%3B%20filename%3D%22plugin-51873c%22%3B%20filename%2A%3DUTF-8%27%27plugin-51873c\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260224%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260224T004826Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=d34e8f07a1c0940cecaa57d812628be8091d151d7ff3599454b37653b130b6c2",
+        "author_bio": {
+            "keyname": "author_bio",
+            "field_type": "author_bio",
+            "name": "About This Plugin",
+            "description": "Displays Comics from heyokyay/islieb/isfies",
+            "category": "comics,humor",
+            "learn_more_url": "https://heyokyay.com/",
+            "email_address": "michael.kurath@gmail.com"
+        },
+        "custom_fields": [
+            {
+                "keyname": "author_bio",
+                "field_type": "author_bio",
+                "name": "About This Plugin",
+                "description": "Displays Comics from heyokyay/islieb/isfies",
+                "category": "comics,humor",
+                "learn_more_url": "https://heyokyay.com/",
+                "email_address": "michael.kurath@gmail.com"
+            },
+            {
+                "keyname": "feed",
+                "field_type": "select",
+                "name": "Comic Feed",
+                "default": "heyokyay",
+                "options": [
+                    {
+                        "EN (heyokyay)": "heyokyay"
+                    },
+                    {
+                        "DE (islieb)": "islieb"
+                    },
+                    {
+                        "DE (isfies)": "isfies"
+                    }
+                ]
+            },
+            {
+                "keyname": "mode",
+                "field_type": "select",
+                "name": "Comic mode",
+                "default": "latest",
+                "options": [
+                    {
+                        "Latest": "latest"
+                    },
+                    {
+                        "Random": "random"
+                    }
+                ]
+            }
+        ],
+        "stats": {
+            "installs": 1,
+            "forks": 3
+        }
+    }
+}
