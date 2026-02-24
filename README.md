@@ -16,7 +16,8 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 - ⚡ Fast badge generation using Cloudflare Workers edge network
 - 🎨 Official TRMNL brand styling and colors
 - 📊 Display recipe statistics (installs, forks, connections)
-- 🔄 Real-time data from TRMNL API
+- � Author badges with combined stats across all recipes
+- �🔄 Real-time data from TRMNL API
 - 🎯 Simple integration with markdown and HTML
 - 📏 Compact number formatting support
 
@@ -24,7 +25,8 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 
 > [!NOTE]  
 > 🎨 **Try the Interactive Badge Builder** 🛠️  
-> Use our 👷 **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** 🧰 for an easy, visual way to create and customize badges with live previews.
+> Use our 👷 **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** 🧰 for an easy, visual way to create and customize badges with live previews.  
+> 👤 **New!** Try the **[Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html)** to generate combined badges for all your recipes.
 
 ## Usage
 
@@ -53,12 +55,15 @@ https://trmnl.com/recipes/28496
 
 ## Badge URL Query Parameters
 
-- **`recipe`** (required) - TRMNL recipe ID (e.g., `28496`)
+- **`recipe`** (required\*) - TRMNL recipe ID (e.g., `28496`)
+- **`userId`** (required\*) - TRMNL author/user ID for combined stats (e.g., `364`)
 - **`label`** (optional) - Custom label text (eg. `?label=Downloads` or `?label=Download%20Count`)
 - **`pretty`** (optional) - Format numbers in compact notation (e.g., `1.78K`)
 
+\* Either `recipe` or `userId` is required. Use `recipe` for single recipe badges, `userId` for author badges.
+
 > [!TIP]
-> Use the **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** to generate badge markup.
+> Use the **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** to generate badge markup, or the **[Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html)** for author badges.
 
 ### HTML Usage
 
@@ -99,6 +104,36 @@ https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&pretty
 ```
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count
 ```
+
+## Author Badges
+
+Author badges display **combined statistics** across all recipes published by a TRMNL user. Use the `userId` parameter instead of `recipe`.
+
+### Finding Your User ID
+
+Your user ID can be found by using the [Badge Builder](https://hossain-khan.github.io/trmnl-badges/) — enter any of your recipe URLs and your user ID will be detected automatically.
+
+### Author Badge Examples
+
+| Badge Type          | Code                                                                                                            | Preview                                                                                                  |
+| ------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Recipes**         | `![Recipes](https://trmnl-badges.gohk.xyz/badge/recipes?userId=364)`                                            | ![Recipes](https://trmnl-badges.gohk.xyz/badge/recipes?userId=364)                                       |
+| **Total Installs**  | `![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364)`                                    | ![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364)                                |
+| **Total Forks**     | `![Total Forks](https://trmnl-badges.gohk.xyz/badge/forks?userId=364)`                                          | ![Total Forks](https://trmnl-badges.gohk.xyz/badge/forks?userId=364)                                      |
+| **Total Connections** | `![Total Connections](https://trmnl-badges.gohk.xyz/badge/connections?userId=364)`                            | ![Total Connections](https://trmnl-badges.gohk.xyz/badge/connections?userId=364)                          |
+| **Pretty Format**   | `![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364&pretty)`                            | ![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364&pretty)                         |
+
+### Author Badge HTML Usage
+
+```html
+<img src="https://trmnl-badges.gohk.xyz/badge/recipes?userId=364" alt="Recipes" />
+<img src="https://trmnl-badges.gohk.xyz/badge/installs?userId=364" alt="Total Installs" />
+<img src="https://trmnl-badges.gohk.xyz/badge/forks?userId=364" alt="Total Forks" />
+<img src="https://trmnl-badges.gohk.xyz/badge/connections?userId=364" alt="Total Connections" />
+```
+
+> [!TIP]
+> Use the **[Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html)** for a visual way to generate author badges with live previews and per-recipe breakdowns.
 
 ## Contributing
 
