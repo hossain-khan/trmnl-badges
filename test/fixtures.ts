@@ -49,3 +49,45 @@ export const mockRecipeZeroForks: TRMNLRecipe = {
     forks: 0,
   },
 };
+
+// Mock user recipes for author badge testing
+export const mockUserRecipesResponse = {
+  data: [
+    {
+      id: 240176,
+      user_id: 29,
+      name: 'Kung Fu Panda Quotes',
+      published_at: '2026-02-09T07:45:36.616Z',
+      stats: {
+        installs: 100,
+        forks: 50,
+      },
+    },
+    {
+      id: 240177,
+      user_id: 29,
+      name: 'Test Recipe 2',
+      published_at: '2026-02-09T07:45:36.616Z',
+      stats: {
+        installs: 75,
+        forks: 30,
+      },
+    },
+    {
+      id: 240178,
+      user_id: 29,
+      name: 'Test Recipe 3',
+      published_at: '2026-02-09T07:45:36.616Z',
+      stats: {
+        installs: 50,
+        forks: 20,
+      },
+    },
+  ],
+  total: 3,
+  from: 1,
+  to: 3,
+  per_page: 50,
+  current_page: 1,
+};
+

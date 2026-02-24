@@ -39,10 +39,10 @@ fi
 # Badge installs endpoint - missing recipe
 echo "Testing GET /badge/installs (missing recipe)"
 RESPONSE=$(curl -s http://localhost:8787/badge/installs)
-if echo "$RESPONSE" | grep -q '<svg' && echo "$RESPONSE" | grep -q 'Missing recipe ID'; then
+if echo "$RESPONSE" | grep -q '<svg' && echo "$RESPONSE" | grep -q 'Missing recipe or userId'; then
   echo "✓ Returns error badge for missing recipe"
 else
-  echo "✗ Expected error badge with 'Missing recipe ID' message"
+  echo "✗ Expected error badge with 'Missing recipe or userId' message"
   kill $DEV_PID || true
   exit 1
 fi

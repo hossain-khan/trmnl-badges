@@ -5,14 +5,16 @@ import {
   mockRecipeHighEngagement,
   mockRecipeZeroStats,
   mockRecipeZeroForks,
+  mockUserRecipesResponse,
 } from './fixtures';
 
-// Mock the fetchRecipe function
+// Mock the trmnl-api functions
 vi.mock('../src/trmnl-api', () => ({
   fetchRecipe: vi.fn(),
+  fetchUserRecipes: vi.fn(),
 }));
 
-import { fetchRecipe } from '../src/trmnl-api';
+import { fetchRecipe, fetchUserRecipes } from '../src/trmnl-api';
 
 describe('TRMNL Badges API', () => {
   beforeEach(() => {
@@ -68,7 +70,7 @@ describe('TRMNL Badges API', () => {
       expect(response.status).toBe(200);
       expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
       const svg = await response.text();
-      expect(svg).toContain('Missing recipe ID');
+      expect(svg).toContain('Missing recipe or userId');
     });
 
     it('should return error badge when recipe is not found', async () => {
@@ -92,7 +94,7 @@ describe('TRMNL Badges API', () => {
       const svg = await response.text();
       expect(svg).toContain('Network Error');
       expect(consoleMock).toHaveBeenCalledWith(
-        '[installs] Network error fetching recipe:',
+        '[badge/installs] Network error fetching recipe:',
         expect.any(Error)
       );
       consoleMock.mockRestore();
@@ -177,6 +179,69 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('0');
       expect(svg).not.toContain('Recipe Not Found');
     });
+
+    // Tests for userId parameter (author badges)
+    it('should return error badge when neither recipe nor userId are provided', async () => {
+      const response = await app.request('/badge/installs');
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('Missing recipe or userId');
+    });
+
+    it('should return error badge when userId has no recipes', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce({ data: [] });
+
+      const response = await app.request('/badge/installs?userId=9999');
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('No recipes found');
+    });
+
+    it('should generate installs badge with userId parameter', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/installs?userId=29');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
+
+      const svg = await response.text();
+      expect(svg).toContain('Installs');
+      // Total installs: 100 + 75 + 50 = 225
+      expect(svg).toContain('225');
+    });
+
+    it('should support custom label with userId', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/installs?userId=29&label=Total%20Downloads');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Total Downloads');
+      expect(svg).toContain('225');
+    });
+
+    it('should support pretty formatting with userId', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/installs?userId=29&pretty');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Installs');
+      // 225 formatted as '225' (under 1000, so no K suffix)
+      expect(svg).toContain('225');
+    });
+
+    it('should handle null response when fetching user recipes', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(null);
+
+      const response = await app.request('/badge/installs?userId=29');
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('No recipes found');
+    });
   });
 
   describe('GET /badge/forks', () => {
@@ -185,7 +250,7 @@ describe('TRMNL Badges API', () => {
       expect(response.status).toBe(200);
       expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
       const svg = await response.text();
-      expect(svg).toContain('Missing recipe ID');
+      expect(svg).toContain('Missing recipe or userId');
     });
 
     it('should return error badge when recipe is not found', async () => {
@@ -209,7 +274,7 @@ describe('TRMNL Badges API', () => {
       const svg = await response.text();
       expect(svg).toContain('Network Error');
       expect(consoleMock).toHaveBeenCalledWith(
-        '[forks] Network error fetching recipe:',
+        '[badge/forks] Network error fetching recipe:',
         expect.any(Error)
       );
       consoleMock.mockRestore();
@@ -283,6 +348,32 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('0');
       expect(svg).not.toContain('Recipe Not Found');
     });
+
+    // Tests for userId parameter (author badges)
+    it('should generate forks badge with userId parameter', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/forks?userId=29');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
+
+      const svg = await response.text();
+      expect(svg).toContain('Forks');
+      // Total forks: 50 + 30 + 20 = 100
+      expect(svg).toContain('100');
+    });
+
+    it('should support pretty formatting for forks with userId', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/forks?userId=29&pretty');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Forks');
+      expect(svg).toContain('100');
+    });
   });
 
   describe('GET /badge/connections', () => {
@@ -291,7 +382,7 @@ describe('TRMNL Badges API', () => {
       expect(response.status).toBe(200);
       expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
       const svg = await response.text();
-      expect(svg).toContain('Missing recipe ID');
+      expect(svg).toContain('Missing recipe or userId');
     });
 
     it('should return error badge when recipe is not found', async () => {
@@ -315,7 +406,7 @@ describe('TRMNL Badges API', () => {
       const svg = await response.text();
       expect(svg).toContain('Network Error');
       expect(consoleMock).toHaveBeenCalledWith(
-        '[connections] Network error fetching recipe:',
+        '[badge/connections] Network error fetching recipe:',
         expect.any(Error)
       );
       consoleMock.mockRestore();
@@ -406,6 +497,94 @@ describe('TRMNL Badges API', () => {
 
       // Check that counter was incremented
       expect(mockKV.put).toHaveBeenCalledWith('badges_served_total', '1');
+    });
+
+    // Tests for userId parameter (author badges)
+    it('should generate connections badge with userId parameter', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/connections?userId=29');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
+
+      const svg = await response.text();
+      expect(svg).toContain('Connections');
+      // Total connections: (100+75+50) + (50+30+20) = 225 + 100 = 325
+      expect(svg).toContain('325');
+    });
+
+    it('should support pretty formatting for connections with userId', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/connections?userId=29&pretty');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Connections');
+      expect(svg).toContain('325');
+    });
+  });
+
+  describe('GET /badge/recipes', () => {
+    it('should return error badge when userId is missing', async () => {
+      const response = await app.request('/badge/recipes');
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('Missing userId');
+    });
+
+    it('should return error badge when userId has no recipes', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce({ data: [] });
+
+      const response = await app.request('/badge/recipes?userId=9999');
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('No recipes found');
+    });
+
+    it('should generate recipes count badge with userId', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/recipes?userId=29');
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toBe('image/svg+xml');
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=3600');
+
+      const svg = await response.text();
+      expect(svg).toContain('Recipes');
+      expect(svg).toContain('3');
+    });
+
+    it('should support custom label for recipes badge', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/recipes?userId=29&label=Total%20Recipes');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Total Recipes');
+      expect(svg).toContain('3');
+    });
+
+    it('should support pretty formatting for recipes', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(mockUserRecipesResponse);
+
+      const response = await app.request('/badge/recipes?userId=29&pretty');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Recipes');
+      expect(svg).toContain('3');
+    });
+
+    it('should handle null response when fetching recipes list', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce(null);
+
+      const response = await app.request('/badge/recipes?userId=29');
+      expect(response.status).toBe(200);
+      const svg = await response.text();
+      expect(svg).toContain('No recipes found');
     });
   });
 
@@ -607,7 +786,7 @@ describe('TRMNL Badges API', () => {
       const response = await app.request('/badge/installs?recipe=240176', {}, bindings);
 
       expect(response.status).toBe(200);
-      expect(consoleMock).toHaveBeenCalledWith('[installs] Counter error:', expect.any(Error));
+      expect(consoleMock).toHaveBeenCalledWith('Counter error:', expect.any(Error));
       consoleMock.mockRestore();
     });
 
@@ -626,7 +805,7 @@ describe('TRMNL Badges API', () => {
       const response = await app.request('/badge/forks?recipe=240176', {}, bindings);
 
       expect(response.status).toBe(200);
-      expect(consoleMock).toHaveBeenCalledWith('[forks] Counter error:', expect.any(Error));
+      expect(consoleMock).toHaveBeenCalledWith('Counter error:', expect.any(Error));
       consoleMock.mockRestore();
     });
 
