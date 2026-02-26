@@ -1425,10 +1425,12 @@
           const badgeTypes = ['installs', 'forks', 'connections'];
           const badgeLabels = { installs: 'Installs', forks: 'Forks', connections: 'Connections' };
           const allMarkdown = recipes
-            .map((recipe) =>
-              badgeTypes
-                .map((type) => generateRecipeBadgeMarkdown(recipe.id, type, badgeLabels[type]))
-                .join('\n')
+            .map(
+              (recipe) =>
+                `<!-- Recipe: ${recipe.name} -->\n` +
+                badgeTypes
+                  .map((type) => generateRecipeBadgeMarkdown(recipe.id, type, badgeLabels[type]))
+                  .join('\n')
             )
             .join('\n\n');
           try {
