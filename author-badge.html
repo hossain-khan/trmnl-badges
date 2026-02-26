@@ -340,7 +340,7 @@
         font-size: 16px;
         font-weight: 600;
         color: #333;
-        margin-bottom: 16px;
+        margin-bottom: 0;
         padding-left: 20px;
         position: relative;
       }
@@ -506,6 +506,68 @@
       }
 
       .recipe-badge-copy-btn.copied {
+        background: #4caf50;
+        color: white;
+        border-color: #4caf50;
+      }
+
+      /* Copy All Buttons */
+      .recipes-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .copy-all-global-btn {
+        background: #f8654b;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .copy-all-global-btn:hover {
+        background: #e8523a;
+      }
+
+      .copy-all-global-btn.copied {
+        background: #4caf50;
+      }
+
+      .copy-all-recipe-btn {
+        background: #f0f0f0;
+        color: #333;
+        border: 1px solid #ddd;
+        padding: 10px 16px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        grid-column: 1 / -1;
+      }
+
+      .copy-all-recipe-btn:hover {
+        background: #e0e0e0;
+        border-color: #999;
+      }
+
+      .copy-all-recipe-btn.copied {
         background: #4caf50;
         color: white;
         border-color: #4caf50;
@@ -901,8 +963,13 @@
 
       <!-- Individual Recipes Section -->
       <div id="individualRecipesSection" class="individual-recipes-section">
-        <div class="recipes-header">
-          Individual Recipe Badges (<span id="recipeCount">0</span> recipes)
+        <div class="recipes-header-row">
+          <div class="recipes-header">
+            Individual Recipe Badges (<span id="recipeCount">0</span> recipes)
+          </div>
+          <button type="button" class="copy-all-global-btn" id="copyAllBadgesBtn">
+            📋 Copy All Badges
+          </button>
         </div>
         <div class="recipes-list" id="recipesList"></div>
       </div>
@@ -1286,6 +1353,30 @@
             badgesContent.appendChild(previewDiv);
           });
 
+          // Per-recipe Copy All button
+          const copyAllRecipeBtn = document.createElement('button');
+          copyAllRecipeBtn.className = 'copy-all-recipe-btn';
+          copyAllRecipeBtn.textContent = `📋 Copy All ${badgeTypes.length} Badges`;
+          copyAllRecipeBtn.type = 'button';
+          copyAllRecipeBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const allMarkdown = badgeTypes
+              .map((badge) => generateRecipeBadgeMarkdown(recipe.id, badge.type, badge.label))
+              .join('\n');
+            try {
+              await navigator.clipboard.writeText(allMarkdown);
+              copyAllRecipeBtn.classList.add('copied');
+              copyAllRecipeBtn.textContent = '✓ Copied All Badges!';
+              setTimeout(() => {
+                copyAllRecipeBtn.classList.remove('copied');
+                copyAllRecipeBtn.textContent = `📋 Copy All ${badgeTypes.length} Badges`;
+              }, 2000);
+            } catch (err) {
+              console.error('Failed to copy:', err);
+            }
+          });
+          badgesContent.appendChild(copyAllRecipeBtn);
+
           badgesContainer.appendChild(badgesContent);
 
           // Toggle button handler
@@ -1326,6 +1417,32 @@
         });
 
         document.getElementById('recipeCount').textContent = recipes.length;
+
+        // Global Copy All Badges button handler
+        const copyAllBtn = document.getElementById('copyAllBadgesBtn');
+        copyAllBtn.onclick = async (e) => {
+          e.preventDefault();
+          const badgeTypes = ['installs', 'forks', 'connections'];
+          const badgeLabels = { installs: 'Installs', forks: 'Forks', connections: 'Connections' };
+          const allMarkdown = recipes
+            .map((recipe) =>
+              badgeTypes
+                .map((type) => generateRecipeBadgeMarkdown(recipe.id, type, badgeLabels[type]))
+                .join('\n')
+            )
+            .join('\n\n');
+          try {
+            await navigator.clipboard.writeText(allMarkdown);
+            copyAllBtn.classList.add('copied');
+            copyAllBtn.textContent = '✓ Copied All!';
+            setTimeout(() => {
+              copyAllBtn.classList.remove('copied');
+              copyAllBtn.textContent = '📋 Copy All Badges';
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy:', err);
+          }
+        };
       }
 
       let currentUserId = null;
