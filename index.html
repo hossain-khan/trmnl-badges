@@ -1437,8 +1437,8 @@
       prettyFormat.addEventListener('change', update);
       linkToRecipe.addEventListener('change', update);
       glyphRadios.forEach((radio) => radio.addEventListener('change', update));
-      badgeColor.addEventListener('input', update);
-      labelColorInput.addEventListener('input', update);
+      badgeColor.addEventListener('input', debouncedUpdate);
+      labelColorInput.addEventListener('input', debouncedUpdate);
 
       // Copy buttons - Updated to work with textarea content
       document.querySelectorAll('.copy-btn').forEach((btn) => {
