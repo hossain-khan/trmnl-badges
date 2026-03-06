@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   formatNumber,
   compactNumberFormatter,
@@ -172,6 +172,9 @@ describe('Utils', () => {
   describe('incrementBadgeCounter', () => {
     const makeContext = (kv: any) => ({ env: { BADGE_COUNTER: kv } }) as any;
 
+    // Ensure real timers are restored after every test even if the test throws
+    afterEach(() => vi.useRealTimers());
+
     it('should increment the counter successfully', async () => {
       const kv = { get: vi.fn().mockResolvedValue('5'), put: vi.fn().mockResolvedValue(undefined) };
       await incrementBadgeCounter(makeContext(kv), 'key');
@@ -215,7 +218,6 @@ describe('Utils', () => {
         expect.stringMatching(/KV rate limited \(429\), retrying/)
       );
       warnMock.mockRestore();
-      vi.useRealTimers();
     });
 
     it('should retry up to max attempts and then log error when all attempts fail with 429', async () => {
@@ -238,7 +240,6 @@ describe('Utils', () => {
       expect(errorMock).toHaveBeenCalledWith('Counter error:', error);
       warnMock.mockRestore();
       errorMock.mockRestore();
-      vi.useRealTimers();
     });
 
     it('should not retry on non-429 errors', async () => {
@@ -275,7 +276,65 @@ describe('Utils', () => {
         expect.stringMatching(/KV rate limited \(429\), retrying/)
       );
       warnMock.mockRestore();
-      vi.useRealTimers();
+    });
+    it('should not retry on errors containing "429" as part of a larger number (false positive guard)', async () => {
+      // Error message "1429" or "4290" should NOT be treated as a 429 rate limit error
+      const kv = {
+        get: vi.fn().mockResolvedValue('0'),
+        put: vi.fn().mockRejectedValue(new Error('Error code 1429: something else')),
+      };
+      const errorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await incrementBadgeCounter(makeContext(kv), 'key');
+
+      // Should fail immediately without retry (only 1 put attempt)
+      expect(kv.put).toHaveBeenCalledTimes(1);
+      expect(errorMock).toHaveBeenCalledWith('Counter error:', expect.any(Error));
+      errorMock.mockRestore();
+    });
+
+    it('should retry on errors matching "too many requests" phrase (case-insensitive)', async () => {
+      vi.useFakeTimers();
+      const kv = {
+        get: vi.fn().mockResolvedValue('2'),
+        put: vi
+          .fn()
+          .mockRejectedValueOnce(new Error('KV PUT failed: Too Many Requests'))
+          .mockResolvedValue(undefined),
+      };
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const promise = incrementBadgeCounter(makeContext(kv), 'key');
+      await vi.runAllTimersAsync();
+      await promise;
+
+      expect(kv.put).toHaveBeenCalledTimes(2);
+      expect(kv.put).toHaveBeenLastCalledWith('key', '3');
+      expect(warnMock).toHaveBeenCalledWith(
+        expect.stringMatching(/KV rate limited \(429\), retrying/)
+      );
+      warnMock.mockRestore();
+    });
+
+    it('should retry on errors with a structured numeric status field of 429', async () => {
+      vi.useFakeTimers();
+      const rateLimitError = Object.assign(new Error('rate limited'), { status: 429 });
+      const kv = {
+        get: vi.fn().mockResolvedValue('7'),
+        put: vi.fn().mockRejectedValueOnce(rateLimitError).mockResolvedValue(undefined),
+      };
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const promise = incrementBadgeCounter(makeContext(kv), 'key');
+      await vi.runAllTimersAsync();
+      await promise;
+
+      expect(kv.put).toHaveBeenCalledTimes(2);
+      expect(kv.put).toHaveBeenLastCalledWith('key', '8');
+      expect(warnMock).toHaveBeenCalledWith(
+        expect.stringMatching(/KV rate limited \(429\), retrying/)
+      );
+      warnMock.mockRestore();
     });
   });
 });
