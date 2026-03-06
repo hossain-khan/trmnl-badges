@@ -222,27 +222,42 @@
         transform: none;
       }
 
+      /* Input + customize toggle inline row */
+      .input-action-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 4px;
+      }
+
+      .input-action-row input[type='text'] {
+        flex: 1;
+        margin: 0;
+      }
+
       /* Customize appearance */
       .customize-toggle {
         display: inline-flex;
         align-items: center;
         gap: 6px;
         background: none;
-        border: 1px solid #e0e0e0;
-        color: #667eea;
+        border: 1px solid #c4a09a;
+        color: #a07068;
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
         padding: 6px 12px;
         border-radius: 6px;
-        margin-bottom: 16px;
+        flex-shrink: 0;
+        white-space: nowrap;
         transition:
           border-color 0.2s,
           color 0.2s;
       }
 
       .customize-toggle:hover {
-        border-color: #667eea;
+        border-color: #a07068;
+        color: #8a5c54;
       }
 
       .customize-toggle svg.toggle-icon {
@@ -1056,12 +1071,37 @@
               auto-detect author)</span
             ></label
           >
-          <input
-            type="text"
-            id="authorInput"
-            placeholder="Enter recipe URL or author ID"
-            required
-          />
+          <div class="input-action-row">
+            <input
+              type="text"
+              id="authorInput"
+              placeholder="Enter recipe URL or author ID"
+              required
+            />
+            <!-- Appearance Customization toggle (collapsed by default) -->
+            <button
+              type="button"
+              class="customize-toggle"
+              id="customizeToggle"
+              aria-expanded="false"
+              aria-controls="customizePanel"
+            >
+              <svg class="toggle-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.04 7.04 0 0 0-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54a7.04 7.04 0 0 0-1.62.94l-2.39-.96a.477.477 0 0 0-.59.22L2.74 8.87a.47.47 0 0 0 .12.61l2.03 1.58c-.05.3-.07.63-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.36 1.04.67 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54a7.04 7.04 0 0 0 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.47.47 0 0 0-.12-.61zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
+                />
+              </svg>
+              Customize appearance
+              <span
+                class="customize-active-dot"
+                id="customizeActiveDot"
+                style="display: none"
+              ></span>
+              <svg class="toggle-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 10l5 5 5-5z" />
+              </svg>
+            </button>
+          </div>
           <div class="hint-feedback-row">
             <div class="url-hint">
               Tip: Paste the full recipe URL and we'll find the author automatically
@@ -1070,25 +1110,6 @@
           </div>
         </div>
 
-        <!-- Appearance Customization (collapsed by default) -->
-        <button
-          type="button"
-          class="customize-toggle"
-          id="customizeToggle"
-          aria-expanded="false"
-          aria-controls="customizePanel"
-        >
-          <svg class="toggle-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.04 7.04 0 0 0-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54a7.04 7.04 0 0 0-1.62.94l-2.39-.96a.477.477 0 0 0-.59.22L2.74 8.87a.47.47 0 0 0 .12.61l2.03 1.58c-.05.3-.07.63-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.36 1.04.67 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54a7.04 7.04 0 0 0 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.47.47 0 0 0-.12-.61zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
-            />
-          </svg>
-          Customize appearance
-          <span class="customize-active-dot" id="customizeActiveDot" style="display: none"></span>
-          <svg class="toggle-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 10l5 5 5-5z" />
-          </svg>
-        </button>
         <div class="customize-panel" id="customizePanel" inert>
           <div class="customize-panel-inner">
             <div class="customize-col">
