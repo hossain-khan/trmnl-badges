@@ -13,11 +13,11 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 
 <details><summary>Features</summary>
 
-- ⚡ Fast badge generation using Cloudflare Workers edge network
+- ⚡️ Fast badge generation using Cloudflare Workers edge network
 - 🎨 Official TRMNL brand styling and colors
 - 📊 Display recipe statistics (installs, forks, connections)
-- � Author badges with combined stats across all recipes
-- �🔄 Real-time data from TRMNL API
+- 🎭 Author badges with combined stats across all recipes
+- 🔄 Real-time data from TRMNL API
 - 🎯 Simple integration with markdown and HTML
 - 📏 Compact number formatting support
 
