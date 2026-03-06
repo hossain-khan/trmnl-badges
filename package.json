@@ -9,6 +9,7 @@
     "deploy": "wrangler deploy --minify",
     "dev": "wrangler dev --minify",
     "test": "vitest",
+    "validate:html": "html-validate index.html author-badge.html",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -29,6 +30,7 @@
     "@cloudflare/workers-types": "^4.20260124.0",
     "@types/node": "^22.10.2",
     "@vitest/coverage-v8": "^4.0.18",
+    "html-validate": "^10.11.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "typescript": "^5.7.2",

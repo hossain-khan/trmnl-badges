@@ -32,6 +32,9 @@ jobs:
       - name: Check TypeScript
         run: npx tsc --noEmit
 
+      - name: Validate HTML
+        run: npm run validate:html
+
       - name: Run tests with coverage
         run: npm test -- --run --coverage
 

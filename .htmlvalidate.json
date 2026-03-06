@@ -1,0 +1,9 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "doctype-style": ["error", { "style": "lowercase" }],
+    "void-style": "off",
+    "no-inline-style": "off",
+    "wcag/h32": "off"
+  }
+}
