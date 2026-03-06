@@ -1,9 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   formatNumber,
   compactNumberFormatter,
   aggregateAuthorStats,
   isValidUserId,
+  incrementBadgeCounter,
 } from '../src/utils';
 import type { TRMNLRecipe } from '../src/types';
 import { mockRecipe, mockRecipeZeroStats } from './fixtures';
@@ -165,6 +166,116 @@ describe('Utils', () => {
 
     it('should return false for an array of strings', () => {
       expect(isValidUserId(['29', '30'] as any)).toBe(false);
+    });
+  });
+
+  describe('incrementBadgeCounter', () => {
+    const makeContext = (kv: any) => ({ env: { BADGE_COUNTER: kv } }) as any;
+
+    it('should increment the counter successfully', async () => {
+      const kv = { get: vi.fn().mockResolvedValue('5'), put: vi.fn().mockResolvedValue(undefined) };
+      await incrementBadgeCounter(makeContext(kv), 'key');
+      expect(kv.put).toHaveBeenCalledWith('key', '6');
+    });
+
+    it('should do nothing when BADGE_COUNTER binding is absent', async () => {
+      // No error should be thrown
+      await expect(incrementBadgeCounter({ env: {} } as any, 'key')).resolves.toBeUndefined();
+    });
+
+    it('should log error and not throw for non-429 KV errors', async () => {
+      const kv = {
+        get: vi.fn().mockRejectedValue(new Error('KV internal error')),
+        put: vi.fn(),
+      };
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+      await incrementBadgeCounter(makeContext(kv), 'key');
+      expect(consoleMock).toHaveBeenCalledWith('Counter error:', expect.any(Error));
+      consoleMock.mockRestore();
+    });
+
+    it('should retry on 429 error and succeed on second attempt', async () => {
+      vi.useFakeTimers();
+      const kv = {
+        get: vi.fn().mockResolvedValue('10'),
+        put: vi
+          .fn()
+          .mockRejectedValueOnce(new Error('KV PUT failed: 429 Too Many Requests'))
+          .mockResolvedValue(undefined),
+      };
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const promise = incrementBadgeCounter(makeContext(kv), 'key');
+      await vi.runAllTimersAsync();
+      await promise;
+
+      expect(kv.put).toHaveBeenCalledTimes(2);
+      expect(kv.put).toHaveBeenLastCalledWith('key', '11');
+      expect(warnMock).toHaveBeenCalledWith(
+        expect.stringMatching(/KV rate limited \(429\), retrying/)
+      );
+      warnMock.mockRestore();
+      vi.useRealTimers();
+    });
+
+    it('should retry up to max attempts and then log error when all attempts fail with 429', async () => {
+      vi.useFakeTimers();
+      const error = new Error('KV PUT failed: 429 Too Many Requests');
+      const kv = {
+        get: vi.fn().mockResolvedValue('0'),
+        put: vi.fn().mockRejectedValue(error),
+      };
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const errorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const promise = incrementBadgeCounter(makeContext(kv), 'key');
+      await vi.runAllTimersAsync();
+      await promise;
+
+      // 3 total attempts (KV_MAX_ATTEMPTS = 3), 2 warn retries then 1 final error
+      expect(kv.put).toHaveBeenCalledTimes(3);
+      expect(warnMock).toHaveBeenCalledTimes(2);
+      expect(errorMock).toHaveBeenCalledWith('Counter error:', error);
+      warnMock.mockRestore();
+      errorMock.mockRestore();
+      vi.useRealTimers();
+    });
+
+    it('should not retry on non-429 errors', async () => {
+      const kv = {
+        get: vi.fn().mockResolvedValue('0'),
+        put: vi.fn().mockRejectedValue(new Error('KV internal error')),
+      };
+      const errorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await incrementBadgeCounter(makeContext(kv), 'key');
+
+      expect(kv.put).toHaveBeenCalledTimes(1);
+      expect(errorMock).toHaveBeenCalledWith('Counter error:', expect.any(Error));
+      errorMock.mockRestore();
+    });
+
+    it('should retry on 429 from GET and succeed on second attempt', async () => {
+      vi.useFakeTimers();
+      const kv = {
+        get: vi
+          .fn()
+          .mockRejectedValueOnce(new Error('KV GET failed: 429 Too Many Requests'))
+          .mockResolvedValue('3'),
+        put: vi.fn().mockResolvedValue(undefined),
+      };
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const promise = incrementBadgeCounter(makeContext(kv), 'key');
+      await vi.runAllTimersAsync();
+      await promise;
+
+      expect(kv.put).toHaveBeenCalledWith('key', '4');
+      expect(warnMock).toHaveBeenCalledWith(
+        expect.stringMatching(/KV rate limited \(429\), retrying/)
+      );
+      warnMock.mockRestore();
+      vi.useRealTimers();
     });
   });
 });

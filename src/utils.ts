@@ -48,13 +48,44 @@ export function isValidUserId(userId: string | string[] | undefined): boolean {
 }
 
 /**
- * Helper function to increment badge counter
+ * Maximum number of attempts (1 initial + retries) for KV counter operations
+ */
+const KV_MAX_ATTEMPTS = 3;
+
+/**
+ * Base delay in milliseconds for exponential backoff on KV rate limit errors
+ */
+const KV_RETRY_BASE_DELAY_MS = 100;
+
+/**
+ * Returns true if the error is a Cloudflare KV 429 Too Many Requests error
+ */
+function is429Error(err: unknown): boolean {
+  return err instanceof Error && err.message.includes('429');
+}
+
+/**
+ * Returns a Promise that resolves after the given number of milliseconds
+ */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Helper function to increment badge counter.
+ * Retries up to KV_MAX_ATTEMPTS times with exponential backoff and jitter on
+ * 429 Too Many Requests errors, which can occur when many concurrent requests
+ * all attempt to write to the same KV key simultaneously.
  */
 export async function incrementBadgeCounter(
   context: Context<{ Bindings: Bindings }>,
   counterKey: string
 ) {
-  if (context.env && context.env.BADGE_COUNTER) {
+  if (!context.env || !context.env.BADGE_COUNTER) {
+    return;
+  }
+
+  for (let attempt = 1; attempt <= KV_MAX_ATTEMPTS; attempt++) {
     try {
       const current = await context.env.BADGE_COUNTER.get(counterKey);
       const count = current ? parseInt(current, 10) : 0;
@@ -65,8 +96,21 @@ export async function incrementBadgeCounter(
 
       const newCount = (Number.isFinite(count) ? count : 0) + 1;
       await context.env.BADGE_COUNTER.put(counterKey, newCount.toString());
+      return; // success
     } catch (err) {
-      console.error('Counter error:', err);
+      const isLastAttempt = attempt === KV_MAX_ATTEMPTS;
+      if (is429Error(err) && !isLastAttempt) {
+        // Exponential backoff with full jitter to spread out concurrent retries
+        const ceiling = KV_RETRY_BASE_DELAY_MS * Math.pow(2, attempt - 1);
+        const delay = Math.random() * ceiling;
+        console.warn(
+          `KV rate limited (429), retrying in ${Math.round(delay)}ms (attempt ${attempt}/${KV_MAX_ATTEMPTS})...`
+        );
+        await sleep(delay);
+      } else {
+        console.error('Counter error:', err);
+        return;
+      }
     }
   }
 }
