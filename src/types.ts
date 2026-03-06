@@ -56,6 +56,14 @@ export interface TRMNLRecipe {
 }
 
 /**
+ * TRMNL glyph variants for badge icons
+ * - `brand`: TRMNL orange (#F8654B) — default
+ * - `black`: Black glyph, suitable for light backgrounds
+ * - `white`: White glyph, suitable for dark backgrounds
+ */
+export type TRMNLGlyph = 'brand' | 'black' | 'white';
+
+/**
  * Options for generating SVG badges
  * Used by the badge generation service to customize appearance
  */
@@ -64,11 +72,13 @@ export interface BadgeOptions {
   label: string;
   /** Right-side message/value text of the badge */
   message: string;
-  /** Right-side background color (hex or named color, default: brightgreen) */
+  /** Right-side background color (hex or named color, default: TRMNL orange) */
   color?: string;
-  /** Left-side background color (hex or named color, default: dark gray) */
+  /** Left-side background color (hex or named color, default: TRMNL dark gray) */
   labelColor?: string;
-  /** SVG logo/icon to display on the badge (default: TRMNL logo) */
+  /** TRMNL glyph variant to use as the icon (default: 'brand') */
+  glyph?: TRMNLGlyph;
+  /** Custom SVG logo/icon override (takes precedence over glyph) */
   logo?: string;
 }
 

@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import type { Context } from 'hono';
-import type { Bindings, TRMNLRecipe } from './types';
+import type { Bindings, TRMNLGlyph, TRMNLRecipe } from './types';
 import { fetchRecipe, fetchUserRecipes } from './trmnl-api';
 import { generateBadge } from './badge-generator';
 import { formatNumber, aggregateAuthorStats, isValidUserId, incrementBadgeCounter } from './utils';
@@ -12,6 +12,15 @@ const APP_VERSION = '1.4.0';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
+
+// Valid TRMNL glyph options accepted as query params
+const VALID_GLYPHS: TRMNLGlyph[] = ['brand', 'black', 'white'];
+function parseGlyph(glyph: string | undefined): TRMNLGlyph | undefined {
+  if (glyph && (VALID_GLYPHS as string[]).includes(glyph)) {
+    return glyph as TRMNLGlyph;
+  }
+  return undefined;
+}
 
 const app = new Hono<{ Bindings: Bindings }>({ strict: false });
 
@@ -29,9 +38,10 @@ app.use(
 // Badge endpoints for TRMNL recipes
 app.get('/badge/installs', async (context) => {
   try {
-    const { recipe, userId, label, pretty } = context.req.query();
+    const { recipe, userId, label, pretty, color, labelColor, glyph } = context.req.query();
     const defaultLabel = isValidUserId(userId) ? 'Total Installs' : 'Installs';
     const isPretty = pretty !== undefined;
+    const parsedGlyph = parseGlyph(glyph);
 
     if (recipe) {
       // Single recipe badge
@@ -50,6 +60,9 @@ app.get('/badge/installs', async (context) => {
       const badge = generateBadge({
         label: label || defaultLabel,
         message: formatNumber(recipeData.stats.installs, isPretty),
+        color: color || undefined,
+        labelColor: labelColor || undefined,
+        glyph: parsedGlyph,
       });
 
       await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
@@ -66,6 +79,9 @@ app.get('/badge/installs', async (context) => {
       const badge = generateBadge({
         label: label || defaultLabel,
         message: formatNumber(stats.installs, isPretty),
+        color: color || undefined,
+        labelColor: labelColor || undefined,
+        glyph: parsedGlyph,
       });
 
       await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
@@ -81,9 +97,10 @@ app.get('/badge/installs', async (context) => {
 
 app.get('/badge/forks', async (context) => {
   try {
-    const { recipe, userId, label, pretty } = context.req.query();
+    const { recipe, userId, label, pretty, color, labelColor, glyph } = context.req.query();
     const defaultLabel = isValidUserId(userId) ? 'Total Forks' : 'Forks';
     const isPretty = pretty !== undefined;
+    const parsedGlyph = parseGlyph(glyph);
 
     if (recipe) {
       // Single recipe badge
@@ -102,6 +119,9 @@ app.get('/badge/forks', async (context) => {
       const badge = generateBadge({
         label: label || defaultLabel,
         message: formatNumber(recipeData.stats.forks, isPretty),
+        color: color || undefined,
+        labelColor: labelColor || undefined,
+        glyph: parsedGlyph,
       });
 
       await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
@@ -118,6 +138,9 @@ app.get('/badge/forks', async (context) => {
       const badge = generateBadge({
         label: label || defaultLabel,
         message: formatNumber(stats.forks, isPretty),
+        color: color || undefined,
+        labelColor: labelColor || undefined,
+        glyph: parsedGlyph,
       });
 
       await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
@@ -133,9 +156,10 @@ app.get('/badge/forks', async (context) => {
 
 app.get('/badge/recipes', async (context) => {
   try {
-    const { userId, label, pretty } = context.req.query();
+    const { userId, label, pretty, color, labelColor, glyph } = context.req.query();
     const defaultLabel = 'Recipes';
     const isPretty = pretty !== undefined;
+    const parsedGlyph = parseGlyph(glyph);
 
     if (!userId) {
       return returnErrorBadge(context, label || defaultLabel, 'Missing userId');
@@ -151,6 +175,9 @@ app.get('/badge/recipes', async (context) => {
     const badge = generateBadge({
       label: label || defaultLabel,
       message: formatNumber(stats.recipes, isPretty),
+      color: color || undefined,
+      labelColor: labelColor || undefined,
+      glyph: parsedGlyph,
     });
 
     await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
@@ -163,9 +190,10 @@ app.get('/badge/recipes', async (context) => {
 
 app.get('/badge/connections', async (context) => {
   try {
-    const { recipe, userId, label, pretty } = context.req.query();
+    const { recipe, userId, label, pretty, color, labelColor, glyph } = context.req.query();
     const defaultLabel = isValidUserId(userId) ? 'Total Connections' : 'Connections';
     const isPretty = pretty !== undefined;
+    const parsedGlyph = parseGlyph(glyph);
 
     if (recipe) {
       // Single recipe badge
@@ -189,6 +217,9 @@ app.get('/badge/connections', async (context) => {
       const badge = generateBadge({
         label: label || defaultLabel,
         message: formatNumber(totalConnections, isPretty),
+        color: color || undefined,
+        labelColor: labelColor || undefined,
+        glyph: parsedGlyph,
       });
 
       await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
@@ -205,6 +236,9 @@ app.get('/badge/connections', async (context) => {
       const badge = generateBadge({
         label: label || defaultLabel,
         message: formatNumber(stats.connections, isPretty),
+        color: color || undefined,
+        labelColor: labelColor || undefined,
+        glyph: parsedGlyph,
       });
 
       await incrementBadgeCounter(context, BADGES_SERVED_COUNTER_KEY);
