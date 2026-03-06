@@ -69,6 +69,94 @@ else
   exit 1
 fi
 
+# Badge connections endpoint - valid recipe
+echo "Testing GET /badge/connections?recipe=28496"
+BADGE=$(curl -s "http://localhost:8787/badge/connections?recipe=28496")
+if echo "$BADGE" | grep -q '<svg'; then
+  echo "✓ Connections badge SVG returned"
+else
+  echo "✗ Connections badge endpoint failed"
+  kill $DEV_PID || true
+  exit 1
+fi
+
+# Badge recipes endpoint - valid userId
+echo "Testing GET /badge/recipes?userId=4318"
+BADGE=$(curl -s "http://localhost:8787/badge/recipes?userId=4318")
+if echo "$BADGE" | grep -q '<svg'; then
+  echo "✓ Recipes badge SVG returned"
+else
+  echo "✗ Recipes badge endpoint failed"
+  kill $DEV_PID || true
+  exit 1
+fi
+
+# Glyph param - black
+echo "Testing GET /badge/installs?recipe=28496&glyph=black"
+BADGE=$(curl -s "http://localhost:8787/badge/installs?recipe=28496&glyph=black")
+if echo "$BADGE" | grep -q '<svg'; then
+  echo "✓ Badge with glyph=black returned"
+else
+  echo "✗ Badge glyph=black failed"
+  kill $DEV_PID || true
+  exit 1
+fi
+
+# Glyph param - white
+echo "Testing GET /badge/installs?recipe=28496&glyph=white"
+BADGE=$(curl -s "http://localhost:8787/badge/installs?recipe=28496&glyph=white")
+if echo "$BADGE" | grep -q '<svg'; then
+  echo "✓ Badge with glyph=white returned"
+else
+  echo "✗ Badge glyph=white failed"
+  kill $DEV_PID || true
+  exit 1
+fi
+
+# Glyph param - invalid value (should fall back gracefully)
+echo "Testing GET /badge/installs?recipe=28496&glyph=invalid"
+BADGE=$(curl -s "http://localhost:8787/badge/installs?recipe=28496&glyph=invalid")
+if echo "$BADGE" | grep -q '<svg'; then
+  echo "✓ Badge with invalid glyph falls back gracefully"
+else
+  echo "✗ Badge invalid glyph did not fall back gracefully"
+  kill $DEV_PID || true
+  exit 1
+fi
+
+# Color param override
+echo "Testing GET /badge/installs?recipe=28496&color=0075FF"
+BADGE=$(curl -s "http://localhost:8787/badge/installs?recipe=28496&color=0075FF")
+if echo "$BADGE" | grep -q '<svg'; then
+  echo "✓ Badge with custom color returned"
+else
+  echo "✗ Badge custom color failed"
+  kill $DEV_PID || true
+  exit 1
+fi
+
+# Label color param override
+echo "Testing GET /badge/installs?recipe=28496&labelColor=222222"
+BADGE=$(curl -s "http://localhost:8787/badge/installs?recipe=28496&labelColor=222222")
+if echo "$BADGE" | grep -q '<svg'; then
+  echo "✓ Badge with custom labelColor returned"
+else
+  echo "✗ Badge custom labelColor failed"
+  kill $DEV_PID || true
+  exit 1
+fi
+
+# Combined params - glyph + color + labelColor
+echo "Testing GET /badge/installs?recipe=28496&glyph=black&color=0075FF&labelColor=222222"
+BADGE=$(curl -s "http://localhost:8787/badge/installs?recipe=28496&glyph=black&color=0075FF&labelColor=222222")
+if echo "$BADGE" | grep -q '<svg'; then
+  echo "✓ Badge with combined glyph+color+labelColor returned"
+else
+  echo "✗ Badge combined params failed"
+  kill $DEV_PID || true
+  exit 1
+fi
+
 # Stats API endpoint - missing recipe
 echo "Testing GET /api/stats (missing recipe)"
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8787/api/stats)
