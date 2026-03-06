@@ -284,7 +284,6 @@
       }
 
       .customize-panel.open {
-        max-height: 300px;
         transition: max-height 0.3s ease-in;
       }
 
@@ -324,8 +323,17 @@
         cursor: pointer;
       }
 
+      /* Visually hidden but still in tab/AT order */
       .glyph-option input[type='radio'] {
-        display: none;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
 
       .glyph-swatch {
@@ -341,6 +349,11 @@
 
       .glyph-option input[type='radio']:checked + .glyph-swatch {
         border-color: #667eea;
+      }
+
+      .glyph-option input[type='radio']:focus-visible + .glyph-swatch {
+        outline: 2px solid #667eea;
+        outline-offset: 2px;
       }
 
       .glyph-swatch svg {
@@ -1237,11 +1250,23 @@
               <div class="customize-section-label">Background Colors</div>
               <div class="color-row">
                 <div class="color-item">
-                  <input type="color" id="labelColorInput" value="#3D3D3E" title="Label color" />
+                  <input
+                    type="color"
+                    id="labelColorInput"
+                    value="#3D3D3E"
+                    title="Label color"
+                    aria-label="Label"
+                  />
                   <span class="color-label-text">Label</span>
                 </div>
                 <div class="color-item">
-                  <input type="color" id="badgeColor" value="#F8654B" title="Count color" />
+                  <input
+                    type="color"
+                    id="badgeColor"
+                    value="#F8654B"
+                    title="Count color"
+                    aria-label="Count"
+                  />
                   <span class="color-label-text">Count</span>
                 </div>
               </div>
@@ -1951,35 +1976,45 @@
       }
 
       let refreshTimer = null;
+      let refreshSequence = 0;
 
       async function refreshCustomizablePreviews() {
         if (!currentUserId) return;
+        const seq = ++refreshSequence;
+
         const stats = aggregateStats(currentRecipes);
         updateStatsDisplay(stats);
         markdownCode.textContent = generateMarkdownCode(stats);
         urlCode.textContent = generateDirectUrls(stats);
         await loadBadgePreviews(currentUserId);
+
+        // Bail out if a newer refresh has already been scheduled
+        if (seq !== refreshSequence) return;
+
         const isPretty = prettyFormat.checked;
+        const previewPromises = [];
         for (let index = 0; index < currentRecipes.length; index++) {
           const recipe = currentRecipes[index];
           const badgesContainer = document.getElementById(`badges-container-${index}`);
           if (badgesContainer && badgesContainer.classList.contains('expanded')) {
             for (const type of ['installs', 'forks', 'connections']) {
-              await loadRecipeBadgePreview(
-                `recipe-badge-${index}-${type}`,
-                recipe.id,
-                type,
-                isPretty
+              previewPromises.push(
+                loadRecipeBadgePreview(`recipe-badge-${index}-${type}`, recipe.id, type, isPretty)
               );
             }
           }
         }
+        await Promise.all(previewPromises);
+
+        if (seq !== refreshSequence) return;
         updateCustomizeActiveDot();
       }
 
       function debouncedRefresh() {
         clearTimeout(refreshTimer);
-        refreshTimer = setTimeout(refreshCustomizablePreviews, 300);
+        refreshTimer = setTimeout(() => {
+          refreshCustomizablePreviews().catch((err) => console.error('Badge refresh failed:', err));
+        }, 300);
       }
 
       // Copy buttons
@@ -2003,22 +2038,62 @@
       // Customize panel toggle and appearance change listeners
       const customizeToggle = document.getElementById('customizeToggle');
       const customizePanel = document.getElementById('customizePanel');
-      customizeToggle.addEventListener('click', () => {
-        const isOpen = customizePanel.classList.contains('open');
-        customizePanel.classList.toggle('open');
-        customizeToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-        if (isOpen) {
-          customizePanel.setAttribute('inert', '');
+      const supportsInert = 'inert' in HTMLElement.prototype;
+
+      function setPanelAccessibility(collapsed) {
+        if (supportsInert) {
+          if (collapsed) {
+            customizePanel.setAttribute('inert', '');
+          } else {
+            customizePanel.removeAttribute('inert');
+          }
         } else {
-          customizePanel.removeAttribute('inert');
+          // Fallback: manually manage tabindex for browsers without inert support
+          const focusables = customizePanel.querySelectorAll(
+            'input, button, select, textarea, a[href], [tabindex]'
+          );
+          if (collapsed) {
+            focusables.forEach((el) => {
+              el.dataset.origTabindex = el.getAttribute('tabindex') ?? '';
+              el.setAttribute('tabindex', '-1');
+            });
+          } else {
+            focusables.forEach((el) => {
+              const orig = el.dataset.origTabindex;
+              if (orig === '' || orig == null) {
+                el.removeAttribute('tabindex');
+              } else {
+                el.setAttribute('tabindex', orig);
+              }
+              delete el.dataset.origTabindex;
+            });
+          }
         }
+      }
+
+      customizeToggle.addEventListener('click', () => {
+        const willOpen = !customizePanel.classList.contains('open');
+        customizePanel.classList.toggle('open');
+        customizePanel.style.maxHeight = willOpen ? customizePanel.scrollHeight + 'px' : '0';
+        customizeToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        setPanelAccessibility(!willOpen);
       });
 
+      // Apply initial accessibility state (panel starts collapsed)
+      if (!supportsInert) {
+        setPanelAccessibility(true);
+      }
+
+      function handleAppearanceChange() {
+        updateCustomizeActiveDot(); // immediately reflect state on the toggle button
+        debouncedRefresh(); // debounced preview refresh
+      }
+
       document.querySelectorAll('input[name="glyphOption"]').forEach((input) => {
-        input.addEventListener('change', debouncedRefresh);
+        input.addEventListener('change', handleAppearanceChange);
       });
-      document.getElementById('badgeColor').addEventListener('input', debouncedRefresh);
-      document.getElementById('labelColorInput').addEventListener('input', debouncedRefresh);
+      document.getElementById('badgeColor').addEventListener('input', handleAppearanceChange);
+      document.getElementById('labelColorInput').addEventListener('input', handleAppearanceChange);
 
       // Check if userId is in URL query parameters and auto-prefill
       function checkAndPrefillUserId() {
