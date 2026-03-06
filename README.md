@@ -61,6 +61,9 @@ https://trmnl.com/recipes/28496
 - **`userId`** (required\*) - TRMNL author/user ID for combined stats (e.g., `364`)
 - **`label`** (optional) - Custom label text (eg. `?label=Downloads` or `?label=Download%20Count`)
 - **`pretty`** (optional) - Format numbers in compact notation (e.g., `1.78K`)
+- **`glyph`** (optional) - TRMNL logo variant: `brand` (default), `black`, or `white`
+- **`color`** (optional) - Badge value background color as a hex code without `#` (default: `F8654B` — TRMNL orange, e.g., `&color=959393`)
+- **`labelColor`** (optional) - Badge label background color as a hex code without `#` (default: `3D3D3E` — TRMNL dark gray, e.g., `&labelColor=4EBC91`)
 
 \* Either `recipe` or `userId` is required. Use `recipe` for single recipe badges, `userId` for author badges.
 
