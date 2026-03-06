@@ -222,6 +222,174 @@
         transform: none;
       }
 
+      /* Customize appearance */
+      .customize-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: none;
+        border: 1px solid #e0e0e0;
+        color: #667eea;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+
+      .customize-toggle:hover {
+        border-color: #667eea;
+      }
+
+      .customize-toggle svg.toggle-icon {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+        flex-shrink: 0;
+      }
+
+      .customize-toggle svg.toggle-chevron {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+        flex-shrink: 0;
+        transition: transform 0.2s;
+        margin-left: 2px;
+      }
+
+      .customize-toggle[aria-expanded='true'] svg.toggle-chevron {
+        transform: rotate(180deg);
+      }
+
+      .customize-active-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #f8654b;
+        flex-shrink: 0;
+      }
+
+      .customize-panel {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease-out;
+        background: #fafafa;
+        border: 1px solid #e8e8e8;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+
+      .customize-panel.open {
+        max-height: 300px;
+        transition: max-height 0.3s ease-in;
+      }
+
+      .customize-panel-inner {
+        padding: 16px;
+        display: flex;
+        gap: 32px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .customize-col {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .customize-section-label {
+        font-size: 11px;
+        color: #999;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+      }
+
+      /* Glyph selector */
+      .glyph-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      .glyph-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+
+      .glyph-option input[type='radio'] {
+        display: none;
+      }
+
+      .glyph-swatch {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid transparent;
+        transition: border-color 0.2s;
+      }
+
+      .glyph-option input[type='radio']:checked + .glyph-swatch {
+        border-color: #667eea;
+      }
+
+      .glyph-swatch svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .glyph-label {
+        font-size: 11px;
+        color: #666;
+        font-weight: 400;
+        margin: 0;
+      }
+
+      /* Color pickers */
+      .color-row {
+        display: flex;
+        gap: 16px;
+      }
+
+      .color-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .color-label-text {
+        font-size: 11px;
+        color: #666;
+        font-weight: 400;
+      }
+
+      input[type='color'] {
+        width: 40px;
+        height: 40px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        padding: 2px;
+        background: none;
+        transition: border-color 0.2s;
+      }
+
+      input[type='color']:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
       /* Author Stats Section */
       .author-stats-section {
         background: #fff5f3;
@@ -889,6 +1057,198 @@
           </div>
         </div>
 
+        <!-- Appearance Customization (collapsed by default) -->
+        <button
+          type="button"
+          class="customize-toggle"
+          id="customizeToggle"
+          aria-expanded="false"
+          aria-controls="customizePanel"
+        >
+          <svg class="toggle-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.04 7.04 0 0 0-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54a7.04 7.04 0 0 0-1.62.94l-2.39-.96a.477.477 0 0 0-.59.22L2.74 8.87a.47.47 0 0 0 .12.61l2.03 1.58c-.05.3-.07.63-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.36 1.04.67 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54a7.04 7.04 0 0 0 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.47.47 0 0 0-.12-.61zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
+            />
+          </svg>
+          Customize appearance
+          <span class="customize-active-dot" id="customizeActiveDot" style="display: none"></span>
+          <svg class="toggle-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 10l5 5 5-5z" />
+          </svg>
+        </button>
+        <div class="customize-panel" id="customizePanel" inert>
+          <div class="customize-panel-inner">
+            <div class="customize-col">
+              <div class="customize-section-label">Icon Style</div>
+              <div class="glyph-group">
+                <label class="glyph-option">
+                  <input type="radio" name="glyphOption" value="brand" checked />
+                  <span class="glyph-swatch" style="background: #3d3d3e" title="Brand (orange)">
+                    <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z"
+                        fill="#F8654B"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
+                        fill="#F8654B"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M157.609 56.0668L132.682 93.8519L113.971 81.5078L138.898 43.7227L157.609 56.0668Z"
+                        fill="#F8654B"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M147.533 123.466L102.449 127.536L100.434 105.211L145.517 101.141L147.533 123.466Z"
+                        fill="#F8654B"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M88.5468 157.611L57.2559 124.901L73.4541 109.406L104.745 142.116L88.5468 157.611Z"
+                        fill="#F8654B"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M25.0723 132.804L31.1366 87.9453L53.3508 90.9484L47.2865 135.808L25.0723 132.804Z"
+                        fill="#F8654B"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M4.9082 67.6809L43.7612 44.4531L55.2636 63.6933L16.4107 86.921L4.9082 67.6809Z"
+                        fill="#F8654B"
+                      />
+                    </svg>
+                  </span>
+                  <span class="glyph-label">Brand</span>
+                </label>
+                <label class="glyph-option">
+                  <input type="radio" name="glyphOption" value="black" />
+                  <span class="glyph-swatch" style="background: #f0f0f0" title="Black">
+                    <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z"
+                        fill="black"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
+                        fill="black"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M157.609 56.0686L132.682 93.8537L113.971 81.5097L138.898 43.7246L157.609 56.0686Z"
+                        fill="black"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M147.533 123.467L102.449 127.536L100.434 105.211L145.517 101.141L147.533 123.467Z"
+                        fill="black"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M88.5468 157.611L57.2559 124.901L73.4541 109.406L104.745 142.116L88.5468 157.611Z"
+                        fill="black"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M25.0723 132.804L31.1366 87.9453L53.3508 90.9484L47.2865 135.808L25.0723 132.804Z"
+                        fill="black"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M4.9082 67.6808L43.7612 44.4531L55.2636 63.6933L16.4107 86.921L4.9082 67.6808Z"
+                        fill="black"
+                      />
+                    </svg>
+                  </span>
+                  <span class="glyph-label">Black</span>
+                </label>
+                <label class="glyph-option">
+                  <input type="radio" name="glyphOption" value="white" />
+                  <span class="glyph-swatch" style="background: #3d3d3e" title="White">
+                    <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M43.2322 11.3438L85.6168 27.238L77.7459 48.227L35.3613 32.3328L43.2322 11.3438Z"
+                        fill="white"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
+                        fill="white"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M157.61 56.0687L132.682 93.8538L113.971 81.5097L138.898 43.7246L157.61 56.0687Z"
+                        fill="white"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M147.533 123.467L102.449 127.537L100.434 105.211L145.517 101.141L147.533 123.467Z"
+                        fill="white"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M88.5488 157.611L57.2578 124.901L73.4561 109.406L104.747 142.116L88.5488 157.611Z"
+                        fill="white"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M25.0723 132.802L31.1366 87.9434L53.3508 90.9465L47.2866 135.805L25.0723 132.802Z"
+                        fill="white"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M4.9082 67.6828L43.7612 44.4551L55.2637 63.6953L16.4107 86.923L4.9082 67.6828Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </span>
+                  <span class="glyph-label">White</span>
+                </label>
+              </div>
+            </div>
+            <div class="customize-col">
+              <div class="customize-section-label">Background Colors</div>
+              <div class="color-row">
+                <div class="color-item">
+                  <input type="color" id="labelColorInput" value="#3D3D3E" title="Label color" />
+                  <span class="color-label-text">Label</span>
+                </div>
+                <div class="color-item">
+                  <input type="color" id="badgeColor" value="#F8654B" title="Count color" />
+                  <span class="color-label-text">Count</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="button-group">
           <button type="button" class="generate-btn" id="generateBtn">
             Generate Author Badges
@@ -1134,7 +1494,7 @@
       async function loadBadgePreview(containerId, badgeType, userId, isPretty = false) {
         try {
           const container = document.getElementById(containerId);
-          const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}${isPretty ? '&pretty' : ''}`;
+          const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}${isPretty ? '&pretty' : ''}${getCustomParams()}`;
           const response = await fetch(badgeUrl);
           const svgText = await response.text();
           container.innerHTML = svgText;
@@ -1157,7 +1517,7 @@
 
           for (const badgeType of badgeTypes) {
             try {
-              const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}${isPretty ? '&pretty' : ''}`;
+              const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}${isPretty ? '&pretty' : ''}${getCustomParams()}`;
               const response = await fetch(badgeUrl);
               const svgText = await response.text();
               container.innerHTML += svgText;
@@ -1202,16 +1562,16 @@
       function generateMarkdownCode(stats) {
         const lines = [];
         lines.push(
-          `![Recipes](${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`
+          `![Recipes](${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()})`
         );
         lines.push(
-          `![Total Installs](${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`
+          `![Total Installs](${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()})`
         );
         lines.push(
-          `![Total Forks](${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`
+          `![Total Forks](${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()})`
         );
         lines.push(
-          `![Total Connections](${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''})`
+          `![Total Connections](${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()})`
         );
         return lines.join('\n');
       }
@@ -1222,16 +1582,16 @@
       function generateDirectUrls(stats) {
         const lines = [];
         lines.push(
-          `• Recipes: ${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+          `• Recipes: ${BASE_URL}/badge/recipes?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()}`
         );
         lines.push(
-          `• Total Installs: ${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+          `• Total Installs: ${BASE_URL}/badge/installs?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()}`
         );
         lines.push(
-          `• Total Forks: ${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+          `• Total Forks: ${BASE_URL}/badge/forks?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()}`
         );
         lines.push(
-          `• Total Connections: ${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}`
+          `• Total Connections: ${BASE_URL}/badge/connections?userId=${currentUserId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()}`
         );
         return lines.join('\n');
       }
@@ -1242,7 +1602,7 @@
       async function loadRecipeBadgePreview(containerId, recipeId, badgeType, isPretty = false) {
         try {
           const container = document.getElementById(containerId);
-          const badgeUrl = `${BASE_URL}/badge/${badgeType}?recipe=${recipeId}${isPretty ? '&pretty' : ''}`;
+          const badgeUrl = `${BASE_URL}/badge/${badgeType}?recipe=${recipeId}${isPretty ? '&pretty' : ''}${getCustomParams()}`;
           const response = await fetch(badgeUrl);
           const svgText = await response.text();
           container.innerHTML = svgText;
@@ -1255,7 +1615,7 @@
        * Generate markdown code for a single recipe badge
        */
       function generateRecipeBadgeMarkdown(recipeId, badgeType, badgeLabel) {
-        const url = `${BASE_URL}/badge/${badgeType}?recipe=${recipeId}${prettyFormat.checked ? '&pretty' : ''}`;
+        const url = `${BASE_URL}/badge/${badgeType}?recipe=${recipeId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()}`;
         return `![${badgeLabel}](${url})`;
       }
 
@@ -1568,6 +1928,60 @@
 
       let currentRecipes = [];
 
+      // Customization helpers
+      function getCustomParams() {
+        const glyph = document.querySelector('input[name="glyphOption"]:checked').value;
+        const color = document.getElementById('badgeColor').value.replace('#', '').toUpperCase();
+        const lColor = document
+          .getElementById('labelColorInput')
+          .value.replace('#', '')
+          .toUpperCase();
+        let params = '';
+        if (glyph !== 'brand') params += `&glyph=${glyph}`;
+        if (color !== 'F8654B') params += `&color=${color}`;
+        if (lColor !== '3D3D3E') params += `&labelColor=${lColor}`;
+        return params;
+      }
+
+      function updateCustomizeActiveDot() {
+        const isCustomized = getCustomParams() !== '';
+        document.getElementById('customizeActiveDot').style.display = isCustomized
+          ? 'inline-block'
+          : 'none';
+      }
+
+      let refreshTimer = null;
+
+      async function refreshCustomizablePreviews() {
+        if (!currentUserId) return;
+        const stats = aggregateStats(currentRecipes);
+        updateStatsDisplay(stats);
+        markdownCode.textContent = generateMarkdownCode(stats);
+        urlCode.textContent = generateDirectUrls(stats);
+        await loadBadgePreviews(currentUserId);
+        const isPretty = prettyFormat.checked;
+        for (let index = 0; index < currentRecipes.length; index++) {
+          const recipe = currentRecipes[index];
+          const badgesContainer = document.getElementById(`badges-container-${index}`);
+          if (badgesContainer && badgesContainer.classList.contains('expanded')) {
+            for (const type of ['installs', 'forks', 'connections']) {
+              await loadRecipeBadgePreview(
+                `recipe-badge-${index}-${type}`,
+                recipe.id,
+                type,
+                isPretty
+              );
+            }
+          }
+        }
+        updateCustomizeActiveDot();
+      }
+
+      function debouncedRefresh() {
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(refreshCustomizablePreviews, 300);
+      }
+
       // Copy buttons
       document.querySelectorAll('.copy-btn').forEach((btn) => {
         btn.addEventListener('click', async (e) => {
@@ -1585,6 +1999,26 @@
           }
         });
       });
+
+      // Customize panel toggle and appearance change listeners
+      const customizeToggle = document.getElementById('customizeToggle');
+      const customizePanel = document.getElementById('customizePanel');
+      customizeToggle.addEventListener('click', () => {
+        const isOpen = customizePanel.classList.contains('open');
+        customizePanel.classList.toggle('open');
+        customizeToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        if (isOpen) {
+          customizePanel.setAttribute('inert', '');
+        } else {
+          customizePanel.removeAttribute('inert');
+        }
+      });
+
+      document.querySelectorAll('input[name="glyphOption"]').forEach((input) => {
+        input.addEventListener('change', debouncedRefresh);
+      });
+      document.getElementById('badgeColor').addEventListener('input', debouncedRefresh);
+      document.getElementById('labelColorInput').addEventListener('input', debouncedRefresh);
 
       // Check if userId is in URL query parameters and auto-prefill
       function checkAndPrefillUserId() {
