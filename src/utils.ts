@@ -41,6 +41,24 @@ export function aggregateAuthorStats(recipes: TRMNLRecipe[]) {
 }
 
 /**
+ * Default badge scale multiplier.
+ */
+export const BADGE_SCALE_DEFAULT = 1;
+export const BADGE_SCALE_MAX = 5;
+
+/**
+ * Parse a scale query parameter string into a valid positive finite number,
+ * capped at BADGE_SCALE_MAX. Returns undefined for missing, non-numeric, zero,
+ * negative, or infinite values.
+ */
+export function parseScale(value: string | undefined): number | undefined {
+  if (!value) return undefined;
+  const n = parseFloat(value);
+  if (!Number.isFinite(n) || n <= 0) return undefined;
+  return Math.min(n, BADGE_SCALE_MAX);
+}
+
+/**
  * Helper function to safely check if userId is a valid non-empty string
  */
 export function isValidUserId(userId: string | string[] | undefined): boolean {

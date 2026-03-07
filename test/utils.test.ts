@@ -4,6 +4,9 @@ import {
   compactNumberFormatter,
   aggregateAuthorStats,
   isValidUserId,
+  parseScale,
+  BADGE_SCALE_DEFAULT,
+  BADGE_SCALE_MAX,
   incrementBadgeCounter,
 } from '../src/utils';
 import type { TRMNLRecipe } from '../src/types';
@@ -166,6 +169,76 @@ describe('Utils', () => {
 
     it('should return false for an array of strings', () => {
       expect(isValidUserId(['29', '30'] as any)).toBe(false);
+    });
+  });
+
+  describe('parseScale', () => {
+    it('should return the value for a valid positive integer string', () => {
+      expect(parseScale('2')).toBe(2);
+    });
+
+    it('should return the value for a valid positive decimal string', () => {
+      expect(parseScale('1.5')).toBe(1.5);
+    });
+
+    it('should return the value for a fractional scale like 1.2', () => {
+      expect(parseScale('1.2')).toBe(1.2);
+    });
+
+    it('should return the value for a larger scale like 3.5', () => {
+      expect(parseScale('3.5')).toBe(3.5);
+    });
+
+    it('should return undefined for undefined input', () => {
+      expect(parseScale(undefined)).toBeUndefined();
+    });
+
+    it('should return undefined for an empty string', () => {
+      expect(parseScale('')).toBeUndefined();
+    });
+
+    it('should return undefined for a non-numeric string', () => {
+      expect(parseScale('abc')).toBeUndefined();
+    });
+
+    it('should return undefined for zero', () => {
+      expect(parseScale('0')).toBeUndefined();
+    });
+
+    it('should return undefined for a negative number', () => {
+      expect(parseScale('-1')).toBeUndefined();
+    });
+
+    it('should return undefined for a negative decimal', () => {
+      expect(parseScale('-0.5')).toBeUndefined();
+    });
+
+    it('should return undefined for Infinity', () => {
+      expect(parseScale('Infinity')).toBeUndefined();
+    });
+
+    it('should return undefined for NaN string', () => {
+      expect(parseScale('NaN')).toBeUndefined();
+    });
+
+    it('should return 5 for a value exactly at the max', () => {
+      expect(parseScale('5')).toBe(BADGE_SCALE_MAX);
+    });
+
+    it('should cap a value exceeding max to BADGE_SCALE_MAX', () => {
+      expect(parseScale('6')).toBe(BADGE_SCALE_MAX);
+    });
+
+    it('should cap a large value to BADGE_SCALE_MAX', () => {
+      expect(parseScale('100')).toBe(BADGE_SCALE_MAX);
+    });
+
+    it('should return BADGE_SCALE_DEFAULT as 1', () => {
+      expect(BADGE_SCALE_DEFAULT).toBe(1);
+    });
+
+    it('should return BADGE_SCALE_MAX as 5', () => {
+      expect(BADGE_SCALE_MAX).toBe(5);
     });
   });
 

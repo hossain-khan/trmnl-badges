@@ -64,6 +64,7 @@ https://trmnl.com/recipes/28496
 - **`glyph`** (optional) - TRMNL logo variant: `brand` (default), `black`, or `white`
 - **`color`** (optional) - Badge value background color as a hex code without `#` (default: `F8654B` — TRMNL orange, e.g., `&color=959393`)
 - **`labelColor`** (optional) - Badge label background color as a hex code without `#` (default: `3D3D3E` — TRMNL dark gray, e.g., `&labelColor=4EBC91`)
+- **`scale`** (optional) - Badge scale multiplier as a positive number (default: `1`, e.g., `&scale=2` for 2x size)
 
 \* Either `recipe` or `userId` is required. Use `recipe` for single recipe badges, `userId` for author badges.
 
