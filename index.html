@@ -225,19 +225,6 @@
         flex: 1;
       }
 
-      .pretty-format-group {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-      }
-
-      @media (max-width: 480px) {
-        .pretty-format-group {
-          flex-basis: 100%;
-          align-items: flex-start;
-        }
-      }
-
       .checkbox-group {
         display: flex;
         align-items: center;
@@ -991,14 +978,6 @@
               </div>
             </div>
           </div>
-
-          <div class="form-group pretty-format-group">
-            <label>&nbsp;</label>
-            <div class="checkbox-group">
-              <input type="checkbox" id="prettyFormat" />
-              <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
-            </div>
-          </div>
         </div>
 
         <button
@@ -1283,6 +1262,10 @@
                 id="customLabel"
                 placeholder="e.g., 'My Cool Recipe' – appears as the left side of the badge"
               />
+            </div>
+            <div class="checkbox-group" style="margin-top: 8px">
+              <input type="checkbox" id="prettyFormat" />
+              <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
             </div>
           </div>
         </div>
@@ -1649,7 +1632,12 @@
         const lColor = labelColorInput.value.replace('#', '').toUpperCase();
         const scale = parseFloat(scaleInput.value);
         const isCustomized =
-          glyph !== 'brand' || color !== 'F8654B' || lColor !== '3D3D3E' || scale !== 1;
+          glyph !== 'brand' ||
+          color !== 'F8654B' ||
+          lColor !== '3D3D3E' ||
+          scale !== 1 ||
+          prettyFormat.checked ||
+          customLabel.value.trim() !== '';
         customizeActiveDot.style.display = isCustomized ? 'block' : 'none';
         customizeToggle.classList.toggle('active', isCustomized);
       }
