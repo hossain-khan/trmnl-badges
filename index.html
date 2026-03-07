@@ -696,6 +696,39 @@
         outline: none;
         border-color: #667eea;
       }
+
+      /* Scale slider */
+      .scale-control {
+        margin-top: 8px;
+      }
+
+      input[type='range'] {
+        width: 100%;
+        cursor: pointer;
+        accent-color: #667eea;
+        margin: 8px 0 2px;
+      }
+
+      .scale-ticks {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: #999;
+      }
+
+      .scale-value-pill {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 1px 7px;
+        border-radius: 10px;
+        margin-left: 6px;
+        vertical-align: middle;
+        min-width: 28px;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -1075,6 +1108,34 @@
 
           <div class="form-group">
             <label
+              ><svg class="label-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M3 3h5v2H5v3H3zm13 0h5v5h-2V5h-3zm5 13h-2v3h-3v2h5zm-18 3v-3H3v5h5v-2z"
+                /></svg
+              >Badge Scale<span class="scale-value-pill" id="scaleValueDisplay">1×</span></label
+            >
+            <div class="scale-control">
+              <input
+                type="range"
+                id="scaleInput"
+                min="1"
+                max="5"
+                step="0.5"
+                value="1"
+                aria-label="Badge scale multiplier"
+              />
+              <div class="scale-ticks">
+                <span>1×</span>
+                <span>2×</span>
+                <span>3×</span>
+                <span>4×</span>
+                <span>5×</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label
               ><svg
                 class="label-icon"
                 height="800"
@@ -1251,6 +1312,8 @@
       const glyphRadios = document.querySelectorAll('input[name="glyphOption"]');
       const badgeColor = document.getElementById('badgeColor');
       const labelColorInput = document.getElementById('labelColorInput');
+      const scaleInput = document.getElementById('scaleInput');
+      const scaleValueDisplay = document.getElementById('scaleValueDisplay');
 
       // Debounce utility function
       function debounce(func, delay) {
@@ -1377,6 +1440,9 @@
         const lColor = labelColorInput.value.replace('#', '').toUpperCase();
         if (lColor !== '3D3D3E') url += `&labelColor=${lColor}`;
 
+        const scale = parseFloat(scaleInput.value);
+        if (scale !== 1) url += `&scale=${scale}`;
+
         return url;
       }
 
@@ -1475,6 +1541,10 @@
       glyphRadios.forEach((radio) => radio.addEventListener('change', update));
       badgeColor.addEventListener('input', debouncedUpdate);
       labelColorInput.addEventListener('input', debouncedUpdate);
+      scaleInput.addEventListener('input', () => {
+        scaleValueDisplay.textContent = parseFloat(scaleInput.value) + '×';
+        update();
+      });
 
       // Copy buttons - Updated to work with textarea content
       document.querySelectorAll('.copy-btn').forEach((btn) => {
