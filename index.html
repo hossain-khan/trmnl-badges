@@ -182,7 +182,7 @@
       input[type='text']:focus,
       select:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: #f8654b;
       }
 
       .radio-group {
@@ -201,7 +201,7 @@
         width: 16px;
         height: 16px;
         cursor: pointer;
-        accent-color: #667eea;
+        accent-color: #f8654b;
       }
 
       .radio-label {
@@ -225,19 +225,6 @@
         flex: 1;
       }
 
-      .pretty-format-group {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-      }
-
-      @media (max-width: 480px) {
-        .pretty-format-group {
-          flex-basis: 100%;
-          align-items: flex-start;
-        }
-      }
-
       .checkbox-group {
         display: flex;
         align-items: center;
@@ -248,6 +235,7 @@
         width: 18px;
         height: 18px;
         cursor: pointer;
+        accent-color: #f8654b;
       }
 
       .checkbox-label {
@@ -748,6 +736,84 @@
         min-width: 28px;
         text-align: center;
       }
+
+      /* Customize appearance toggle */
+      .customize-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: none;
+        border: 2px solid #e0e0e0;
+        color: #695a58;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        align-self: flex-end;
+        white-space: nowrap;
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+
+      @media (max-width: 480px) {
+        .customize-toggle {
+          flex-basis: 100%;
+          justify-content: center;
+        }
+      }
+
+      .customize-toggle:hover,
+      .customize-toggle.active {
+        border-color: #f8654b;
+        color: #f8654b;
+      }
+
+      .toggle-icon {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+        flex-shrink: 0;
+      }
+
+      .toggle-chevron {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+        flex-shrink: 0;
+        transition: transform 0.2s;
+      }
+
+      .customize-toggle[aria-expanded='true'] .toggle-chevron {
+        transform: rotate(180deg);
+      }
+
+      .customize-active-dot {
+        width: 6px;
+        height: 6px;
+        background: #f8654b;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .customize-panel {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.35s ease;
+      }
+
+      .customize-panel.open {
+        max-height: 600px;
+      }
+
+      .customize-panel-inner {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
     </style>
   </head>
   <body>
@@ -868,7 +934,7 @@
           <input
             type="text"
             id="recipeInput"
-            placeholder="Enter recipe URL (e.g., https://trmnl.com/recipes/28496) or ID (28496)"
+            placeholder="Enter recipe URL (e.g., https://trmnl.com/recipes/9917) or ID (9917)"
             required
           />
           <div class="hint-feedback-row">
@@ -877,33 +943,9 @@
           </div>
         </div>
 
-        <!-- Custom Label - Full Width -->
-        <div class="form-group">
-          <label for="customLabel"
-            ><svg
-              class="label-icon"
-              height="800"
-              viewBox="0 0 512 512"
-              width="800"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m448 0v298.666667h-341.333333l-106.666667-149.333334 106.666667-149.333333zm-42.666667 42.6666667h-276.736l-76.181333 106.6666663 76.202667 106.666667h276.714666zm-266.666666 74.6666663c17.673112 0 32 14.326888 32 32s-14.326888 32-32 32-32-14.326888-32-32 14.326888-32 32-32zm74.666666 53.333334h149.333334v42.666666h-149.333334zm0-85.3333337h149.333334v42.6666667h-149.333334z"
-                fill-rule="evenodd"
-                transform="translate(21.333333 106.666667)"
-              /></svg
-            >Custom Label (optional)</label
-          >
-          <input
-            type="text"
-            id="customLabel"
-            placeholder="e.g., 'My Cool Recipe' – appears as the left side of the badge"
-          />
-        </div>
-
-        <!-- Badge Type and Pretty Format Row -->
-        <div class="row">
-          <div class="form-group">
+        <!-- Badge Type + Customize toggle Row -->
+        <div class="row" style="align-items: flex-end; margin-bottom: 16px">
+          <div class="form-group" style="margin-bottom: 0">
             <label
               ><svg
                 class="label-icon"
@@ -944,253 +986,291 @@
               </div>
             </div>
           </div>
-
-          <div class="form-group pretty-format-group">
-            <label>&nbsp;</label>
-            <div class="checkbox-group">
-              <input type="checkbox" id="prettyFormat" />
-              <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Icon Style and Colors Row -->
-        <div class="row">
-          <div class="form-group">
-            <label
-              ><svg
-                class="label-icon"
-                height="800"
-                viewBox="0 0 24 24"
-                width="800"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m4 2h16c1.1045695 0 2 .8954305 2 2v16c0 1.1045695-.8954305 2-2 2h-16c-1.1045695 0-2-.8954305-2-2v-16c0-1.1045695.8954305-2 2-2zm0 2v16h16v-16zm1 1h14v14h-14zm2 2v10h10v-10z"
-                  fill-rule="evenodd"
-                /></svg
-              >Icon Style</label
-            >
-            <div class="glyph-group">
-              <label class="glyph-option">
-                <input type="radio" name="glyphOption" value="brand" checked />
-                <span class="glyph-swatch" style="background: #3d3d3e" title="Brand (orange)">
-                  <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z"
-                      fill="#F8654B"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
-                      fill="#F8654B"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M157.609 56.0668L132.682 93.8519L113.971 81.5078L138.898 43.7227L157.609 56.0668Z"
-                      fill="#F8654B"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M147.533 123.466L102.449 127.536L100.434 105.211L145.517 101.141L147.533 123.466Z"
-                      fill="#F8654B"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M88.5468 157.611L57.2559 124.901L73.4541 109.406L104.745 142.116L88.5468 157.611Z"
-                      fill="#F8654B"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M25.0723 132.804L31.1366 87.9453L53.3508 90.9484L47.2865 135.808L25.0723 132.804Z"
-                      fill="#F8654B"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M4.9082 67.6809L43.7612 44.4531L55.2636 63.6933L16.4107 86.921L4.9082 67.6809Z"
-                      fill="#F8654B"
-                    />
-                  </svg>
-                </span>
-                <span class="glyph-label">Brand</span>
-              </label>
-              <label class="glyph-option">
-                <input type="radio" name="glyphOption" value="black" />
-                <span class="glyph-swatch" style="background: #f0f0f0" title="Black">
-                  <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z"
-                      fill="black"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
-                      fill="black"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M157.609 56.0686L132.682 93.8537L113.971 81.5097L138.898 43.7246L157.609 56.0686Z"
-                      fill="black"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M147.533 123.467L102.449 127.536L100.434 105.211L145.517 101.141L147.533 123.467Z"
-                      fill="black"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M88.5468 157.611L57.2559 124.901L73.4541 109.406L104.745 142.116L88.5468 157.611Z"
-                      fill="black"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M25.0723 132.804L31.1366 87.9453L53.3508 90.9484L47.2865 135.808L25.0723 132.804Z"
-                      fill="black"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M4.9082 67.6808L43.7612 44.4531L55.2636 63.6933L16.4107 86.921L4.9082 67.6808Z"
-                      fill="black"
-                    />
-                  </svg>
-                </span>
-                <span class="glyph-label">Black</span>
-              </label>
-              <label class="glyph-option">
-                <input type="radio" name="glyphOption" value="white" />
-                <span class="glyph-swatch" style="background: #3d3d3e" title="White">
-                  <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M43.2322 11.3438L85.6168 27.238L77.7459 48.227L35.3613 32.3328L43.2322 11.3438Z"
-                      fill="white"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
-                      fill="white"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M157.61 56.0687L132.682 93.8538L113.971 81.5097L138.898 43.7246L157.61 56.0687Z"
-                      fill="white"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M147.533 123.467L102.449 127.537L100.434 105.211L145.517 101.141L147.533 123.467Z"
-                      fill="white"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M88.5488 157.611L57.2578 124.901L73.4561 109.406L104.747 142.116L88.5488 157.611Z"
-                      fill="white"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M25.0723 132.802L31.1366 87.9434L53.3508 90.9465L47.2866 135.805L25.0723 132.802Z"
-                      fill="white"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M4.9082 67.6828L43.7612 44.4551L55.2637 63.6953L16.4107 86.923L4.9082 67.6828Z"
-                      fill="white"
-                    />
-                  </svg>
-                </span>
-                <span class="glyph-label">White</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label
-              ><svg
-                class="label-icon"
-                height="800"
-                viewBox="0 0 20 20"
-                width="800"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m4 9a5 5 0 1 1 10 0 5 5 0 0 1 -10 0zm5-7a7 7 0 1 0 4.2 12.6.999.999 0 0 0 .093.107l3 3a1 1 0 0 0 1.414-1.414l-3-3a.999.999 0 0 0 -.107-.093 7 7 0 0 0 -5.6-11.2zm-1 4.5a1 1 0 1 1 2 0v1.5h1.5a1 1 0 1 1 0 2h-1.5v1.5a1 1 0 1 1 -2 0v-1.5h-1.5a1 1 0 0 1 0-2h1.5z"
-                  fill-rule="evenodd"
-                /></svg
-              >Badge Scale<span class="scale-value-pill" id="scaleValueDisplay">1×</span></label
-            >
-            <div class="scale-control">
-              <input
-                type="range"
-                id="scaleInput"
-                min="1"
-                max="3"
-                step="0.5"
-                value="1"
-                aria-label="Badge scale multiplier"
+          <button
+            type="button"
+            class="customize-toggle"
+            id="customizeToggle"
+            aria-expanded="false"
+            aria-controls="customizePanel"
+          >
+            <svg class="toggle-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="m9 13.829a3.004 3.004 0 0 0 2-2.829 3.003 3.003 0 0 0 -2-2.829v-8.171h-2v8.171a3.004 3.004 0 0 0 -2 2.829c0 1.306.836 2.417 2 2.829v2.171h2zm-5-6a3.004 3.004 0 0 0 2-2.829 3.003 3.003 0 0 0 -2-2.829v-2.171h-2v2.171a3.004 3.004 0 0 0 -2 2.829c0 1.306.836 2.417 2 2.829v8.171h2zm10 0a3.004 3.004 0 0 0 2-2.829 3.003 3.003 0 0 0 -2-2.829v-2.171h-2v2.171a3.004 3.004 0 0 0 -2 2.829c0 1.306.836 2.417 2 2.829v8.171h2zm-2-1.829v-2h2v2zm-10 0v-2h2v2zm5 6v-2h2v2z"
+                fill-rule="evenodd"
               />
-              <div class="scale-ticks">
-                <span>1×</span>
-                <span>2×</span>
-                <span>3×</span>
+            </svg>
+            Customize appearance
+            <span class="customize-active-dot" id="customizeActiveDot" style="display: none"></span>
+            <svg class="toggle-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 10l5 5 5-5z" />
+            </svg>
+          </button>
+        </div>
+        <!-- Icon Style and Colors Row -->
+        <div class="customize-panel" id="customizePanel" inert>
+          <div class="customize-panel-inner">
+            <div class="row">
+              <div class="form-group">
+                <label
+                  ><svg
+                    class="label-icon"
+                    height="800"
+                    viewBox="0 0 24 24"
+                    width="800"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m4 2h16c1.1045695 0 2 .8954305 2 2v16c0 1.1045695-.8954305 2-2 2h-16c-1.1045695 0-2-.8954305-2-2v-16c0-1.1045695.8954305-2 2-2zm0 2v16h16v-16zm1 1h14v14h-14zm2 2v10h10v-10z"
+                      fill-rule="evenodd"
+                    /></svg
+                  >Icon Style</label
+                >
+                <div class="glyph-group">
+                  <label class="glyph-option">
+                    <input type="radio" name="glyphOption" value="brand" checked />
+                    <span class="glyph-swatch" style="background: #3d3d3e" title="Brand (orange)">
+                      <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z"
+                          fill="#F8654B"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
+                          fill="#F8654B"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M157.609 56.0668L132.682 93.8519L113.971 81.5078L138.898 43.7227L157.609 56.0668Z"
+                          fill="#F8654B"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M147.533 123.466L102.449 127.536L100.434 105.211L145.517 101.141L147.533 123.466Z"
+                          fill="#F8654B"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M88.5468 157.611L57.2559 124.901L73.4541 109.406L104.745 142.116L88.5468 157.611Z"
+                          fill="#F8654B"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M25.0723 132.804L31.1366 87.9453L53.3508 90.9484L47.2865 135.808L25.0723 132.804Z"
+                          fill="#F8654B"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M4.9082 67.6809L43.7612 44.4531L55.2636 63.6933L16.4107 86.921L4.9082 67.6809Z"
+                          fill="#F8654B"
+                        />
+                      </svg>
+                    </span>
+                    <span class="glyph-label">Brand</span>
+                  </label>
+                  <label class="glyph-option">
+                    <input type="radio" name="glyphOption" value="black" />
+                    <span class="glyph-swatch" style="background: #f0f0f0" title="Black">
+                      <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z"
+                          fill="black"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
+                          fill="black"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M157.609 56.0686L132.682 93.8537L113.971 81.5097L138.898 43.7246L157.609 56.0686Z"
+                          fill="black"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M147.533 123.467L102.449 127.536L100.434 105.211L145.517 101.141L147.533 123.467Z"
+                          fill="black"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M88.5468 157.611L57.2559 124.901L73.4541 109.406L104.745 142.116L88.5468 157.611Z"
+                          fill="black"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M25.0723 132.804L31.1366 87.9453L53.3508 90.9484L47.2865 135.808L25.0723 132.804Z"
+                          fill="black"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M4.9082 67.6808L43.7612 44.4531L55.2636 63.6933L16.4107 86.921L4.9082 67.6808Z"
+                          fill="black"
+                        />
+                      </svg>
+                    </span>
+                    <span class="glyph-label">Black</span>
+                  </label>
+                  <label class="glyph-option">
+                    <input type="radio" name="glyphOption" value="white" />
+                    <span class="glyph-swatch" style="background: #3d3d3e" title="White">
+                      <svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M43.2322 11.3438L85.6168 27.238L77.7459 48.227L35.3613 32.3328L43.2322 11.3438Z"
+                          fill="white"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z"
+                          fill="white"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M157.61 56.0687L132.682 93.8538L113.971 81.5097L138.898 43.7246L157.61 56.0687Z"
+                          fill="white"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M147.533 123.467L102.449 127.537L100.434 105.211L145.517 101.141L147.533 123.467Z"
+                          fill="white"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M88.5488 157.611L57.2578 124.901L73.4561 109.406L104.747 142.116L88.5488 157.611Z"
+                          fill="white"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M25.0723 132.802L31.1366 87.9434L53.3508 90.9465L47.2866 135.805L25.0723 132.802Z"
+                          fill="white"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M4.9082 67.6828L43.7612 44.4551L55.2637 63.6953L16.4107 86.923L4.9082 67.6828Z"
+                          fill="white"
+                        />
+                      </svg>
+                    </span>
+                    <span class="glyph-label">White</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label
+                  ><svg
+                    class="label-icon"
+                    height="800"
+                    viewBox="0 0 20 20"
+                    width="800"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m4 9a5 5 0 1 1 10 0 5 5 0 0 1 -10 0zm5-7a7 7 0 1 0 4.2 12.6.999.999 0 0 0 .093.107l3 3a1 1 0 0 0 1.414-1.414l-3-3a.999.999 0 0 0 -.107-.093 7 7 0 0 0 -5.6-11.2zm-1 4.5a1 1 0 1 1 2 0v1.5h1.5a1 1 0 1 1 0 2h-1.5v1.5a1 1 0 1 1 -2 0v-1.5h-1.5a1 1 0 0 1 0-2h1.5z"
+                      fill-rule="evenodd"
+                    /></svg
+                  >Badge Scale<span class="scale-value-pill" id="scaleValueDisplay">1×</span></label
+                >
+                <div class="scale-control">
+                  <input
+                    type="range"
+                    id="scaleInput"
+                    min="1"
+                    max="3"
+                    step="0.5"
+                    value="1"
+                    aria-label="Badge scale multiplier"
+                  />
+                  <div class="scale-ticks">
+                    <span>1×</span>
+                    <span>2×</span>
+                    <span>3×</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label
+                  ><svg
+                    class="label-icon"
+                    height="800"
+                    viewBox="0 0 20 20"
+                    width="800"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="m7.53559 15.2365c-1.55926.6165-4.25658 2.371-4.72798 1.8996-.30547-.3055.32371-1.5456.97225-2.8051h4.66126c-.20123.2012-.50307.5031-.90553.9055z"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      d="m15.8033 5.55458c.3905-.39053 1.0237-.39053 1.4142 0 .3905.39052.3905 1.02369 0 1.41421l-8.97481 8.97481c-.09671.0967-.21224.1726-.33944.2229-.39633.1566-.79951.3541-1.75279.8452-.47118.2427-.67924.3487-.93379.4741-1.7481.8613-2.40511 1.0684-3.11617.3574-.70971-.7098-.50324-1.3675.35184-3.105.1267-.2575.23399-.468.47967-.945.49101-.9533.6885-1.3565.84519-1.7528.05029-.1272.12614-.2427.22285-.3394l8.97485-8.97485c.3905-.39052 1.0237-.39052 1.4142 0s.3905 1.02369 0 1.41421l-8.83216 8.83214c-.17425.4148-.39339.856-.84694 1.7365-.23995.4659-.34376.6696-.46319.9123-.02487.0505-.04884.0997-.0719.1475.05103-.0247.10363-.0504.15784-.0771.24014-.1183.44153-.2209.9019-.458.88053-.4536 1.32169-.6727 1.7365-.847z"
+                    />
+                    <path
+                      d="m14.3891 4.14039c-.3905.39053-1.0237.39053-1.4142 0-.3906-.39052-.3906-1.02369 0-1.41421 1.1715-1.17157 3.071-1.17157 4.2426 0s1.1716 3.07107 0 4.24264c-.3905.39052-1.0237.39052-1.4142 0s-.3905-1.02369 0-1.41421c.3905-.39053.3905-1.02369 0-1.41422-.3905-.39052-1.0237-.39052-1.4142 0z"
+                    />
+                    <path
+                      d="m9.4373 4.84541c-.39052-.39052-.39052-1.02369 0-1.41421.39053-.39053 1.0237-.39053 1.4142 0l5.6569 5.65685c.3905.39053.3905 1.02365 0 1.41425-.3906.3905-1.0237.3905-1.4142 0z"
+                    /></svg
+                  >Background</label
+                >
+                <div class="color-row">
+                  <div class="color-item">
+                    <input type="color" id="labelColorInput" value="#3D3D3E" title="Label color" />
+                    <span class="color-label-text">Label</span>
+                  </div>
+                  <div class="color-item">
+                    <input type="color" id="badgeColor" value="#F8654B" title="Count color" />
+                    <span class="color-label-text">Count</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label
-              ><svg
-                class="label-icon"
-                height="800"
-                viewBox="0 0 20 20"
-                width="800"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="m7.53559 15.2365c-1.55926.6165-4.25658 2.371-4.72798 1.8996-.30547-.3055.32371-1.5456.97225-2.8051h4.66126c-.20123.2012-.50307.5031-.90553.9055z"
-                  fill-rule="evenodd"
-                />
-                <path
-                  d="m15.8033 5.55458c.3905-.39053 1.0237-.39053 1.4142 0 .3905.39052.3905 1.02369 0 1.41421l-8.97481 8.97481c-.09671.0967-.21224.1726-.33944.2229-.39633.1566-.79951.3541-1.75279.8452-.47118.2427-.67924.3487-.93379.4741-1.7481.8613-2.40511 1.0684-3.11617.3574-.70971-.7098-.50324-1.3675.35184-3.105.1267-.2575.23399-.468.47967-.945.49101-.9533.6885-1.3565.84519-1.7528.05029-.1272.12614-.2427.22285-.3394l8.97485-8.97485c.3905-.39052 1.0237-.39052 1.4142 0s.3905 1.02369 0 1.41421l-8.83216 8.83214c-.17425.4148-.39339.856-.84694 1.7365-.23995.4659-.34376.6696-.46319.9123-.02487.0505-.04884.0997-.0719.1475.05103-.0247.10363-.0504.15784-.0771.24014-.1183.44153-.2209.9019-.458.88053-.4536 1.32169-.6727 1.7365-.847z"
-                />
-                <path
-                  d="m14.3891 4.14039c-.3905.39053-1.0237.39053-1.4142 0-.3906-.39052-.3906-1.02369 0-1.41421 1.1715-1.17157 3.071-1.17157 4.2426 0s1.1716 3.07107 0 4.24264c-.3905.39052-1.0237.39052-1.4142 0s-.3905-1.02369 0-1.41421c.3905-.39053.3905-1.02369 0-1.41422-.3905-.39052-1.0237-.39052-1.4142 0z"
-                />
-                <path
-                  d="m9.4373 4.84541c-.39052-.39052-.39052-1.02369 0-1.41421.39053-.39053 1.0237-.39053 1.4142 0l5.6569 5.65685c.3905.39053.3905 1.02365 0 1.41425-.3906.3905-1.0237.3905-1.4142 0z"
-                /></svg
-              >Background</label
-            >
-            <div class="color-row">
-              <div class="color-item">
-                <input type="color" id="labelColorInput" value="#3D3D3E" title="Label color" />
-                <span class="color-label-text">Label</span>
+            <div class="row" style="align-items: flex-end">
+              <div class="form-group" style="margin-bottom: 0">
+                <label for="customLabel"
+                  ><svg
+                    class="label-icon"
+                    height="800"
+                    viewBox="0 0 512 512"
+                    width="800"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m448 0v298.666667h-341.333333l-106.666667-149.333334 106.666667-149.333333zm-42.666667 42.6666667h-276.736l-76.181333 106.6666663 76.202667 106.666667h276.714666zm-266.666666 74.6666663c17.673112 0 32 14.326888 32 32s-14.326888 32-32 32-32-14.326888-32-32 14.326888-32 32-32zm74.666666 53.333334h149.333334v42.666666h-149.333334zm0-85.3333337h149.333334v42.6666667h-149.333334z"
+                      fill-rule="evenodd"
+                      transform="translate(21.333333 106.666667)"
+                    /></svg
+                  >Custom Label (optional)</label
+                >
+                <input type="text" id="customLabel" placeholder="e.g., 'Total Downloads Count'" />
               </div>
-              <div class="color-item">
-                <input type="color" id="badgeColor" value="#F8654B" title="Count color" />
-                <span class="color-label-text">Count</span>
+              <div class="checkbox-group" style="flex-shrink: 0; padding-bottom: 10px">
+                <input type="checkbox" id="prettyFormat" />
+                <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
               </div>
             </div>
           </div>
@@ -1252,7 +1332,7 @@
             </div>
           </div>
           <code id="markdownCode"
-            >![Badge](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)</code
+            >![Badge](https://trmnl-badges.gohk.xyz/badge/installs?recipe=9917)</code
           >
         </div>
 
@@ -1270,7 +1350,7 @@
             ><span class="syntax-bracket">&lt;</span><span class="syntax-path">img src=</span
             ><span class="syntax-bracket">"</span><span class="syntax-protocol">https://</span
             ><span class="syntax-domain">trmnl-badges.gohk.xyz</span
-            ><span class="syntax-path">/badge/installs?recipe=28496</span
+            ><span class="syntax-path">/badge/installs?recipe=9917</span
             ><span class="syntax-bracket">"</span><span class="syntax-path"> alt=</span
             ><span class="syntax-bracket">"</span>Installs<span class="syntax-bracket">"</span
             ><span class="syntax-bracket">&gt;</span></code
@@ -1286,7 +1366,7 @@
           <code id="urlCode"
             ><span class="syntax-protocol">https://</span
             ><span class="syntax-domain">trmnl-badges.gohk.xyz</span
-            ><span class="syntax-path">/badge/installs?recipe=28496</span></code
+            ><span class="syntax-path">/badge/installs?recipe=9917</span></code
           >
         </div>
       </div>
@@ -1338,6 +1418,9 @@
       const labelColorInput = document.getElementById('labelColorInput');
       const scaleInput = document.getElementById('scaleInput');
       const scaleValueDisplay = document.getElementById('scaleValueDisplay');
+      const customizeToggle = document.getElementById('customizeToggle');
+      const customizePanel = document.getElementById('customizePanel');
+      const customizeActiveDot = document.getElementById('customizeActiveDot');
 
       // Debounce utility function
       function debounce(func, delay) {
@@ -1390,11 +1473,18 @@
         return null;
       }
 
+      let recipeInputTouched = false;
+
       function showValidation(isValid) {
         if (isValid) {
           recipeFeedback.className = 'recipe-feedback success';
           recipeFeedback.innerHTML = '<span class="icon">✓</span><span>Recipe ID valid</span>';
         } else {
+          if (!recipeInputTouched) {
+            recipeFeedback.className = 'recipe-feedback';
+            recipeFeedback.innerHTML = '';
+            return;
+          }
           recipeFeedback.className = 'recipe-feedback error';
           recipeFeedback.innerHTML =
             '<span class="icon">✗</span><span>Invalid recipe URL or ID</span>';
@@ -1542,9 +1632,26 @@
         urlCode.innerHTML = generateSyntaxHighlightedUrl(url);
       }
 
+      function updateCustomizeDot() {
+        const glyph = document.querySelector('input[name="glyphOption"]:checked').value;
+        const color = badgeColor.value.replace('#', '').toUpperCase();
+        const lColor = labelColorInput.value.replace('#', '').toUpperCase();
+        const scale = parseFloat(scaleInput.value);
+        const isCustomized =
+          glyph !== 'brand' ||
+          color !== 'F8654B' ||
+          lColor !== '3D3D3E' ||
+          scale !== 1 ||
+          prettyFormat.checked ||
+          customLabel.value.trim() !== '';
+        customizeActiveDot.style.display = isCustomized ? 'block' : 'none';
+        customizeToggle.classList.toggle('active', isCustomized);
+      }
+
       async function update() {
         updatePreview();
         updateCode();
+        updateCustomizeDot();
 
         // Fetch and display recipe info if valid ID
         const recipeId = extractRecipeId(recipeInput.value);
@@ -1557,7 +1664,10 @@
       }
 
       // Event listeners
-      recipeInput.addEventListener('input', update);
+      recipeInput.addEventListener('input', () => {
+        recipeInputTouched = true;
+        update();
+      });
       badgeTypeRadios.forEach((radio) => radio.addEventListener('change', update));
       customLabel.addEventListener('input', debouncedUpdate); // Debounced to prevent excessive requests
       prettyFormat.addEventListener('change', update);
@@ -1568,6 +1678,16 @@
       scaleInput.addEventListener('input', () => {
         scaleValueDisplay.textContent = parseFloat(scaleInput.value) + '×';
         update();
+      });
+
+      customizeToggle.addEventListener('click', () => {
+        const isOpen = customizePanel.classList.toggle('open');
+        customizeToggle.setAttribute('aria-expanded', String(isOpen));
+        if (isOpen) {
+          customizePanel.removeAttribute('inert');
+        } else {
+          customizePanel.setAttribute('inert', '');
+        }
       });
 
       // Copy buttons - Updated to work with textarea content

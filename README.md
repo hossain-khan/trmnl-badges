@@ -53,8 +53,6 @@ https://trmnl.com/recipes/28496
 | **Custom Label**  | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count)`            | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count)            |
 | **Linked Badge**  | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496) |
 | **Customizations**  | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&glyph=white&color=959393&labelColor=4EBC91)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&glyph=white&color=959393&labelColor=4EBC91) |
-| **Scaled (2x)**     | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&scale=2)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&scale=2) |
-
 
 ## Badge URL Query Parameters
 
