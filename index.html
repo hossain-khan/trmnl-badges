@@ -1241,31 +1241,33 @@
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <label for="customLabel"
-                ><svg
-                  class="label-icon"
-                  height="800"
-                  viewBox="0 0 512 512"
-                  width="800"
-                  xmlns="http://www.w3.org/2000/svg"
+            <div class="row" style="align-items: flex-end">
+              <div class="form-group" style="margin-bottom: 0">
+                <label for="customLabel"
+                  ><svg
+                    class="label-icon"
+                    height="800"
+                    viewBox="0 0 512 512"
+                    width="800"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m448 0v298.666667h-341.333333l-106.666667-149.333334 106.666667-149.333333zm-42.666667 42.6666667h-276.736l-76.181333 106.6666663 76.202667 106.666667h276.714666zm-266.666666 74.6666663c17.673112 0 32 14.326888 32 32s-14.326888 32-32 32-32-14.326888-32-32 14.326888-32 32-32zm74.666666 53.333334h149.333334v42.666666h-149.333334zm0-85.3333337h149.333334v42.6666667h-149.333334z"
+                      fill-rule="evenodd"
+                      transform="translate(21.333333 106.666667)"
+                    /></svg
+                  >Custom Label (optional)</label
                 >
-                  <path
-                    d="m448 0v298.666667h-341.333333l-106.666667-149.333334 106.666667-149.333333zm-42.666667 42.6666667h-276.736l-76.181333 106.6666663 76.202667 106.666667h276.714666zm-266.666666 74.6666663c17.673112 0 32 14.326888 32 32s-14.326888 32-32 32-32-14.326888-32-32 14.326888-32 32-32zm74.666666 53.333334h149.333334v42.666666h-149.333334zm0-85.3333337h149.333334v42.6666667h-149.333334z"
-                    fill-rule="evenodd"
-                    transform="translate(21.333333 106.666667)"
-                  /></svg
-                >Custom Label (optional)</label
-              >
-              <input
-                type="text"
-                id="customLabel"
-                placeholder="e.g., 'My Cool Recipe' – appears as the left side of the badge"
-              />
-            </div>
-            <div class="checkbox-group" style="margin-top: 8px">
-              <input type="checkbox" id="prettyFormat" />
-              <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
+                <input
+                  type="text"
+                  id="customLabel"
+                  placeholder="e.g., 'My Cool Recipe' – appears as the left side of the badge"
+                />
+              </div>
+              <div class="checkbox-group" style="flex-shrink: 0; padding-bottom: 10px">
+                <input type="checkbox" id="prettyFormat" />
+                <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
+              </div>
             </div>
           </div>
         </div>
