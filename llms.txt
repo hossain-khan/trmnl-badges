@@ -1,0 +1,41 @@
+# TRMNL Badges
+
+> Dynamic SVG badge generator for TRMNL recipe statistics. Badge API at https://trmnl-badges.gohk.xyz — Badge Builder UI at https://hossain-khan.github.io/trmnl-badges/
+
+TRMNL Badges generates SVG badges displaying install counts, fork counts, and connection stats for TRMNL recipes and authors. Badges are compatible with GitHub README files and any HTML page.
+
+## Badge Builders (Interactive UI)
+
+- [Single Recipe Badge Builder](https://hossain-khan.github.io/trmnl-badges/): Build badges for a single TRMNL recipe by recipe ID.
+- [Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html): Build aggregated badges for all recipes by a TRMNL author (by user ID).
+
+## Badge API Endpoints
+
+All badge endpoints return `image/svg+xml`. Base URL: `https://trmnl-badges.gohk.xyz`
+
+- `GET /badge/installs?recipe=<id>` — SVG badge showing install count for a recipe.
+- `GET /badge/forks?recipe=<id>` — SVG badge showing fork count for a recipe.
+- `GET /badge/connections?recipe=<id>` — SVG badge showing combined installs + forks for a recipe.
+- `GET /badge/recipes?userId=<id>` — SVG badge showing total published recipe count for an author.
+- `GET /badge/counter` — SVG badge showing total badges served.
+
+Badge endpoints also accept `userId=<id>` instead of `recipe=<id>` to aggregate stats across all recipes by that author.
+
+### Badge Query Parameters
+
+- `label` — Override the left-side label text.
+- `pretty` — Use compact number formatting (e.g. `1.2K`).
+- `color` — Hex color for the right side (without `#`).
+- `labelColor` — Hex color for the left label side (without `#`).
+- `glyph` — TRMNL logo variant: `brand` (default), `black`, or `white`.
+- `scale` — Numeric scale multiplier (max 5).
+
+## API Endpoints
+
+- `GET /api/stats?recipe=<id>` — JSON object with installs, forks, and connections for a recipe.
+- `GET /api/recipes?user_id=<id>` — JSON array of all published recipes for a user.
+- `GET /health` — JSON with status, version, and timestamp.
+
+## Source Code
+
+- [GitHub Repository](https://github.com/hossain-khan/trmnl-badges)
