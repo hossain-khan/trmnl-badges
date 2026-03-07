@@ -20,6 +20,8 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 - 🔄 Real-time data from TRMNL API
 - 🎯 Simple integration with markdown and HTML
 - 📏 Compact number formatting support
+- ⏱️ Badges cached for 1 hour (errors cached for 60 seconds)
+- 🏷️ SVG badges generated with [badgen](https://github.com/badgen/badgen)
 
 </details>
 
