@@ -4,7 +4,13 @@ import type { Context } from 'hono';
 import type { Bindings, TRMNLGlyph, TRMNLRecipe } from './types';
 import { fetchRecipe, fetchUserRecipes } from './trmnl-api';
 import { generateBadge } from './badge-generator';
-import { formatNumber, aggregateAuthorStats, isValidUserId, incrementBadgeCounter } from './utils';
+import {
+  formatNumber,
+  aggregateAuthorStats,
+  isValidUserId,
+  incrementBadgeCounter,
+  parseScale,
+} from './utils';
 import { returnErrorBadge, isRecipeValid, returnSuccessBadge } from './badge-helpers';
 
 // App version - https://github.com/hossain-khan/trmnl-badges/releases
@@ -42,7 +48,7 @@ app.get('/badge/installs', async (context) => {
     const defaultLabel = isValidUserId(userId) ? 'Total Installs' : 'Installs';
     const isPretty = pretty !== undefined;
     const parsedGlyph = parseGlyph(glyph);
-    const parsedScale = scale ? parseFloat(scale) || undefined : undefined;
+    const parsedScale = parseScale(scale);
 
     if (recipe) {
       // Single recipe badge
@@ -104,7 +110,7 @@ app.get('/badge/forks', async (context) => {
     const defaultLabel = isValidUserId(userId) ? 'Total Forks' : 'Forks';
     const isPretty = pretty !== undefined;
     const parsedGlyph = parseGlyph(glyph);
-    const parsedScale = scale ? parseFloat(scale) || undefined : undefined;
+    const parsedScale = parseScale(scale);
 
     if (recipe) {
       // Single recipe badge
@@ -166,7 +172,7 @@ app.get('/badge/recipes', async (context) => {
     const defaultLabel = 'Recipes';
     const isPretty = pretty !== undefined;
     const parsedGlyph = parseGlyph(glyph);
-    const parsedScale = scale ? parseFloat(scale) || undefined : undefined;
+    const parsedScale = parseScale(scale);
 
     if (!userId) {
       return returnErrorBadge(context, label || defaultLabel, 'Missing userId');
@@ -202,7 +208,7 @@ app.get('/badge/connections', async (context) => {
     const defaultLabel = isValidUserId(userId) ? 'Total Connections' : 'Connections';
     const isPretty = pretty !== undefined;
     const parsedGlyph = parseGlyph(glyph);
-    const parsedScale = scale ? parseFloat(scale) || undefined : undefined;
+    const parsedScale = parseScale(scale);
 
     if (recipe) {
       // Single recipe badge

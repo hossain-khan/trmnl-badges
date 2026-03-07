@@ -41,6 +41,16 @@ export function aggregateAuthorStats(recipes: TRMNLRecipe[]) {
 }
 
 /**
+ * Parse a scale query parameter string into a valid positive finite number.
+ * Returns undefined for missing, non-numeric, zero, negative, or infinite values.
+ */
+export function parseScale(value: string | undefined): number | undefined {
+  if (!value) return undefined;
+  const n = parseFloat(value);
+  return Number.isFinite(n) && n > 0 ? n : undefined;
+}
+
+/**
  * Helper function to safely check if userId is a valid non-empty string
  */
 export function isValidUserId(userId: string | string[] | undefined): boolean {
