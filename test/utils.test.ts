@@ -5,6 +5,8 @@ import {
   aggregateAuthorStats,
   isValidUserId,
   parseScale,
+  BADGE_SCALE_DEFAULT,
+  BADGE_SCALE_MAX,
   incrementBadgeCounter,
 } from '../src/utils';
 import type { TRMNLRecipe } from '../src/types';
@@ -217,6 +219,26 @@ describe('Utils', () => {
 
     it('should return undefined for NaN string', () => {
       expect(parseScale('NaN')).toBeUndefined();
+    });
+
+    it('should return 5 for a value exactly at the max', () => {
+      expect(parseScale('5')).toBe(BADGE_SCALE_MAX);
+    });
+
+    it('should cap a value exceeding max to BADGE_SCALE_MAX', () => {
+      expect(parseScale('6')).toBe(BADGE_SCALE_MAX);
+    });
+
+    it('should cap a large value to BADGE_SCALE_MAX', () => {
+      expect(parseScale('100')).toBe(BADGE_SCALE_MAX);
+    });
+
+    it('should return BADGE_SCALE_DEFAULT as 1', () => {
+      expect(BADGE_SCALE_DEFAULT).toBe(1);
+    });
+
+    it('should return BADGE_SCALE_MAX as 5', () => {
+      expect(BADGE_SCALE_MAX).toBe(5);
     });
   });
 
