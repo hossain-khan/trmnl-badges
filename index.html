@@ -217,6 +217,12 @@
         justify-content: space-between;
         align-items: flex-start;
         gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .row .form-group {
+        min-width: 140px;
+        flex: 1;
       }
 
       .checkbox-group {
@@ -635,8 +641,8 @@
       }
 
       .glyph-swatch {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
         border-radius: 8px;
         display: flex;
         align-items: center;
@@ -666,6 +672,7 @@
         display: flex;
         gap: 16px;
         margin-top: 8px;
+        justify-content: flex-end;
       }
 
       .color-item {
@@ -682,8 +689,8 @@
       }
 
       input[type='color'] {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
         border: 2px solid #e0e0e0;
         border-radius: 8px;
         cursor: pointer;
@@ -695,6 +702,39 @@
       input[type='color']:focus {
         outline: none;
         border-color: #667eea;
+      }
+
+      /* Scale slider */
+      .scale-control {
+        margin-top: 8px;
+      }
+
+      input[type='range'] {
+        width: 100%;
+        cursor: pointer;
+        accent-color: #f8654b;
+        margin: 8px 0 2px;
+      }
+
+      .scale-ticks {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: #999;
+      }
+
+      .scale-value-pill {
+        display: inline-block;
+        background: #f8654b;
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 1px 7px;
+        border-radius: 10px;
+        margin-left: 6px;
+        vertical-align: middle;
+        min-width: 28px;
+        text-align: center;
       }
     </style>
   </head>
@@ -1083,6 +1123,39 @@
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
+                  d="m4 9a5 5 0 1 1 10 0 5 5 0 0 1 -10 0zm5-7a7 7 0 1 0 4.2 12.6.999.999 0 0 0 .093.107l3 3a1 1 0 0 0 1.414-1.414l-3-3a.999.999 0 0 0 -.107-.093 7 7 0 0 0 -5.6-11.2zm-1 4.5a1 1 0 1 1 2 0v1.5h1.5a1 1 0 1 1 0 2h-1.5v1.5a1 1 0 1 1 -2 0v-1.5h-1.5a1 1 0 0 1 0-2h1.5z"
+                  fill-rule="evenodd"
+                /></svg
+              >Badge Scale<span class="scale-value-pill" id="scaleValueDisplay">1×</span></label
+            >
+            <div class="scale-control">
+              <input
+                type="range"
+                id="scaleInput"
+                min="1"
+                max="3"
+                step="0.5"
+                value="1"
+                aria-label="Badge scale multiplier"
+              />
+              <div class="scale-ticks">
+                <span>1×</span>
+                <span>2×</span>
+                <span>3×</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label
+              ><svg
+                class="label-icon"
+                height="800"
+                viewBox="0 0 20 20"
+                width="800"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
                   clip-rule="evenodd"
                   d="m7.53559 15.2365c-1.55926.6165-4.25658 2.371-4.72798 1.8996-.30547-.3055.32371-1.5456.97225-2.8051h4.66126c-.20123.2012-.50307.5031-.90553.9055z"
                   fill-rule="evenodd"
@@ -1096,7 +1169,7 @@
                 <path
                   d="m9.4373 4.84541c-.39052-.39052-.39052-1.02369 0-1.41421.39053-.39053 1.0237-.39053 1.4142 0l5.6569 5.65685c.3905.39053.3905 1.02365 0 1.41425-.3906.3905-1.0237.3905-1.4142 0z"
                 /></svg
-              >Background Colors</label
+              >Background</label
             >
             <div class="color-row">
               <div class="color-item">
@@ -1251,6 +1324,8 @@
       const glyphRadios = document.querySelectorAll('input[name="glyphOption"]');
       const badgeColor = document.getElementById('badgeColor');
       const labelColorInput = document.getElementById('labelColorInput');
+      const scaleInput = document.getElementById('scaleInput');
+      const scaleValueDisplay = document.getElementById('scaleValueDisplay');
 
       // Debounce utility function
       function debounce(func, delay) {
@@ -1377,6 +1452,9 @@
         const lColor = labelColorInput.value.replace('#', '').toUpperCase();
         if (lColor !== '3D3D3E') url += `&labelColor=${lColor}`;
 
+        const scale = parseFloat(scaleInput.value);
+        if (scale !== 1) url += `&scale=${scale}`;
+
         return url;
       }
 
@@ -1475,6 +1553,10 @@
       glyphRadios.forEach((radio) => radio.addEventListener('change', update));
       badgeColor.addEventListener('input', debouncedUpdate);
       labelColorInput.addEventListener('input', debouncedUpdate);
+      scaleInput.addEventListener('input', () => {
+        scaleValueDisplay.textContent = parseFloat(scaleInput.value) + '×';
+        update();
+      });
 
       // Copy buttons - Updated to work with textarea content
       document.querySelectorAll('.copy-btn').forEach((btn) => {
