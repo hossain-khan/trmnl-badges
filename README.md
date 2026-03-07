@@ -78,7 +78,7 @@ https://trmnl.com/recipes/28496
 <img src="https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496" alt="Connections" />
 ```
 
-## Examples
+<details><summary>Examples</summary>
 
 ### Installs Badge
 
@@ -115,6 +115,8 @@ https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count
 ```
 https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&scale=2
 ```
+
+</details>
 
 ## Author Badges
 
