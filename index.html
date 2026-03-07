@@ -814,6 +814,73 @@
         padding: 16px;
         margin-bottom: 16px;
       }
+
+      /* =============================================
+         Responsive styles for mobile devices
+         ============================================= */
+
+      @media (max-width: 600px) {
+        body {
+          align-items: flex-start;
+          padding: 12px;
+        }
+
+        .container {
+          padding: 24px 20px;
+          border-radius: 8px;
+        }
+
+        h1 {
+          font-size: 22px;
+        }
+
+        .header {
+          gap: 12px;
+          margin-bottom: 20px;
+        }
+
+        .logo svg {
+          width: 36px;
+          height: 36px;
+        }
+
+        .preview-image {
+          transform: scale(1.5);
+        }
+
+        .hint-feedback-row {
+          flex-wrap: wrap;
+        }
+
+        .customize-panel-inner {
+          flex-direction: column;
+          gap: 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 16px;
+        }
+
+        h1 {
+          font-size: 20px;
+        }
+
+        .header {
+          flex-direction: column;
+          gap: 8px;
+          align-items: flex-start;
+        }
+
+        .subtitle {
+          font-size: 13px;
+        }
+
+        .preview-image {
+          transform: scale(1.2);
+        }
+      }
     </style>
   </head>
   <body>
