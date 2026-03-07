@@ -182,7 +182,7 @@
       input[type='text']:focus,
       select:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: #f8654b;
       }
 
       .radio-group {
@@ -1477,11 +1477,18 @@
         return null;
       }
 
+      let recipeInputTouched = false;
+
       function showValidation(isValid) {
         if (isValid) {
           recipeFeedback.className = 'recipe-feedback success';
           recipeFeedback.innerHTML = '<span class="icon">✓</span><span>Recipe ID valid</span>';
         } else {
+          if (!recipeInputTouched) {
+            recipeFeedback.className = 'recipe-feedback';
+            recipeFeedback.innerHTML = '';
+            return;
+          }
           recipeFeedback.className = 'recipe-feedback error';
           recipeFeedback.innerHTML =
             '<span class="icon">✗</span><span>Invalid recipe URL or ID</span>';
@@ -1656,7 +1663,10 @@
       }
 
       // Event listeners
-      recipeInput.addEventListener('input', update);
+      recipeInput.addEventListener('input', () => {
+        recipeInputTouched = true;
+        update();
+      });
       badgeTypeRadios.forEach((radio) => radio.addEventListener('change', update));
       customLabel.addEventListener('input', debouncedUpdate); // Debounced to prevent excessive requests
       prettyFormat.addEventListener('change', update);
