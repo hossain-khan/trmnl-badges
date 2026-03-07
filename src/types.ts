@@ -80,6 +80,8 @@ export interface BadgeOptions {
   glyph?: TRMNLGlyph;
   /** Custom SVG logo/icon override (takes precedence over glyph) */
   logo?: string;
+  /** Badge scale multiplier (e.g. 2 for 2x size, default: 1) */
+  scale?: number;
 }
 
 /**

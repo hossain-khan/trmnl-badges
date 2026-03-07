@@ -35,6 +35,7 @@ export function generateBadge(options: BadgeOptions): string {
     labelColor = TRMNL_DARK_GRAY,
     glyph,
     logo,
+    scale,
   } = options;
 
   return badgen({
@@ -43,6 +44,7 @@ export function generateBadge(options: BadgeOptions): string {
     color,
     labelColor,
     icon: logo || getGlyphDataUri(glyph),
+    scale,
   });
 }
 
