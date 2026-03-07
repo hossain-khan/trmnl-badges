@@ -235,6 +235,21 @@
         margin: 0;
       }
 
+      @media (max-width: 480px) {
+        .input-action-row {
+          flex-wrap: wrap;
+        }
+
+        .input-action-row input[type='text'] {
+          flex-basis: 100%;
+        }
+
+        .customize-toggle {
+          flex: 1;
+          justify-content: center;
+        }
+      }
+
       /* Customize appearance */
       .customize-toggle {
         display: inline-flex;
