@@ -4,6 +4,7 @@ import type { Context } from 'hono';
 import type { Bindings, TRMNLGlyph, TRMNLRecipe } from './types';
 import { fetchRecipe, fetchUserRecipes } from './trmnl-api';
 import { generateBadge } from './badge-generator';
+import { APP_VERSION } from './constants';
 import {
   formatNumber,
   aggregateAuthorStats,
@@ -12,9 +13,6 @@ import {
   parseScale,
 } from './utils';
 import { returnErrorBadge, isRecipeValid, returnSuccessBadge } from './badge-helpers';
-
-// App version - https://github.com/hossain-khan/trmnl-badges/releases
-const APP_VERSION = '1.5.0';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';

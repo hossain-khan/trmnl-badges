@@ -247,8 +247,13 @@ Badges are generated using the `badgen` library with:
 - **HTTP Caching**: All badge endpoints return appropriate cache headers:
   - Error responses: `Cache-Control: public, max-age=60` (1 minute)
   - Success responses: `Cache-Control: public, max-age=3600` (1 hour)
-- Cloudflare Workers cache responses at the edge network, reducing API calls to TRMNL servers
+- **Worker edge cache**: `/badge/*` responses are cached with short TTLs in `caches.default`:
+  - Success badges: `90s`
+  - Error badges: `30s`
+- **TRMNL upstream fetch cache hint**: upstream requests use `cf.cacheTtl=60` with request coalescing to reduce duplicate fetches under concurrency
 - The `/badge/counter` endpoint caches for 1 hour to allow for reasonable badge count accuracy while minimizing KV operations
+
+For cache invalidation, freshness expectations, and observability markers, see [docs/cache-strategy.md](docs/cache-strategy.md).
 
 ## Contributing Guidelines
 

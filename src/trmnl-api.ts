@@ -1,4 +1,5 @@
 import type { TRMNLRecipe } from './types';
+import { APP_USER_AGENT } from './constants';
 
 const TRMNL_API_BASE = 'https://trmnl.com';
 const TRMNL_API_TIMEOUT_MS = 4000;
@@ -124,7 +125,7 @@ export async function fetchRecipe(recipeId: string): Promise<TRMNLRecipe | null>
 
   const headers: Record<string, string> = {
     Accept: 'application/json',
-    'User-Agent': 'trmnl-badges',
+    'User-Agent': APP_USER_AGENT,
   };
 
   return getInFlightOrCreate(inFlightRecipeRequests, url, 'recipe', async () => {
@@ -164,7 +165,7 @@ export async function fetchUserRecipes(userId: string): Promise<{ data: TRMNLRec
 
   const headers: Record<string, string> = {
     Accept: 'application/json',
-    'User-Agent': 'trmnl-badges',
+    'User-Agent': APP_USER_AGENT,
   };
 
   return getInFlightOrCreate(inFlightUserRequests, url, 'user', async () => {

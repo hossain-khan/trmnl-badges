@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fetchRecipe, fetchUserRecipes } from '../src/trmnl-api';
+import { APP_USER_AGENT } from '../src/constants';
 import { mockRecipe, mockUserRecipesResponse } from './fixtures';
 
 describe('fetchRecipe', () => {
@@ -32,7 +33,7 @@ describe('fetchRecipe', () => {
       expect.objectContaining({
         headers: {
           Accept: 'application/json',
-          'User-Agent': 'trmnl-badges',
+          'User-Agent': APP_USER_AGENT,
         },
         cf: {
           cacheEverything: true,
@@ -210,7 +211,7 @@ describe('fetchUserRecipes', () => {
       expect.objectContaining({
         headers: {
           Accept: 'application/json',
-          'User-Agent': 'trmnl-badges',
+          'User-Agent': APP_USER_AGENT,
         },
         cf: {
           cacheEverything: true,
@@ -293,7 +294,7 @@ describe('fetchUserRecipes', () => {
       expect.objectContaining({
         headers: {
           Accept: 'application/json',
-          'User-Agent': 'trmnl-badges',
+          'User-Agent': APP_USER_AGENT,
         },
       })
     );
