@@ -21,6 +21,7 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 - 🎯 Simple integration with markdown and HTML
 - 📏 Compact number formatting support
 - ⏱️ Badges cached for 1 hour (errors cached for 60 seconds)
+- 🚀 Layered caching with edge cache + in-flight request dedupe for better burst performance
 - 🏷️ SVG badges generated with [badgen](https://github.com/badgen/badgen)
 
 </details>
