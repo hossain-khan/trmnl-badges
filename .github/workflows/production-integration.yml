@@ -1,0 +1,46 @@
+name: Production Integration Tests
+
+on:
+  check_run:
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Base URL for production integration tests"
+        required: false
+        default: "https://trmnl-badges.gohk.xyz"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-integration-main
+  cancel-in-progress: true
+
+jobs:
+  production-integration:
+    name: Production Integration
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.check_run.app.slug == 'cloudflare-workers-and-pages' &&
+        github.event.check_run.name == 'Workers Builds: trmnl-badges' &&
+        github.event.check_run.conclusion == 'success' &&
+        github.event.check_run.check_suite.head_branch == 'main'
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.event.check_run.head_sha }}
+
+      - name: Make production integration script executable
+        run: chmod +x scripts/production-integration-test.sh
+
+      - name: Run production integration tests
+        env:
+          BASE_URL: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.base_url || 'https://trmnl-badges.gohk.xyz' }}
+        run: ./scripts/production-integration-test.sh
