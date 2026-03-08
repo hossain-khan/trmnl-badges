@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fetchRecipe, fetchUserRecipes } from '../src/trmnl-api';
+import { APP_USER_AGENT } from '../src/constants';
 import { mockRecipe, mockUserRecipesResponse } from './fixtures';
 
 describe('fetchRecipe', () => {
@@ -27,12 +28,19 @@ describe('fetchRecipe', () => {
     const result = await fetchRecipe('227153');
 
     expect(result).toEqual(mockRecipe);
-    expect(mockFetch).toHaveBeenCalledWith('https://trmnl.com/recipes/227153.json', {
-      headers: {
-        Accept: 'application/json',
-        'User-Agent': 'trmnl-badges',
-      },
-    });
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://trmnl.com/recipes/227153.json',
+      expect.objectContaining({
+        headers: {
+          Accept: 'application/json',
+          'User-Agent': APP_USER_AGENT,
+        },
+        cf: {
+          cacheEverything: true,
+          cacheTtl: 60,
+        },
+      })
+    );
   });
 
   it('should return null when recipe does not exist (302 redirect with HTML)', async () => {
@@ -125,6 +133,52 @@ describe('fetchRecipe', () => {
 
     expect(result).toBeNull();
   });
+
+  it('should dedupe concurrent requests for the same recipe ID', async () => {
+    let resolveFetch: ((value: unknown) => void) | undefined;
+    const deferredFetch = new Promise((resolve) => {
+      resolveFetch = resolve;
+    });
+
+    mockFetch.mockReturnValueOnce(deferredFetch as any);
+
+    const p1 = fetchRecipe('227153');
+    const p2 = fetchRecipe('227153');
+    const p3 = fetchRecipe('227153');
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+
+    resolveFetch?.({
+      ok: true,
+      status: 200,
+      headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+      json: async () => ({ data: mockRecipe }),
+    });
+
+    const [r1, r2, r3] = await Promise.all([p1, p2, p3]);
+    expect(r1).toEqual(mockRecipe);
+    expect(r2).toEqual(mockRecipe);
+    expect(r3).toEqual(mockRecipe);
+  });
+
+  it('should clear in-flight state after a failed request so the next call retries', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    mockFetch.mockRejectedValueOnce(new Error('Network error')).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+      json: async () => ({ data: mockRecipe }),
+    } as any);
+
+    const first = await fetchRecipe('227153');
+    const second = await fetchRecipe('227153');
+
+    expect(first).toBeNull();
+    expect(second).toEqual(mockRecipe);
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    consoleErrorSpy.mockRestore();
+  });
 });
 
 describe('fetchUserRecipes', () => {
@@ -152,12 +206,19 @@ describe('fetchUserRecipes', () => {
     const result = await fetchUserRecipes('29');
 
     expect(result).toEqual(mockUserRecipesResponse);
-    expect(mockFetch).toHaveBeenCalledWith('https://trmnl.com/recipes.json?user_id=29', {
-      headers: {
-        Accept: 'application/json',
-        'User-Agent': 'trmnl-badges',
-      },
-    });
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://trmnl.com/recipes.json?user_id=29',
+      expect.objectContaining({
+        headers: {
+          Accept: 'application/json',
+          'User-Agent': APP_USER_AGENT,
+        },
+        cf: {
+          cacheEverything: true,
+          cacheTtl: 60,
+        },
+      })
+    );
   });
 
   it('should return null when content-type is not JSON', async () => {
@@ -228,11 +289,41 @@ describe('fetchUserRecipes', () => {
 
     await fetchUserRecipes('user 123');
 
-    expect(mockFetch).toHaveBeenCalledWith('https://trmnl.com/recipes.json?user_id=user%20123', {
-      headers: {
-        Accept: 'application/json',
-        'User-Agent': 'trmnl-badges',
-      },
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://trmnl.com/recipes.json?user_id=user%20123',
+      expect.objectContaining({
+        headers: {
+          Accept: 'application/json',
+          'User-Agent': APP_USER_AGENT,
+        },
+      })
+    );
+  });
+
+  it('should dedupe concurrent requests for the same user ID', async () => {
+    let resolveFetch: ((value: unknown) => void) | undefined;
+    const deferredFetch = new Promise((resolve) => {
+      resolveFetch = resolve;
     });
+
+    mockFetch.mockReturnValueOnce(deferredFetch as any);
+
+    const p1 = fetchUserRecipes('29');
+    const p2 = fetchUserRecipes('29');
+    const p3 = fetchUserRecipes('29');
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+
+    resolveFetch?.({
+      ok: true,
+      status: 200,
+      headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+      json: async () => mockUserRecipesResponse,
+    });
+
+    const [r1, r2, r3] = await Promise.all([p1, p2, p3]);
+    expect(r1).toEqual(mockUserRecipesResponse);
+    expect(r2).toEqual(mockUserRecipesResponse);
+    expect(r3).toEqual(mockUserRecipesResponse);
   });
 });

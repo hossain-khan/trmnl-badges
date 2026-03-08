@@ -153,3 +153,9 @@ Your user ID can be found by using the [Badge Builder](https://hossain-khan.gith
 ## Contributing
 
 For developers interested in contributing or running this project locally, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Cache Freshness and Invalidation
+
+This service uses layered caching (in-flight dedupe, short Worker edge cache, and upstream cache hints) to reduce burst load while keeping badges fresh.
+
+For the full operational runbook, see [docs/cache-strategy.md](docs/cache-strategy.md).
