@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Local integration test runner. For deployed production checks, use:
+# scripts/production-integration-test.sh
+
 echo "Starting Wrangler dev server..."
 npx wrangler dev --port 8787 &
 DEV_PID=$!
