@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import app from '../src/index';
 import {
   mockRecipe,
@@ -19,6 +19,10 @@ import { fetchRecipe, fetchUserRecipes } from '../src/trmnl-api';
 describe('TRMNL Badges API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   describe('GET /', () => {
@@ -61,6 +65,66 @@ describe('TRMNL Badges API', () => {
       expect(json).toHaveProperty('label', 'TRMNL Badge Service');
       expect(json).toHaveProperty('message', 'Online');
       expect(json).toHaveProperty('color', 'brightgreen');
+    });
+  });
+
+  describe('Edge cache middleware', () => {
+    function createInMemoryEdgeCache() {
+      const store = new Map<string, Response>();
+      const match = vi.fn(async (request: Request) => {
+        const cached = store.get(request.url);
+        return cached ? cached.clone() : undefined;
+      });
+
+      const put = vi.fn(async (request: Request, response: Response) => {
+        store.set(request.url, response.clone());
+      });
+
+      vi.stubGlobal('caches', {
+        default: {
+          match,
+          put,
+        },
+      });
+
+      return { store, match, put };
+    }
+
+    it('should serve repeated badge request from edge cache after first miss', async () => {
+      const edgeCache = createInMemoryEdgeCache();
+      vi.mocked(fetchRecipe).mockResolvedValue(mockRecipe);
+
+      const firstResponse = await app.request('/badge/installs?recipe=240176');
+      expect(firstResponse.status).toBe(200);
+      await firstResponse.text();
+
+      expect(edgeCache.match).toHaveBeenCalledTimes(1);
+      expect(edgeCache.put).toHaveBeenCalledTimes(1);
+      expect(fetchRecipe).toHaveBeenCalledTimes(1);
+
+      const secondResponse = await app.request('/badge/installs?recipe=240176');
+      expect(secondResponse.status).toBe(200);
+      const secondSvg = await secondResponse.text();
+
+      expect(secondSvg).toContain('Installs');
+      expect(secondSvg).toContain('7');
+      expect(edgeCache.match).toHaveBeenCalledTimes(2);
+      expect(fetchRecipe).toHaveBeenCalledTimes(1);
+    });
+
+    it('should cache error badge responses with short edge TTL', async () => {
+      const edgeCache = createInMemoryEdgeCache();
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(null);
+
+      const response = await app.request('/badge/installs?recipe=999999');
+      expect(response.status).toBe(200);
+      // Response header remains route-level policy; edge cache TTL is applied in cached copy.
+      expect(response.headers.get('Cache-Control')).toBe('public, max-age=60');
+      await response.text();
+
+      const cachedResponse = edgeCache.store.get('http://localhost/badge/installs?recipe=999999');
+      expect(cachedResponse).toBeDefined();
+      expect(cachedResponse?.headers.get('Cache-Control')).toBe('public, max-age=30');
     });
   });
 

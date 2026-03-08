@@ -18,6 +18,84 @@ const APP_VERSION = '1.5.0';
 
 // 🎉 Fun tracking feature: KV store key for total badges served counter
 const BADGES_SERVED_COUNTER_KEY = 'badges_served_total';
+const EDGE_CACHE_TTL_SUCCESS_SECONDS = 90;
+const EDGE_CACHE_TTL_ERROR_SECONDS = 30;
+const EDGE_CACHE_METRICS_LOG_EVERY = 25;
+
+const edgeCacheMetrics = {
+  eligibleRequests: 0,
+  hits: 0,
+  misses: 0,
+  writes: 0,
+  bypasses: 0,
+  cacheUnavailable: 0,
+  errors: 0,
+};
+
+function maybeLogEdgeCacheMetrics() {
+  if (
+    edgeCacheMetrics.eligibleRequests === 0 ||
+    edgeCacheMetrics.eligibleRequests % EDGE_CACHE_METRICS_LOG_EVERY !== 0
+  ) {
+    return;
+  }
+
+  const totalRequests =
+    edgeCacheMetrics.eligibleRequests +
+    edgeCacheMetrics.bypasses +
+    edgeCacheMetrics.cacheUnavailable;
+
+  const hitRatePercent =
+    edgeCacheMetrics.eligibleRequests === 0
+      ? 0
+      : Math.round((edgeCacheMetrics.hits / edgeCacheMetrics.eligibleRequests) * 1000) / 10;
+
+  console.log('[edge-cache] badge-cache-metrics', {
+    totalRequests,
+    eligibleRequests: edgeCacheMetrics.eligibleRequests,
+    hits: edgeCacheMetrics.hits,
+    misses: edgeCacheMetrics.misses,
+    hitRatePercent,
+    writes: edgeCacheMetrics.writes,
+    bypasses: edgeCacheMetrics.bypasses,
+    cacheUnavailable: edgeCacheMetrics.cacheUnavailable,
+    errors: edgeCacheMetrics.errors,
+  });
+}
+
+function parseMaxAge(cacheControl: string | null): number | undefined {
+  if (!cacheControl) {
+    return undefined;
+  }
+
+  const match = cacheControl.match(/max-age=(\d+)/i);
+  if (!match) {
+    return undefined;
+  }
+
+  const value = parseInt(match[1], 10);
+  return Number.isFinite(value) ? value : undefined;
+}
+
+function resolveEdgeCacheTtlSeconds(response: Response): number {
+  const maxAge = parseMaxAge(response.headers.get('Cache-Control'));
+  if (typeof maxAge === 'number' && maxAge <= 60) {
+    return EDGE_CACHE_TTL_ERROR_SECONDS;
+  }
+  return EDGE_CACHE_TTL_SUCCESS_SECONDS;
+}
+
+function buildCacheableResponse(response: Response, edgeTtlSeconds: number): Response {
+  const clone = response.clone();
+  const headers = new Headers(clone.headers);
+  headers.set('Cache-Control', `public, max-age=${edgeTtlSeconds}`);
+
+  return new Response(clone.body, {
+    status: clone.status,
+    statusText: clone.statusText,
+    headers,
+  });
+}
 
 // Valid TRMNL glyph options accepted as query params
 const VALID_GLYPHS: TRMNLGlyph[] = ['brand', 'black', 'white'];
@@ -40,6 +118,81 @@ app.use(
     maxAge: 600,
   })
 );
+
+// Cache rendered SVG badges at edge for a short period to reduce duplicate upstream calls.
+app.use('/badge/*', async (context, next) => {
+  if (context.req.method !== 'GET') {
+    await next();
+    return;
+  }
+
+  const pathname = new URL(context.req.url).pathname;
+  if (pathname === '/badge/counter') {
+    edgeCacheMetrics.bypasses += 1;
+    maybeLogEdgeCacheMetrics();
+    await next();
+    return;
+  }
+
+  if (typeof caches === 'undefined' || !caches.default) {
+    edgeCacheMetrics.cacheUnavailable += 1;
+    maybeLogEdgeCacheMetrics();
+    await next();
+    return;
+  }
+
+  const cacheKey = new Request(context.req.url, { method: 'GET' });
+
+  try {
+    edgeCacheMetrics.eligibleRequests += 1;
+    const cached = await caches.default.match(cacheKey);
+    if (cached) {
+      edgeCacheMetrics.hits += 1;
+      maybeLogEdgeCacheMetrics();
+      return cached;
+    }
+
+    edgeCacheMetrics.misses += 1;
+    maybeLogEdgeCacheMetrics();
+  } catch (error) {
+    edgeCacheMetrics.errors += 1;
+    console.warn('[edge-cache] cache lookup failed', { pathname, error });
+    maybeLogEdgeCacheMetrics();
+  }
+
+  await next();
+
+  const response = context.res;
+  if (response.status !== 200) {
+    return;
+  }
+
+  const contentType = response.headers.get('Content-Type') || response.headers.get('content-type');
+  if (!contentType?.includes('image/svg+xml')) {
+    return;
+  }
+
+  const edgeTtlSeconds = resolveEdgeCacheTtlSeconds(response);
+  const cacheableResponse = buildCacheableResponse(response, edgeTtlSeconds);
+
+  const writePromise = caches.default
+    .put(cacheKey, cacheableResponse)
+    .then(() => {
+      edgeCacheMetrics.writes += 1;
+      maybeLogEdgeCacheMetrics();
+    })
+    .catch((error) => {
+      edgeCacheMetrics.errors += 1;
+      console.warn('[edge-cache] cache write failed', { pathname, error });
+      maybeLogEdgeCacheMetrics();
+    });
+
+  try {
+    context.executionCtx.waitUntil(writePromise);
+  } catch {
+    await writePromise;
+  }
+});
 
 // Badge endpoints for TRMNL recipes
 app.get('/badge/installs', async (context) => {
