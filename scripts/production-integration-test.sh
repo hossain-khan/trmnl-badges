@@ -6,10 +6,12 @@ BASE_URL="${BASE_URL%/}"
 HEALTH_RETRIES="${HEALTH_RETRIES:-24}"
 HEALTH_RETRY_DELAY_SECONDS="${HEALTH_RETRY_DELAY_SECONDS:-5}"
 RECIPE_IDS="${RECIPE_IDS:-11023,240176,227153}"
-AUTHOR_USER_ID="${AUTHOR_USER_ID:-1162}"
+AUTHOR_USER_IDS="${AUTHOR_USER_IDS:-29,1162}"
 
 IFS=',' read -r -a RECIPE_ID_ARRAY <<< "$RECIPE_IDS"
+IFS=',' read -r -a AUTHOR_USER_ID_ARRAY <<< "$AUTHOR_USER_IDS"
 SELECTED_RECIPE_ID=""
+SELECTED_AUTHOR_USER_ID=""
 
 assert_contains() {
   local haystack="$1"
@@ -66,9 +68,32 @@ select_valid_recipe_id() {
   exit 1
 }
 
+select_valid_author_user_id() {
+  echo "Selecting a valid author user ID from: ${AUTHOR_USER_IDS}"
+
+  for user_id in "${AUTHOR_USER_ID_ARRAY[@]}"; do
+    local status
+    local body
+    status="$(curl -sS -o /tmp/trmnl-badges-recipes.json -w "%{http_code}" --max-time 20 "${BASE_URL}/api/recipes?user_id=${user_id}" || true)"
+    body="$(cat /tmp/trmnl-badges-recipes.json 2>/dev/null || true)"
+
+    if [ "$status" = "200" ] && echo "$body" | grep -q '"data"'; then
+      SELECTED_AUTHOR_USER_ID="$user_id"
+      echo "✓ Selected author user ID: ${SELECTED_AUTHOR_USER_ID}"
+      return 0
+    fi
+
+    echo "Skipping author user ID ${user_id} (status=${status})"
+  done
+
+  echo "✗ No valid author user ID found in: ${AUTHOR_USER_IDS}"
+  exit 1
+}
+
 echo "Running production integration tests against: ${BASE_URL}"
 wait_for_health
 select_valid_recipe_id
+select_valid_author_user_id
 
 echo ""
 echo "Testing production endpoints..."
@@ -101,8 +126,8 @@ BADGE="$(curl -sS --max-time 20 "${BASE_URL}/badge/connections?recipe=${SELECTED
 assert_contains "$BADGE" '<svg' "Connections badge SVG returned"
 
 # Badge recipes endpoint - valid userId
-echo "Testing GET /badge/recipes?userId=${AUTHOR_USER_ID}"
-BADGE="$(curl -sS --max-time 20 "${BASE_URL}/badge/recipes?userId=${AUTHOR_USER_ID}")"
+echo "Testing GET /badge/recipes?userId=${SELECTED_AUTHOR_USER_ID}"
+BADGE="$(curl -sS --max-time 20 "${BASE_URL}/badge/recipes?userId=${SELECTED_AUTHOR_USER_ID}")"
 assert_contains "$BADGE" '<svg' "Recipes badge SVG returned"
 
 # Stats API endpoint - missing recipe
@@ -121,8 +146,8 @@ STATS="$(curl -sS --max-time 20 "${BASE_URL}/api/stats?recipe=${SELECTED_RECIPE_
 assert_contains "$STATS" '"id"' "Stats API returned JSON with id"
 
 # User recipes API endpoint - valid user
-echo "Testing GET /api/recipes?user_id=${AUTHOR_USER_ID}"
-RECIPES="$(curl -sS --max-time 20 "${BASE_URL}/api/recipes?user_id=${AUTHOR_USER_ID}")"
+echo "Testing GET /api/recipes?user_id=${SELECTED_AUTHOR_USER_ID}"
+RECIPES="$(curl -sS --max-time 20 "${BASE_URL}/api/recipes?user_id=${SELECTED_AUTHOR_USER_ID}")"
 assert_contains "$RECIPES" '"data"' "User recipes API returned data"
 
 echo ""
