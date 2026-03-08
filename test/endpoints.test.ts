@@ -126,6 +126,98 @@ describe('TRMNL Badges API', () => {
       expect(cachedResponse).toBeDefined();
       expect(cachedResponse?.headers.get('Cache-Control')).toBe('public, max-age=30');
     });
+
+    it('should bypass edge cache lookups for non-GET requests', async () => {
+      const edgeCache = createInMemoryEdgeCache();
+
+      const response = await app.request('/badge/installs?recipe=240176', { method: 'POST' });
+
+      expect(response.status).toBe(404);
+      expect(edgeCache.match).not.toHaveBeenCalled();
+      expect(edgeCache.put).not.toHaveBeenCalled();
+    });
+
+    it('should not cache non-200 responses', async () => {
+      const edgeCache = createInMemoryEdgeCache();
+
+      const response = await app.request('/badge/unknown-route');
+
+      expect(response.status).toBe(404);
+      expect(edgeCache.match).toHaveBeenCalledTimes(1);
+      expect(edgeCache.put).not.toHaveBeenCalled();
+    });
+
+    it('should continue request flow when cache lookup fails', async () => {
+      const matchError = new Error('cache lookup failed');
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const put = vi.fn(async () => undefined);
+      vi.stubGlobal('caches', {
+        default: {
+          match: vi.fn(async () => {
+            throw matchError;
+          }),
+          put,
+        },
+      });
+
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      const response = await app.request('/badge/installs?recipe=240176');
+
+      expect(response.status).toBe(200);
+      expect(put).toHaveBeenCalledTimes(1);
+      expect(warnMock).toHaveBeenCalledWith(
+        '[edge-cache] cache lookup failed',
+        expect.objectContaining({ pathname: '/badge/installs', error: matchError })
+      );
+      warnMock.mockRestore();
+    });
+
+    it('should keep serving responses when cache write fails', async () => {
+      const writeError = new Error('cache write failed');
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      vi.stubGlobal('caches', {
+        default: {
+          match: vi.fn(async () => undefined),
+          put: vi.fn(async () => {
+            throw writeError;
+          }),
+        },
+      });
+
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      const response = await app.request('/badge/installs?recipe=240176');
+      const svg = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(svg).toContain('Installs');
+      expect(warnMock).toHaveBeenCalledWith(
+        '[edge-cache] cache write failed',
+        expect.objectContaining({ pathname: '/badge/installs', error: writeError })
+      );
+      warnMock.mockRestore();
+    });
+
+    it('should emit edge-cache metrics logs after enough eligible requests', async () => {
+      const edgeCache = createInMemoryEdgeCache();
+      const logMock = vi.spyOn(console, 'log').mockImplementation(() => {});
+      vi.mocked(fetchRecipe).mockResolvedValue(mockRecipe);
+
+      for (let i = 0; i < 30; i++) {
+        const response = await app.request(`/badge/installs?recipe=240176&label=Load${i}`);
+        expect(response.status).toBe(200);
+        await response.text();
+      }
+
+      expect(edgeCache.match).toHaveBeenCalledTimes(30);
+      expect(
+        logMock.mock.calls.some((call) => String(call[0]) === '[edge-cache] badge-cache-metrics')
+      ).toBe(true);
+      logMock.mockRestore();
+    });
   });
 
   describe('GET /badge/installs', () => {
@@ -185,6 +277,17 @@ describe('TRMNL Badges API', () => {
 
       const svg = await response.text();
       expect(svg).toContain('Downloads');
+      expect(svg).toContain('7');
+    });
+
+    it('should support glyph selection', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
+
+      const response = await app.request('/badge/installs?recipe=240176&glyph=white');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Installs');
       expect(svg).toContain('7');
     });
 
@@ -305,6 +408,22 @@ describe('TRMNL Badges API', () => {
       expect(response.status).toBe(200);
       const svg = await response.text();
       expect(svg).toContain('No recipes found');
+    });
+
+    it('should return service error when user recipe fetch throws unexpectedly', async () => {
+      vi.mocked(fetchUserRecipes).mockRejectedValueOnce(new Error('Unexpected user fetch error'));
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const response = await app.request('/badge/installs?userId=29');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Service Error');
+      expect(consoleMock).toHaveBeenCalledWith(
+        '[badge/installs] Unexpected error:',
+        expect.any(Error)
+      );
+      consoleMock.mockRestore();
     });
   });
 
@@ -437,6 +556,32 @@ describe('TRMNL Badges API', () => {
       const svg = await response.text();
       expect(svg).toContain('Forks');
       expect(svg).toContain('100');
+    });
+
+    it('should return error badge when userId has no recipes for forks', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce({ data: [] });
+
+      const response = await app.request('/badge/forks?userId=29');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('No recipes found');
+    });
+
+    it('should return service error when user forks fetch throws unexpectedly', async () => {
+      vi.mocked(fetchUserRecipes).mockRejectedValueOnce(new Error('Unexpected user fetch error'));
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const response = await app.request('/badge/forks?userId=29');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Service Error');
+      expect(consoleMock).toHaveBeenCalledWith(
+        '[badge/forks] Unexpected error:',
+        expect.any(Error)
+      );
+      consoleMock.mockRestore();
     });
   });
 
@@ -588,6 +733,32 @@ describe('TRMNL Badges API', () => {
       expect(svg).toContain('Connections');
       expect(svg).toContain('325');
     });
+
+    it('should return error badge when userId has no recipes for connections', async () => {
+      vi.mocked(fetchUserRecipes).mockResolvedValueOnce({ data: [] });
+
+      const response = await app.request('/badge/connections?userId=29');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('No recipes found');
+    });
+
+    it('should return service error when user connections fetch throws unexpectedly', async () => {
+      vi.mocked(fetchUserRecipes).mockRejectedValueOnce(new Error('Unexpected user fetch error'));
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const response = await app.request('/badge/connections?userId=29');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Service Error');
+      expect(consoleMock).toHaveBeenCalledWith(
+        '[badge/connections] Unexpected error:',
+        expect.any(Error)
+      );
+      consoleMock.mockRestore();
+    });
   });
 
   describe('GET /badge/recipes', () => {
@@ -649,6 +820,22 @@ describe('TRMNL Badges API', () => {
       expect(response.status).toBe(200);
       const svg = await response.text();
       expect(svg).toContain('No recipes found');
+    });
+
+    it('should return service error when recipes fetch throws unexpectedly', async () => {
+      vi.mocked(fetchUserRecipes).mockRejectedValueOnce(new Error('Unexpected user fetch error'));
+      const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const response = await app.request('/badge/recipes?userId=29');
+      expect(response.status).toBe(200);
+
+      const svg = await response.text();
+      expect(svg).toContain('Service Error');
+      expect(consoleMock).toHaveBeenCalledWith(
+        '[badge/recipes] Unexpected error:',
+        expect.any(Error)
+      );
+      consoleMock.mockRestore();
     });
   });
 
