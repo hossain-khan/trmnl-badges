@@ -115,6 +115,11 @@ echo "Testing GET /badge/installs?recipe=${SELECTED_RECIPE_ID}"
 BADGE="$(curl -sS --max-time 20 "${BASE_URL}/badge/installs?recipe=${SELECTED_RECIPE_ID}")"
 assert_contains "$BADGE" '<svg' "Installs badge SVG returned"
 
+# Badge installs endpoint - valid author userId mode
+echo "Testing GET /badge/installs?userId=${SELECTED_AUTHOR_USER_ID}"
+BADGE="$(curl -sS --max-time 20 "${BASE_URL}/badge/installs?userId=${SELECTED_AUTHOR_USER_ID}")"
+assert_contains "$BADGE" '<svg' "Author installs badge SVG returned"
+
 # Badge forks endpoint - valid recipe
 echo "Testing GET /badge/forks?recipe=${SELECTED_RECIPE_ID}"
 BADGE="$(curl -sS --max-time 20 "${BASE_URL}/badge/forks?recipe=${SELECTED_RECIPE_ID}")"
@@ -129,6 +134,11 @@ assert_contains "$BADGE" '<svg' "Connections badge SVG returned"
 echo "Testing GET /badge/recipes?userId=${SELECTED_AUTHOR_USER_ID}"
 BADGE="$(curl -sS --max-time 20 "${BASE_URL}/badge/recipes?userId=${SELECTED_AUTHOR_USER_ID}")"
 assert_contains "$BADGE" '<svg' "Recipes badge SVG returned"
+
+# Badge installs endpoint - customization params combination
+echo "Testing GET /badge/installs with pretty/label/glyph/color/labelColor/scale"
+BADGE="$(curl -sS --max-time 20 "${BASE_URL}/badge/installs?recipe=${SELECTED_RECIPE_ID}&pretty&label=Downloads&glyph=white&color=959393&labelColor=4EBC91&scale=2")"
+assert_contains "$BADGE" '<svg' "Customized installs badge SVG returned"
 
 # Stats API endpoint - missing recipe
 echo "Testing GET /api/stats (missing recipe)"
