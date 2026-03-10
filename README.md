@@ -28,8 +28,8 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 
 > [!NOTE]  
 > 🎨 **Try the Interactive Badge Builder** 🛠️  
-> Use our 👷 **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** 🧰 for an easy, visual way to create and customize badges with live previews.  
-> 👤 **New!** Try the **[Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html)** to generate combined badges for all your recipes.
+> - 👷 **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)** 🧰: An easy, visual way to create and customize badges with live previews.
+> - 👤 **New! [Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html)**: Generate combined badges for you and all your recipes.
 
 ## Usage
 
