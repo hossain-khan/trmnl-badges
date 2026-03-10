@@ -86,7 +86,15 @@ function resolveEdgeCacheTtlSeconds(response: Response): number {
 function buildCacheableResponse(response: Response, edgeTtlSeconds: number): Response {
   const clone = response.clone();
   const headers = new Headers(clone.headers);
-  headers.set('Cache-Control', `public, max-age=${edgeTtlSeconds}`);
+
+  // Preserve the original max-age (browser/downstream cache TTL) and add s-maxage
+  // for edge/shared cache TTL. This ensures cache-hit responses still deliver the
+  // intended downstream Cache-Control semantics while keeping the edge cache TTL short.
+  const originalCacheControl = clone.headers.get('Cache-Control');
+  if (!originalCacheControl) {
+    console.warn('[edge-cache] response missing Cache-Control header before caching');
+  }
+  headers.set('Cache-Control', `${originalCacheControl ?? 'public'}, s-maxage=${edgeTtlSeconds}`);
 
   return new Response(clone.body, {
     status: clone.status,
