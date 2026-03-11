@@ -752,6 +752,11 @@
         text-overflow: ellipsis;
       }
 
+      .recipe-item-stats .recipe-id-link {
+        color: inherit;
+        text-decoration: none;
+      }
+
       .recipe-item-action {
         flex-shrink: 0;
       }
@@ -1987,7 +1992,16 @@
           const statsDiv = document.createElement('div');
           statsDiv.className = 'recipe-item-stats';
           const isPretty = prettyFormat.checked;
-          statsDiv.textContent = `${formatNumber(recipe.stats.installs, isPretty)} installs • ${formatNumber(recipe.stats.forks, isPretty)} forks • ${formatNumber(recipe.stats.installs + recipe.stats.forks, isPretty)} connections • recipe-id ${recipe.id}`;
+          statsDiv.appendChild(
+            document.createTextNode(
+              `${formatNumber(recipe.stats.installs, isPretty)} installs • ${formatNumber(recipe.stats.forks, isPretty)} forks • ${formatNumber(recipe.stats.installs + recipe.stats.forks, isPretty)} connections • `
+            )
+          );
+          const recipeIdLink = document.createElement('a');
+          recipeIdLink.textContent = `recipe-id ${recipe.id}`;
+          recipeIdLink.href = `index.html?recipeId=${recipe.id}${getCustomParams()}`;
+          recipeIdLink.className = 'recipe-id-link';
+          statsDiv.appendChild(recipeIdLink);
 
           infoDiv.appendChild(nameDiv);
           infoDiv.appendChild(statsDiv);
