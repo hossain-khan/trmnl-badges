@@ -1458,6 +1458,8 @@
 
     <script>
       const BASE_URL = 'https://trmnl-badges.gohk.xyz';
+      const DEFAULT_BADGE_COLOR = 'F8654B';
+      const DEFAULT_LABEL_COLOR = '3D3D3E';
 
       const recipeInput = document.getElementById('recipeInput');
       const badgeTypeRadios = document.querySelectorAll('input[name="badgeType"]');
@@ -1607,10 +1609,10 @@
         if (glyph !== 'brand') url += `&glyph=${glyph}`;
 
         const color = badgeColor.value.replace('#', '').toUpperCase();
-        if (color !== 'F8654B') url += `&color=${color}`;
+        if (color !== DEFAULT_BADGE_COLOR) url += `&color=${color}`;
 
         const lColor = labelColorInput.value.replace('#', '').toUpperCase();
-        if (lColor !== '3D3D3E') url += `&labelColor=${lColor}`;
+        if (lColor !== DEFAULT_LABEL_COLOR) url += `&labelColor=${lColor}`;
 
         const scale = parseFloat(scaleInput.value);
         if (scale !== 1) url += `&scale=${scale}`;
@@ -1697,8 +1699,8 @@
         const scale = parseFloat(scaleInput.value);
         const isCustomized =
           glyph !== 'brand' ||
-          color !== 'F8654B' ||
-          lColor !== '3D3D3E' ||
+          color !== DEFAULT_BADGE_COLOR ||
+          lColor !== DEFAULT_LABEL_COLOR ||
           scale !== 1 ||
           prettyFormat.checked ||
           customLabel.value.trim() !== '';
@@ -1710,14 +1712,34 @@
         const userId = sessionStorage.getItem('lastRecipeUserId');
         if (!userId) return;
         const authorBadgeLink = document.getElementById('authorBadgeLink');
+        if (!authorBadgeLink) return;
         const glyph = document.querySelector('input[name="glyphOption"]:checked')?.value ?? 'brand';
         const color = badgeColor.value.replace('#', '').toUpperCase();
         const lColor = labelColorInput.value.replace('#', '').toUpperCase();
-        let href = `author-badge.html?userId=${userId}`;
-        if (glyph !== 'brand') href += `&glyph=${glyph}`;
-        if (color !== 'F8654B') href += `&color=${color}`;
-        if (lColor !== '3D3D3E') href += `&labelColor=${lColor}`;
-        authorBadgeLink.href = href;
+
+        const url = new URL('author-badge.html', window.location.href);
+        url.searchParams.set('userId', userId);
+        if (glyph !== 'brand') {
+          url.searchParams.set('glyph', glyph);
+        }
+        if (color !== DEFAULT_BADGE_COLOR) {
+          url.searchParams.set('color', color);
+        }
+        if (lColor !== DEFAULT_LABEL_COLOR) {
+          url.searchParams.set('labelColor', lColor);
+        }
+
+        authorBadgeLink.href = url.toString();
+      }
+
+      function normalizeHexColorParam(value) {
+        if (!value) return null;
+        const trimmed = value.trim();
+        const withoutHash = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
+        if (!/^[0-9a-fA-F]{6}$/.test(withoutHash)) {
+          return null;
+        }
+        return `#${withoutHash.toUpperCase()}`;
       }
 
       function applyUrlParams() {
@@ -1729,11 +1751,13 @@
           const radio = document.querySelector(`input[name="glyphOption"][value="${glyph}"]`);
           if (radio) radio.checked = true;
         }
-        if (color) {
-          badgeColor.value = `#${color}`;
+        const normalizedColor = normalizeHexColorParam(color);
+        if (normalizedColor) {
+          badgeColor.value = normalizedColor;
         }
-        if (labelColor) {
-          labelColorInput.value = `#${labelColor}`;
+        const normalizedLabelColor = normalizeHexColorParam(labelColor);
+        if (normalizedLabelColor) {
+          labelColorInput.value = normalizedLabelColor;
         }
       }
 

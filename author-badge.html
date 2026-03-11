@@ -1513,6 +1513,8 @@
 
     <script>
       const BASE_URL = 'https://trmnl-badges.gohk.xyz';
+      const DEFAULT_BADGE_COLOR = 'F8654B';
+      const DEFAULT_LABEL_COLOR = '3D3D3E';
 
       const authorInput = document.getElementById('authorInput');
       const generateBtn = document.getElementById('generateBtn');
@@ -2089,8 +2091,8 @@
           .toUpperCase();
         let params = '';
         if (glyph !== 'brand') params += `&glyph=${glyph}`;
-        if (color !== 'F8654B') params += `&color=${color}`;
-        if (lColor !== '3D3D3E') params += `&labelColor=${lColor}`;
+        if (color !== DEFAULT_BADGE_COLOR) params += `&color=${color}`;
+        if (lColor !== DEFAULT_LABEL_COLOR) params += `&labelColor=${lColor}`;
         return params;
       }
 
@@ -2112,8 +2114,8 @@
           .toUpperCase();
         const searchParams = new URLSearchParams();
         if (glyph !== 'brand') searchParams.set('glyph', glyph);
-        if (color !== 'F8654B') searchParams.set('color', color);
-        if (lColor !== '3D3D3E') searchParams.set('labelColor', lColor);
+        if (color !== DEFAULT_BADGE_COLOR) searchParams.set('color', color);
+        if (lColor !== DEFAULT_LABEL_COLOR) searchParams.set('labelColor', lColor);
         const qs = searchParams.toString();
         indexPageLink.href = qs ? `index.html?${qs}` : 'index.html';
       }
@@ -2240,6 +2242,16 @@
       document.getElementById('labelColorInput').addEventListener('input', handleAppearanceChange);
 
       // Check if userId and customization params are in URL query parameters and auto-prefill
+      function normalizeHexColorParam(value) {
+        if (!value) return null;
+        const trimmed = value.trim();
+        const withoutHash = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
+        if (!/^[0-9a-fA-F]{6}$/.test(withoutHash)) {
+          return null;
+        }
+        return `#${withoutHash.toUpperCase()}`;
+      }
+
       function checkAndPrefillUserId() {
         const params = new URLSearchParams(window.location.search);
         const userIdFromUrl = params.get('userId');
@@ -2254,11 +2266,13 @@
           );
           if (radio) radio.checked = true;
         }
-        if (colorFromUrl) {
-          document.getElementById('badgeColor').value = `#${colorFromUrl}`;
+        const normalizedColor = normalizeHexColorParam(colorFromUrl);
+        if (normalizedColor) {
+          document.getElementById('badgeColor').value = normalizedColor;
         }
-        if (labelColorFromUrl) {
-          document.getElementById('labelColorInput').value = `#${labelColorFromUrl}`;
+        const normalizedLabelColor = normalizeHexColorParam(labelColorFromUrl);
+        if (normalizedLabelColor) {
+          document.getElementById('labelColorInput').value = normalizedLabelColor;
         }
 
         // Reflect any applied customization in the UI
