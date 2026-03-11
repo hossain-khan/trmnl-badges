@@ -584,6 +584,33 @@
         gap: 16px;
       }
 
+      .recipe-item-thumbnail {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        object-fit: cover;
+        flex-shrink: 0;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .recipe-item-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 9px;
+      }
+
+      .recipe-item-thumbnail svg {
+        width: 26px;
+        height: 26px;
+      }
+
       .recipe-item-info {
         flex: 1;
         min-width: 0;
@@ -1800,6 +1827,19 @@
           const recipeItem = document.createElement('div');
           recipeItem.className = 'recipe-item';
 
+          // Thumbnail (icon_url or TRMNL brand glyph fallback)
+          const thumbDiv = document.createElement('div');
+          thumbDiv.className = 'recipe-item-thumbnail';
+          if (recipe.icon_url) {
+            const img = document.createElement('img');
+            img.src = recipe.icon_url;
+            img.alt = recipe.name;
+            img.loading = 'lazy';
+            thumbDiv.appendChild(img);
+          } else {
+            thumbDiv.innerHTML = `<svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M157.609 56.0668L132.682 93.8519L113.971 81.5078L138.898 43.7227L157.609 56.0668Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M147.533 123.466L102.449 127.536L100.434 105.211L145.517 101.141L147.533 123.466Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M88.5468 157.611L57.2559 124.901L73.4541 109.406L104.745 142.116L88.5468 157.611Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M25.0723 132.804L31.1366 87.9453L53.3508 90.9484L47.2865 135.808L25.0723 132.804Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M4.9082 67.6809L43.7612 44.4531L55.2636 63.6933L16.4107 86.921L4.9082 67.6809Z" fill="#F8654B"/></svg>`;
+          }
+
           const infoDiv = document.createElement('div');
           infoDiv.className = 'recipe-item-info';
 
@@ -1825,6 +1865,7 @@
 
           actionDiv.appendChild(showBtn);
 
+          recipeItem.appendChild(thumbDiv);
           recipeItem.appendChild(infoDiv);
           recipeItem.appendChild(actionDiv);
 
