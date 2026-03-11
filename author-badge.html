@@ -1931,7 +1931,7 @@
           const statsDiv = document.createElement('div');
           statsDiv.className = 'recipe-item-stats';
           const isPretty = prettyFormat.checked;
-          statsDiv.textContent = `${formatNumber(recipe.stats.installs, isPretty)} installs • ${formatNumber(recipe.stats.forks, isPretty)} forks • ${formatNumber(recipe.stats.installs + recipe.stats.forks, isPretty)} connections`;
+          statsDiv.textContent = `${formatNumber(recipe.stats.installs, isPretty)} installs • ${formatNumber(recipe.stats.forks, isPretty)} forks • ${formatNumber(recipe.stats.installs + recipe.stats.forks, isPretty)} connections • recipe-id ${recipe.id}`;
 
           infoDiv.appendChild(nameDiv);
           infoDiv.appendChild(statsDiv);
