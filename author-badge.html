@@ -151,6 +151,7 @@
         width: 18px;
         height: 18px;
         cursor: pointer;
+        accent-color: #f8654b;
       }
 
       .checkbox-label {
@@ -1149,7 +1150,8 @@
               id="indexPageLink"
               href="index.html"
               class="nav-pill"
-              >Single recipe</a>
+              >Single recipe</a
+            >
           </p>
         </div>
       </div>
@@ -1477,6 +1479,10 @@
           <div class="recipes-header">
             Individual Recipe Badges (<span id="recipeCount">0</span> recipes)
           </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="linkToRecipe" />
+            <label for="linkToRecipe" class="checkbox-label">Link Recipe</label>
+          </div>
           <button type="button" class="copy-all-global-btn" id="copyAllBadgesBtn">
             📋 Copy All Badges
           </button>
@@ -1768,7 +1774,12 @@
        */
       function generateRecipeBadgeMarkdown(recipeId, badgeType, badgeLabel) {
         const url = `${BASE_URL}/badge/${badgeType}?recipe=${recipeId}${prettyFormat.checked ? '&pretty' : ''}${getCustomParams()}`;
-        return `![${badgeLabel}](${url})`;
+        const imgMarkdown = `![${badgeLabel}](${url})`;
+        const linkToRecipe = document.getElementById('linkToRecipe');
+        if (linkToRecipe && linkToRecipe.checked) {
+          return `[![${badgeLabel}](${url})](https://trmnl.com/recipes/${recipeId})`;
+        }
+        return imgMarkdown;
       }
 
       /**
