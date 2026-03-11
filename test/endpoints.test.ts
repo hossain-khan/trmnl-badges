@@ -127,7 +127,7 @@ describe('TRMNL Badges API', () => {
       expect(cachedCopy).toBeDefined();
       expect(cachedCopy?.headers.get('Cache-Control')).toBe('public, max-age=3600, s-maxage=90');
 
-      // Cache hit: downstream browser still receives the intended long max-age
+      // Cache hit: response still includes the intended long max-age alongside s-maxage
       const hitResponse = await app.request('/badge/installs?recipe=240176');
       expect(hitResponse.status).toBe(200);
       expect(hitResponse.headers.get('Cache-Control')).toBe('public, max-age=3600, s-maxage=90');
