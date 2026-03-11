@@ -147,6 +147,55 @@
         gap: 8px;
       }
 
+      /* Custom animated tooltip */
+      .checkbox-group[data-tooltip] {
+        position: relative;
+      }
+
+      .checkbox-group[data-tooltip]::after,
+      .checkbox-group[data-tooltip]::before {
+        pointer-events: none;
+        opacity: 0;
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease;
+      }
+
+      .checkbox-group[data-tooltip]::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 9px);
+        left: 50%;
+        transform: translateX(-50%) translateY(6px);
+        background: #3d3d3e;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.4;
+        padding: 6px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .checkbox-group[data-tooltip]::before {
+        content: '';
+        position: absolute;
+        bottom: calc(100% + 1px);
+        left: 50%;
+        transform: translateX(-50%) translateY(6px);
+        border: 5px solid transparent;
+        border-top-color: #3d3d3e;
+        z-index: 100;
+      }
+
+      .checkbox-group[data-tooltip]:hover::after,
+      .checkbox-group[data-tooltip]:hover::before {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
       input[type='checkbox'] {
         width: 18px;
         height: 18px;
@@ -1505,7 +1554,10 @@
           <div class="recipes-header">
             Individual Recipe Badges (<span id="recipeCount">0</span> recipes)
           </div>
-          <div class="checkbox-group" title="Badge markdown will NOT include a link to the recipe">
+          <div
+            class="checkbox-group"
+            data-tooltip="Badge markdown will NOT include a link to the recipe"
+          >
             <input type="checkbox" id="linkToRecipe" />
             <label for="linkToRecipe" class="checkbox-label">Link Recipe</label>
           </div>
@@ -2084,7 +2136,7 @@
       const linkToRecipeCheckbox = document.getElementById('linkToRecipe');
       const linkToRecipeGroup = linkToRecipeCheckbox.closest('.checkbox-group');
       function updateLinkRecipeTooltip() {
-        linkToRecipeGroup.title = linkToRecipeCheckbox.checked
+        linkToRecipeGroup.dataset.tooltip = linkToRecipeCheckbox.checked
           ? 'Badge markdown will include a clickable link to the recipe page'
           : 'Badge markdown will NOT include a link to the recipe';
       }
