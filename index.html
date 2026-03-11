@@ -336,10 +336,43 @@
         border-radius: 6px;
         text-align: left;
         display: none;
+        align-items: center;
+        gap: 12px;
       }
 
       .recipe-info.show {
-        display: block;
+        display: flex;
+      }
+
+      .recipe-info-thumbnail {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+      }
+
+      .recipe-info-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+
+      .recipe-info-thumbnail svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .recipe-info-text {
+        flex: 1;
+        min-width: 0;
       }
 
       .recipe-name {
@@ -1396,8 +1429,11 @@
           <p style="color: #999; font-size: 12px">Enter recipe ID to preview</p>
         </div>
         <div class="recipe-info" id="recipeInfo">
-          <div class="recipe-name" id="recipeName"></div>
-          <div class="recipe-stats" id="recipeStats"></div>
+          <div class="recipe-info-thumbnail" id="recipeThumbnail"></div>
+          <div class="recipe-info-text">
+            <div class="recipe-name" id="recipeName"></div>
+            <div class="recipe-stats" id="recipeStats"></div>
+          </div>
         </div>
       </div>
 
@@ -1631,6 +1667,19 @@
 
         recipeName.textContent = data.name;
         recipeStats.textContent = `📊 ${data.stats.installs || 0} installs • ${data.stats.forks || 0} forks • ${totalConnections} Connections`;
+
+        // Update thumbnail
+        const recipeThumbnail = document.getElementById('recipeThumbnail');
+        if (data.icon_url) {
+          const img = document.createElement('img');
+          img.src = data.icon_url;
+          img.alt = data.name;
+          img.loading = 'lazy';
+          recipeThumbnail.innerHTML = '';
+          recipeThumbnail.appendChild(img);
+        } else {
+          recipeThumbnail.innerHTML = `<svg viewBox="0 0 160 162" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M43.2322 11.3438L85.6168 27.2379L77.7459 48.2271L35.3613 32.3328L43.2322 11.3438Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M111.192 6.1543L125.192 49.2018L103.875 56.1345L89.875 13.0871L111.192 6.1543Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M157.609 56.0668L132.682 93.8519L113.971 81.5078L138.898 43.7227L157.609 56.0668Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M126.894 105.665L88.0561 127.768L77.5354 109.416L116.373 87.3125L126.894 105.665Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M57.3467 151.504L2.40234 130.579L9.93411 110.791L64.8785 131.716L57.3467 151.504Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M3.71289 95.7656L17.5957 52.6523L38.9448 59.5076L25.062 102.621L3.71289 95.7656Z" fill="#F8654B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M75.5986 157.12L50.957 119.133L69.7617 106.928L94.4033 144.916L75.5986 157.12Z" fill="#F8654B"/></svg>`;
+        }
 
         // Save user_id to sessionStorage and update author badge link
         if (data.user_id) {
