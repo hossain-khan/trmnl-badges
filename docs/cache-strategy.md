@@ -8,8 +8,28 @@ This project uses multiple cache layers to reduce load on `trmnl.com` while keep
 | --- | --- | --- | --- | --- |
 | In-flight request dedupe (`src/trmnl-api.ts`) | Per Worker isolate (memory) | Upstream URL | Lifetime of one in-flight request | Automatic (`finally` removes key) |
 | Upstream fetch cache hint (`fetch(..., { cf })`) | Cloudflare fetch path | Upstream URL | 60s (`cacheTtl`) | TTL expiry only |
-| Worker edge badge cache (`caches.default` in `src/index.ts`) | Per datacenter | Full badge request URL (path + query params) | 90s success, 30s error | TTL expiry or zone-wide purge |
-| Response `Cache-Control` headers | Browser/downstream caches | URL + cache policy | 3600s success, 60s error | TTL expiry, client refresh, URL versioning |
+| Worker edge badge cache (`caches.default` in `src/index.ts`) | Per datacenter | Full badge request URL (path + query params) | 90s success, 30s error (via `s-maxage`) | TTL expiry or zone-wide purge |
+| Response `Cache-Control` headers | Browser/downstream caches | URL + cache policy | 3600s success, 60s error (via `max-age`) | TTL expiry, client refresh, URL versioning |
+
+## Cache-Control Strategy
+
+Badge responses use a two-directive `Cache-Control` header to separate edge/shared cache TTL from browser cache TTL:
+
+- **`max-age`** (e.g. `max-age=3600`) — controls browser and downstream client caching. Set by the route handler via `returnSuccessBadge` / `returnErrorBadge`.
+- **`s-maxage`** (e.g. `s-maxage=90`) — controls shared/edge cache TTL. Added by the edge cache middleware in `buildCacheableResponse` when storing a response in `caches.default`.
+
+Example headers stored in edge cache:
+
+| Badge result | `Cache-Control` stored in edge cache |
+| --- | --- |
+| Success | `public, max-age=3600, s-maxage=90` |
+| Error | `public, max-age=60, s-maxage=30` |
+
+On a **cache miss** the response is served directly from the route handler with the plain `max-age` header (`public, max-age=3600` or `public, max-age=60`). On a **cache hit** the stored response (including `s-maxage`) is returned. Browsers receiving the hit response still honor the `max-age` directive for their local cache, while Cloudflare's edge layer uses `s-maxage` to determine its own freshness window.
+
+This decoupling ensures:
+- Short edge TTLs absorb request bursts without flooding the upstream TRMNL API.
+- Downstream browser cache semantics are preserved and intentional.
 
 ## Freshness Model
 

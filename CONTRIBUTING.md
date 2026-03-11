@@ -244,12 +244,12 @@ Badges are generated using the `badgen` library with:
 
 ### Server-Side
 
-- **HTTP Caching**: All badge endpoints return appropriate cache headers:
+- **HTTP Caching**: All badge endpoints return appropriate cache headers (set by route handlers):
   - Error responses: `Cache-Control: public, max-age=60` (1 minute)
   - Success responses: `Cache-Control: public, max-age=3600` (1 hour)
-- **Worker edge cache**: `/badge/*` responses are cached with short TTLs in `caches.default`:
-  - Success badges: `90s`
-  - Error badges: `30s`
+- **Worker edge cache**: `/badge/*` responses are cached in `caches.default` using `s-maxage` to keep the edge TTL short without changing the downstream `max-age`:
+  - Success badges: `s-maxage=90` (edge TTL 90s, browser `max-age=3600` preserved)
+  - Error badges: `s-maxage=30` (edge TTL 30s, browser `max-age=60` preserved)
 - **TRMNL upstream fetch cache hint**: upstream requests use `cf.cacheTtl=60` with request coalescing to reduce duplicate fetches under concurrency
 - The `/badge/counter` endpoint caches for 1 hour to allow for reasonable badge count accuracy while minimizing KV operations
 

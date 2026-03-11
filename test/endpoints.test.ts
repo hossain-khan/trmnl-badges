@@ -112,19 +112,42 @@ describe('TRMNL Badges API', () => {
       expect(fetchRecipe).toHaveBeenCalledTimes(1);
     });
 
-    it('should cache error badge responses with short edge TTL', async () => {
+    it('should preserve downstream max-age on cache hit for success badge', async () => {
+      const edgeCache = createInMemoryEdgeCache();
+      vi.mocked(fetchRecipe).mockResolvedValue(mockRecipe);
+
+      // Cache miss: response carries route-level max-age
+      const missResponse = await app.request('/badge/installs?recipe=240176');
+      expect(missResponse.status).toBe(200);
+      expect(missResponse.headers.get('Cache-Control')).toBe('public, max-age=3600');
+      await missResponse.text();
+
+      // Edge cache stored copy uses s-maxage for short edge TTL, preserving max-age for browsers
+      const cachedCopy = edgeCache.store.get('http://localhost/badge/installs?recipe=240176');
+      expect(cachedCopy).toBeDefined();
+      expect(cachedCopy?.headers.get('Cache-Control')).toBe('public, max-age=3600, s-maxage=90');
+
+      // Cache hit: response still includes the intended long max-age alongside s-maxage
+      const hitResponse = await app.request('/badge/installs?recipe=240176');
+      expect(hitResponse.status).toBe(200);
+      expect(hitResponse.headers.get('Cache-Control')).toBe('public, max-age=3600, s-maxage=90');
+      expect(fetchRecipe).toHaveBeenCalledTimes(1);
+    });
+
+    it('should cache error badge responses with short edge TTL via s-maxage', async () => {
       const edgeCache = createInMemoryEdgeCache();
       vi.mocked(fetchRecipe).mockResolvedValueOnce(null);
 
+      // Cache miss: response carries route-level max-age (error policy)
       const response = await app.request('/badge/installs?recipe=999999');
       expect(response.status).toBe(200);
-      // Response header remains route-level policy; edge cache TTL is applied in cached copy.
       expect(response.headers.get('Cache-Control')).toBe('public, max-age=60');
       await response.text();
 
+      // Edge cache stored copy uses s-maxage for short edge TTL, preserving max-age for browsers
       const cachedResponse = edgeCache.store.get('http://localhost/badge/installs?recipe=999999');
       expect(cachedResponse).toBeDefined();
-      expect(cachedResponse?.headers.get('Cache-Control')).toBe('public, max-age=30');
+      expect(cachedResponse?.headers.get('Cache-Control')).toBe('public, max-age=60, s-maxage=30');
     });
 
     it('should bypass edge cache lookups for non-GET requests', async () => {
