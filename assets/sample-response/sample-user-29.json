@@ -1,0 +1,548 @@
+{
+    "data": [
+        {
+            "id": 246906,
+            "user_id": 29,
+            "name": "Islamic Prayer Times",
+            "published_at": "2026-02-19T14:05:29.027Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/jlaow5v15p3r4qxau8iokm8iuay0",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/qlpi9bfaawx60jzzbd7ud1jm6444?response-content-disposition=inline%3B%20filename%3D%22plugin-4cab3d%22%3B%20filename%2A%3DUTF-8%27%27plugin-4cab3d\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260311%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260311T062404Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=3f28c57345c34e823ade5d1b5a4daba962955de8178d15c9680faf0b98c2d0ed",
+            "author_bio": {
+                "keyname": "author_bio",
+                "field_type": "author_bio",
+                "name": "About This Plugin",
+                "description": "Display accurate 🕌 Islamic salah prayer times for your location with Hijri calendar, 12/24-hour format options, and responsive layouts for all TRMNL devices.",
+                "category": "life,personal",
+                "email_address": "trmnl@hossain.dev",
+                "github_url": "https://github.com/hossain-khan/trmnl-prayer-times"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "field_type": "author_bio",
+                    "name": "About This Plugin",
+                    "description": "Display accurate 🕌 Islamic salah prayer times for your location with Hijri calendar, 12/24-hour format options, and responsive layouts for all TRMNL devices.",
+                    "category": "life,personal",
+                    "email_address": "trmnl@hossain.dev",
+                    "github_url": "https://github.com/hossain-khan/trmnl-prayer-times"
+                },
+                {
+                    "keyname": "address",
+                    "field_type": "string",
+                    "name": "Location",
+                    "placeholder": "Toronto, Ontario, CA",
+                    "description": "Your city, address, or neighborhood",
+                    "help_text": "Include city and country for best results. Examples: 'Trafalgar Square, London, UK', 'Paris, France', 'New York, USA'",
+                    "required": true
+                },
+                {
+                    "keyname": "method",
+                    "field_type": "select",
+                    "name": "Calculation Method",
+                    "default": "3",
+                    "description": "Method used to calculate prayer times",
+                    "help_text": "Muslim World League (MWL) is widely used globally",
+                    "options": [
+                        {
+                            "Muslim World League (MWL) - Recommended": "3"
+                        },
+                        {
+                            "Islamic Society of North America (ISNA)": "2"
+                        },
+                        {
+                            "University of Islamic Sciences, Karachi": "1"
+                        },
+                        {
+                            "Umm Al-Qura University, Makkah": "4"
+                        },
+                        {
+                            "Egyptian General Authority of Survey": "5"
+                        },
+                        {
+                            "Gulf Region": "8"
+                        },
+                        {
+                            "Kuwait": "9"
+                        },
+                        {
+                            "Qatar": "10"
+                        },
+                        {
+                            "Majlis Ugama Islam Singapura, Singapore": "11"
+                        },
+                        {
+                            "Union Organization islamic de France": "12"
+                        },
+                        {
+                            "Jabatan Kemajuan Islam Malaysia (JAKIM)": "17"
+                        },
+                        {
+                            "Morocco": "21"
+                        }
+                    ]
+                },
+                {
+                    "keyname": "time_format",
+                    "field_type": "select",
+                    "name": "Time Format",
+                    "default": "24h",
+                    "description": "How to display prayer times",
+                    "options": [
+                        {
+                            "24-hour (e.g., 14:30)": "24h"
+                        },
+                        {
+                            "12-hour (e.g., 2:30 PM)": "12h"
+                        }
+                    ]
+                },
+                {
+                    "keyname": "show_hijri_date",
+                    "field_type": "boolean",
+                    "name": "Show Islamic Calendar Date",
+                    "default": false,
+                    "description": "Display the Islamic calendar date along with prayer times",
+                    "optional": true
+                },
+                {
+                    "keyname": "custom_title",
+                    "field_type": "string",
+                    "name": "Custom Plugin Title",
+                    "placeholder": "Prayer Times",
+                    "description": "Override the default 'Prayer Times' title",
+                    "optional": true
+                }
+            ],
+            "stats": {
+                "installs": 5,
+                "forks": 13
+            }
+        },
+        {
+            "id": 226758,
+            "user_id": 29,
+            "name": "GO Transit Schedule",
+            "published_at": "2026-02-18T04:56:01.682Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/wsk5d3xr16p48f6x7x8ayz6a6cv5",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/z1zmeh10nmm22hgjle8dfg68kx5b?response-content-disposition=inline%3B%20filename%3D%22plugin-58e18d%22%3B%20filename%2A%3DUTF-8%27%27plugin-58e18d\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260311%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260311T062404Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=8d43e7bfaec5a192ce7b2f1e63a97a34126bdc3e66ea244153b758fc829ac291",
+            "author_bio": {
+                "keyname": "about",
+                "name": "About This Plugin",
+                "category": "travel,life",
+                "field_type": "author_bio",
+                "description": "GO Transit Dashboard displays real-time departure information for your preferred GO Rail station.\nFeatures include two-direction schedules, service alerts, and responsive layouts for all TRMNL devices.\nData is sourced from the Metrolinx Open Data API with intelligent edge caching for optimal performance.\n",
+                "github_url": "https://github.com/hossain-khan/trmnl-go-transit-plugin",
+                "learn_more_url": "https://hossain-khan.github.io/trmnl-go-transit-plugin/",
+                "email_address": "trmnl@hossain.dev"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "about",
+                    "name": "About This Plugin",
+                    "category": "travel,life",
+                    "field_type": "author_bio",
+                    "description": "GO Transit Dashboard displays real-time departure information for your preferred GO Rail station.\nFeatures include two-direction schedules, service alerts, and responsive layouts for all TRMNL devices.\nData is sourced from the Metrolinx Open Data API with intelligent edge caching for optimal performance.\n",
+                    "github_url": "https://github.com/hossain-khan/trmnl-go-transit-plugin",
+                    "learn_more_url": "https://hossain-khan.github.io/trmnl-go-transit-plugin/",
+                    "email_address": "trmnl@hossain.dev"
+                },
+                {
+                    "keyname": "line",
+                    "field_type": "xhrSelect",
+                    "name": "GO Transit Line",
+                    "description": "Select your preferred GO Transit line.",
+                    "endpoint": "https://gta-go-transit.gohk.xyz/api/V1/lines",
+                    "http_verb": "POST",
+                    "default": "LE",
+                    "help_text": "This determines which stations are available in the next field."
+                },
+                {
+                    "keyname": "station_id",
+                    "field_type": "xhrSelect",
+                    "name": "GO Station",
+                    "description": "Select your preferred station on this line.",
+                    "endpoint": "https://gta-go-transit.gohk.xyz/api/V1/stations-by-line/{{line}}",
+                    "http_verb": "POST",
+                    "exclude_csrf_token": true,
+                    "depends_on": "line",
+                    "optional": true,
+                    "help_text": "Select a line to see available stations."
+                }
+            ],
+            "stats": {
+                "installs": 0,
+                "forks": 9
+            }
+        },
+        {
+            "id": 240176,
+            "user_id": 29,
+            "name": "Kung Fu Panda Quotes",
+            "published_at": "2026-02-09T07:45:36.616Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/e5566c94mqsu0jgvvx76izss4zz4",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/2uvyw0xen7u6rd2u9z8x28im7w23?response-content-disposition=inline%3B%20filename%3D%22plugin-9dee7e%22%3B%20filename%2A%3DUTF-8%27%27plugin-9dee7e\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260311%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260311T062404Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=0463cae53cb49383829fab406b9c306145bf87015724d1ef5b2437b24ecad875",
+            "author_bio": {
+                "keyname": "kung_fu_panda_quotes",
+                "field_type": "author_bio",
+                "name": "Kung Fu Panda Quotes",
+                "category": "entertainment,humor",
+                "description": "Kung Fu Panda Quotes brings the wisdom, humor, and philosophy from all four Kung Fu Panda films directly to your TRMNL device.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🐼 80+ authentic quotes from all 4 Kung Fu Panda movies\u003cbr\u003e\n🎭 8 themed collections: Wisdom, Humor, Growth, Combat, Identity, Confidence, Iconic, Villainy\u003cbr\u003e\n🎨 Beautiful movie poster displays optimized for e-ink\u003cbr\u003e\n🔄 Daily automatic quote updates with intelligent rotation\u003cbr\u003e\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eSetup:\u003c/strong\u003e\u003cbr\u003e\n1. Install or Fork this recipe\u003cbr\u003e\n2. Choose your preferred quote theme (or \"All Themes\" for variety)\u003cbr\u003e\n3. The plugin automatically polls for a new quote every 24 hours\u003cbr\u003e\n4. Add to your playlist and experience daily wisdom from the Valley of Peace\n\u003cbr\u003e\u003cbr\u003e\nExperience the timeless wisdom of Master Oogway, the humor of Po, the discipline of Master Shifu, and memorable quotes from all your favorite characters across the entire franchise.\n\u003cbr\u003e\u003cbr\u003e\n\u003cem\u003e\"Yesterday is history, tomorrow is a mystery, but today is a gift. That is why it is called the present.\"\u003c/em\u003e - Master Oogway\n",
+                "github_url": "https://github.com/hossain-khan/trmnl-kung-fu-panda-quotes",
+                "learn_more_url": "https://hossain-khan.github.io/trmnl-kung-fu-panda-quotes",
+                "email_address": "trmnl@hossain.dev"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "kung_fu_panda_quotes",
+                    "field_type": "author_bio",
+                    "name": "Kung Fu Panda Quotes",
+                    "category": "entertainment,humor",
+                    "description": "Kung Fu Panda Quotes brings the wisdom, humor, and philosophy from all four Kung Fu Panda films directly to your TRMNL device.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🐼 80+ authentic quotes from all 4 Kung Fu Panda movies\u003cbr\u003e\n🎭 8 themed collections: Wisdom, Humor, Growth, Combat, Identity, Confidence, Iconic, Villainy\u003cbr\u003e\n🎨 Beautiful movie poster displays optimized for e-ink\u003cbr\u003e\n🔄 Daily automatic quote updates with intelligent rotation\u003cbr\u003e\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eSetup:\u003c/strong\u003e\u003cbr\u003e\n1. Install or Fork this recipe\u003cbr\u003e\n2. Choose your preferred quote theme (or \"All Themes\" for variety)\u003cbr\u003e\n3. The plugin automatically polls for a new quote every 24 hours\u003cbr\u003e\n4. Add to your playlist and experience daily wisdom from the Valley of Peace\n\u003cbr\u003e\u003cbr\u003e\nExperience the timeless wisdom of Master Oogway, the humor of Po, the discipline of Master Shifu, and memorable quotes from all your favorite characters across the entire franchise.\n\u003cbr\u003e\u003cbr\u003e\n\u003cem\u003e\"Yesterday is history, tomorrow is a mystery, but today is a gift. That is why it is called the present.\"\u003c/em\u003e - Master Oogway\n",
+                    "github_url": "https://github.com/hossain-khan/trmnl-kung-fu-panda-quotes",
+                    "learn_more_url": "https://hossain-khan.github.io/trmnl-kung-fu-panda-quotes",
+                    "email_address": "trmnl@hossain.dev"
+                },
+                {
+                    "keyname": "theme",
+                    "field_type": "select",
+                    "name": "Quote Theme",
+                    "optional": false,
+                    "options": [
+                        {
+                            "All Themes": "all"
+                        },
+                        {
+                            "Wisdom": "wisdom"
+                        },
+                        {
+                            "Humor": "humor"
+                        },
+                        {
+                            "Growth": "growth"
+                        },
+                        {
+                            "Combat": "combat"
+                        },
+                        {
+                            "Identity": "identity"
+                        },
+                        {
+                            "Confidence": "confidence"
+                        },
+                        {
+                            "Iconic": "iconic"
+                        },
+                        {
+                            "Villainy": "villainy"
+                        }
+                    ],
+                    "default": "all",
+                    "description": "Select which type of quotes you'd like to see",
+                    "help_text": "Choose 'All Themes' for a mix of all quote types, or pick a specific theme"
+                }
+            ],
+            "stats": {
+                "installs": 7,
+                "forks": 17
+            }
+        },
+        {
+            "id": 230712,
+            "user_id": 29,
+            "name": "Google Photos Canvas",
+            "published_at": "2026-01-26T22:09:55.631Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/2k91pjeo87tqj1gfai95etgru67h",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/rvrne07odyaz097sgn82o8eucq0j?response-content-disposition=inline%3B%20filename%3D%22plugin-a9e013%22%3B%20filename%2A%3DUTF-8%27%27plugin-a9e013\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260311%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260311T062404Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=971c484590b7b3efb691adea36387db9c72a6d76509ec9672680cb17f0696fd4",
+            "author_bio": {
+                "keyname": "author_bio",
+                "name": "About This Plugin",
+                "field_type": "author_bio",
+                "category": "images,personal",
+                "description": "\u003cstrong\u003eTRMNL Google Photos Canvas\u003c/strong\u003e displays your Google Photos shared album in a clean, immersive, fullscreen layout — no captions, no metadata, just your photos edge to edge.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eHow It Works:\u003c/strong\u003e\u003cbr\u003e\n1. Create a shared album in Google Photos\u003cbr\u003e\n2. Copy the shared album link\u003cbr\u003e\n3. Paste it below in the recipe settings\u003cbr\u003e\n4. Enjoy a new random photo every hour or day (based on your TRMNL refresh settings)\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🖼️ Fullscreen, distraction-free photo display\u003cbr\u003e\n🌈 Adaptive background color based on image being displayed (optional)\u003cbr\u003e\n⚡ Fast loading with optional caching\u003cbr\u003e\n🔒 No sign-in, no tracking, privacy-first\n",
+                "github_url": "https://github.com/hossain-khan/trmnl-google-photos-plugin",
+                "learn_more_url": "https://hossain-khan.github.io/trmnl-google-photos-plugin/",
+                "email_address": "trmnl@hossain.dev"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "name": "About This Plugin",
+                    "field_type": "author_bio",
+                    "category": "images,personal",
+                    "description": "\u003cstrong\u003eTRMNL Google Photos Canvas\u003c/strong\u003e displays your Google Photos shared album in a clean, immersive, fullscreen layout — no captions, no metadata, just your photos edge to edge.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eHow It Works:\u003c/strong\u003e\u003cbr\u003e\n1. Create a shared album in Google Photos\u003cbr\u003e\n2. Copy the shared album link\u003cbr\u003e\n3. Paste it below in the recipe settings\u003cbr\u003e\n4. Enjoy a new random photo every hour or day (based on your TRMNL refresh settings)\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🖼️ Fullscreen, distraction-free photo display\u003cbr\u003e\n🌈 Adaptive background color based on image being displayed (optional)\u003cbr\u003e\n⚡ Fast loading with optional caching\u003cbr\u003e\n🔒 No sign-in, no tracking, privacy-first\n",
+                    "github_url": "https://github.com/hossain-khan/trmnl-google-photos-plugin",
+                    "learn_more_url": "https://hossain-khan.github.io/trmnl-google-photos-plugin/",
+                    "email_address": "trmnl@hossain.dev"
+                },
+                {
+                    "keyname": "shared_album_url",
+                    "field_type": "url",
+                    "name": "Google Photos Shared Album URL",
+                    "description": "Paste your Google Photos shared album link (e.g., https://photos.app.goo.gl/ABC123)",
+                    "placeholder": "https://photos.app.goo.gl/...",
+                    "default": "",
+                    "optional": false,
+                    "help_text": "To create a shared album: Google Photos → Create → Shared Album → Get Link. Make sure link sharing is enabled. Leave blank to see a demo photo."
+                },
+                {
+                    "keyname": "adaptive_background",
+                    "field_type": "boolean",
+                    "default": true,
+                    "optional": true,
+                    "name": "Adaptive Background",
+                    "description": "Match background color to photo edge for seamless display",
+                    "help_text": "When enabled, the background shade adapts to each photo for a more immersive look. Adds ~100-200ms to loading. Disable for pure white background."
+                },
+                {
+                    "keyname": "enable_caching",
+                    "field_type": "boolean",
+                    "default": true,
+                    "optional": true,
+                    "name": "Enable Performance Caching",
+                    "description": "Cache photo info for faster loading",
+                    "help_text": "When enabled, the plugin remembers your album's photos for 24 hours for instant loading. No actual photos are stored. Disable for always-fresh photos (slower)."
+                }
+            ],
+            "stats": {
+                "installs": 0,
+                "forks": 53
+            }
+        },
+        {
+            "id": 227153,
+            "user_id": 29,
+            "name": "Google Photos",
+            "published_at": "2026-01-21T04:17:27.992Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/k25eoz1ytss10hkogbmwn9z92mwe",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/4pbnmlovpeeak62yotbtfiv4u0c7?response-content-disposition=inline%3B%20filename%3D%22plugin-424707%22%3B%20filename%2A%3DUTF-8%27%27plugin-424707\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260311%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260311T062404Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=4316594aaac795e41226c794a275e80e058da20f816f30fd380b981063122072",
+            "author_bio": {
+                "keyname": "author_bio",
+                "name": "About This Plugin",
+                "field_type": "author_bio",
+                "category": "images,personal",
+                "description": "Google Photos Shared Album brings your cherished memories to your TRMNL device by displaying random photos from your Google Photos shared albums — no sign-in needed.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eHow It Works:\u003c/strong\u003e\u003cbr\u003e\n1. Create a shared album in Google Photos\u003cbr\u003e\n2. Copy the shared album link\u003cbr\u003e\n3. Paste it into the plugin settings\u003cbr\u003e\n4. Photos automatically appear on your TRMNL device\u003cbr\u003e\n5. New random photo displayed every hour or day based on your refresh configuration\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n📸 Random photo selection from your shared albums\u003cbr\u003e\n⏰ Automatic refresh with new random photos\u003cbr\u003e\n🎨 Four optimized layouts for all TRMNL device sizes\u003cbr\u003e\n📱 Responsive design across all e-ink displays\u003cbr\u003e\n🖼️ Display photo metadata\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003ePrivacy-First Design:\u003c/strong\u003e This plugin prioritizes your privacy - no need to sign in with Google. No cookies, no tracking, and we never save your personal information. \n",
+                "github_url": "https://github.com/hossain-khan/trmnl-google-photos-plugin",
+                "learn_more_url": "https://hossain-khan.github.io/trmnl-google-photos-plugin/",
+                "email_address": "trmnl@hossain.dev"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "name": "About This Plugin",
+                    "field_type": "author_bio",
+                    "category": "images,personal",
+                    "description": "Google Photos Shared Album brings your cherished memories to your TRMNL device by displaying random photos from your Google Photos shared albums — no sign-in needed.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eHow It Works:\u003c/strong\u003e\u003cbr\u003e\n1. Create a shared album in Google Photos\u003cbr\u003e\n2. Copy the shared album link\u003cbr\u003e\n3. Paste it into the plugin settings\u003cbr\u003e\n4. Photos automatically appear on your TRMNL device\u003cbr\u003e\n5. New random photo displayed every hour or day based on your refresh configuration\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n📸 Random photo selection from your shared albums\u003cbr\u003e\n⏰ Automatic refresh with new random photos\u003cbr\u003e\n🎨 Four optimized layouts for all TRMNL device sizes\u003cbr\u003e\n📱 Responsive design across all e-ink displays\u003cbr\u003e\n🖼️ Display photo metadata\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003ePrivacy-First Design:\u003c/strong\u003e This plugin prioritizes your privacy - no need to sign in with Google. No cookies, no tracking, and we never save your personal information. \n",
+                    "github_url": "https://github.com/hossain-khan/trmnl-google-photos-plugin",
+                    "learn_more_url": "https://hossain-khan.github.io/trmnl-google-photos-plugin/",
+                    "email_address": "trmnl@hossain.dev"
+                },
+                {
+                    "keyname": "shared_album_url",
+                    "field_type": "url",
+                    "name": "Google Photos Shared Album URL",
+                    "description": "Paste your Google Photos shared album link (e.g., https://photos.app.goo.gl/ABC123)",
+                    "placeholder": "https://photos.app.goo.gl/...",
+                    "default": "",
+                    "optional": true,
+                    "help_text": "To create a shared album, open Google Photos → Create → Shared Album → Get Link. Ensure link sharing is enabled. Leave blank to see a demo photo."
+                },
+                {
+                    "keyname": "custom_title",
+                    "field_type": "string",
+                    "name": "Display Name",
+                    "description": "Custom name to show in the title bar (optional)",
+                    "placeholder": "My Google Photos",
+                    "default": "",
+                    "optional": true,
+                    "help_text": "This name appears in the plugin's title bar. Leave blank to use the plugin name (Google Photos Shared Album)."
+                },
+                {
+                    "keyname": "show_year",
+                    "field_type": "boolean",
+                    "default": true,
+                    "optional": true,
+                    "name": "Show Photo Year",
+                    "description": "Display the photo year in the bottom right corner",
+                    "help_text": "When enabled, the year from the photo's date appears in the bottom right corner with a white stroke for visibility. Disable if you prefer a cleaner photo display."
+                },
+                {
+                    "keyname": "show_metadata",
+                    "field_type": "boolean",
+                    "default": true,
+                    "optional": true,
+                    "name": "Show Photo Details",
+                    "description": "Display photo date, size, and count in the title bar",
+                    "help_text": "When enabled, shows photo details like date, size, and total count (e.g., '2 years ago • 12MP • 142 photos'). When disabled, only shows photo count for a cleaner look."
+                },
+                {
+                    "keyname": "enable_caching",
+                    "field_type": "boolean",
+                    "default": true,
+                    "optional": true,
+                    "name": "Enable Performance Caching",
+                    "description": "Save photo information temporarily for faster loading (recommended)",
+                    "help_text": "When enabled, we temporarily remember which photos are in your album for 24 hours so everything loads instantly. Your actual photos are never saved - we just remember they exist. Disable this to always fetch fresh photos directly from Google (takes a few seconds longer, but nothing is saved)."
+                }
+            ],
+            "stats": {
+                "installs": 1,
+                "forks": 91
+            }
+        },
+        {
+            "id": 226166,
+            "user_id": 29,
+            "name": "Element of the Day",
+            "published_at": "2026-01-17T23:28:12.159Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/lnh3i6y972h4nrrv2t7r0jcwu14n",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/b8yov0x0nb29rwavaq3km4n84uj3?response-content-disposition=inline%3B%20filename%3D%22plugin-477d7a%22%3B%20filename%2A%3DUTF-8%27%27plugin-477d7a\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260311%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260311T062404Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=159c25f600c3320ca40512b34d8fcc922e3631476e4c25159bcd973a9ac9c8e9",
+            "author_bio": {
+                "keyname": "author_bio",
+                "name": "About This Plugin",
+                "field_type": "author_bio",
+                "category": "education,discovery",
+                "description": "Element of the Day brings the wonder of chemistry to your TRMNL device by displaying a different element from the Periodic Table each day (or hour).\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🔬 118 elements with comprehensive scientific data\u003cbr\u003e\n⏰ Daily rotation or hourly random display modes\u003cbr\u003e\n📊 Atomic number, mass, electron configuration, and more\u003cbr\u003e\n🎨 Periodic table-style card design\u003cbr\u003e\n📱 Four optimized layouts (Full, Half Horizontal, Half Vertical, Quadrant)\u003cbr\u003e\n⚡ Fast static data delivery via GitHub Pages\u003cbr\u003e\n🧪 Data sourced from PubChem database\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eSetup:\u003c/strong\u003e\u003cbr\u003e\n1. Install or Fork this recipe\u003cbr\u003e\n2. Choose your preferred display mode (Daily or Hourly)\u003cbr\u003e\n3. Select your favorite layout size\u003cbr\u003e\n4. Add to your playlist and learn chemistry one element at a time\n\u003cbr\u003e\u003cbr\u003e\nPerfect for students, educators, science enthusiasts, or anyone curious about the building blocks of matter. Each element includes atomic properties, physical characteristics, and historical discovery information.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eData Source:\u003c/strong\u003e All 118 elements verified from PubChem (National Center for Biotechnology Information)\n",
+                "github_url": "https://github.com/hossain-khan/trmnl-elements-plugin",
+                "learn_more_url": "https://hossain-khan.github.io/trmnl-elements-plugin/",
+                "email_address": "trmnl@hossain.dev"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "name": "About This Plugin",
+                    "field_type": "author_bio",
+                    "category": "education,discovery",
+                    "description": "Element of the Day brings the wonder of chemistry to your TRMNL device by displaying a different element from the Periodic Table each day (or hour).\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🔬 118 elements with comprehensive scientific data\u003cbr\u003e\n⏰ Daily rotation or hourly random display modes\u003cbr\u003e\n📊 Atomic number, mass, electron configuration, and more\u003cbr\u003e\n🎨 Periodic table-style card design\u003cbr\u003e\n📱 Four optimized layouts (Full, Half Horizontal, Half Vertical, Quadrant)\u003cbr\u003e\n⚡ Fast static data delivery via GitHub Pages\u003cbr\u003e\n🧪 Data sourced from PubChem database\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eSetup:\u003c/strong\u003e\u003cbr\u003e\n1. Install or Fork this recipe\u003cbr\u003e\n2. Choose your preferred display mode (Daily or Hourly)\u003cbr\u003e\n3. Select your favorite layout size\u003cbr\u003e\n4. Add to your playlist and learn chemistry one element at a time\n\u003cbr\u003e\u003cbr\u003e\nPerfect for students, educators, science enthusiasts, or anyone curious about the building blocks of matter. Each element includes atomic properties, physical characteristics, and historical discovery information.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eData Source:\u003c/strong\u003e All 118 elements verified from PubChem (National Center for Biotechnology Information)\n",
+                    "github_url": "https://github.com/hossain-khan/trmnl-elements-plugin",
+                    "learn_more_url": "https://hossain-khan.github.io/trmnl-elements-plugin/",
+                    "email_address": "trmnl@hossain.dev"
+                },
+                {
+                    "keyname": "display_mode",
+                    "field_type": "select",
+                    "name": "Display Mode",
+                    "description": "Choose how elements are selected",
+                    "options": [
+                        {
+                            "Daily Rotation": "daily"
+                        },
+                        {
+                            "Hourly Random": "hourly"
+                        }
+                    ],
+                    "default": "daily",
+                    "help_text": "Daily Rotation cycles through all 118 elements based on the day of year. Hourly Random shows a different element each hour."
+                }
+            ],
+            "stats": {
+                "installs": 10,
+                "forks": 51
+            }
+        },
+        {
+            "id": 224761,
+            "user_id": 29,
+            "name": "Max Payne Quotes",
+            "published_at": "2026-01-16T19:24:34.472Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/8zzyovftdgvenuqqolm7ro64yy5u",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/g70ido6dhz1m5yymwjprx0ko6g7r?response-content-disposition=inline%3B%20filename%3D%22plugin-11c2af%22%3B%20filename%2A%3DUTF-8%27%27plugin-11c2af\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260311%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260311T062404Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=a11fc7dbc2cb02cd1ea3533c4ea051e6e3443211080b397f57a83667d7f1040a",
+            "author_bio": {
+                "keyname": "author_bio",
+                "name": "About This Plugin",
+                "field_type": "author_bio",
+                "category": "entertainment,games",
+                "description": "Max Payne Quotes brings the iconic noir dialogue from the legendary Max Payne trilogy directly to your TRMNL device.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🎮 39 authentic quotes from Max Payne, Max Payne 2, and Max Payne 3\u003cbr\u003e\n🗨️ Noir-style typography with Courier New monospace font\u003cbr\u003e\n📱 Optimized layouts for all TRMNL view sizes\u003cbr\u003e\n🎨 Game-specific poster artwork for visual atmosphere\u003cbr\u003e\n🎲 Random quote selection with daily automatic updates\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eSetup:\u003c/strong\u003e\u003cbr\u003e\n1. Install or Fork this recipe\u003cbr\u003e\n2. The plugin automatically polls for a new quote every 24 hours\u003cbr\u003e\n3. Add to your playlist and enjoy noir wisdom on your e-ink display\n\u003cbr\u003e\u003cbr\u003e\nAll quotes are verified authentic from Wikiquote and capture the philosophical, dark, and action-packed moments that made Max Payne an iconic character in gaming.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eQuote Database:\u003c/strong\u003e 39 quotes verified from Wikiquote (35 Max Payne across trilogy, 4 Mona Sax)\n",
+                "github_url": "https://github.com/hossain-khan/trmnl-max-payne-quotes-plugin",
+                "learn_more_url": "https://hossain-khan.github.io/trmnl-max-payne-quotes-plugin/",
+                "email_address": "trmnl@hossain.dev"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "name": "About This Plugin",
+                    "field_type": "author_bio",
+                    "category": "entertainment,games",
+                    "description": "Max Payne Quotes brings the iconic noir dialogue from the legendary Max Payne trilogy directly to your TRMNL device.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🎮 39 authentic quotes from Max Payne, Max Payne 2, and Max Payne 3\u003cbr\u003e\n🗨️ Noir-style typography with Courier New monospace font\u003cbr\u003e\n📱 Optimized layouts for all TRMNL view sizes\u003cbr\u003e\n🎨 Game-specific poster artwork for visual atmosphere\u003cbr\u003e\n🎲 Random quote selection with daily automatic updates\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eSetup:\u003c/strong\u003e\u003cbr\u003e\n1. Install or Fork this recipe\u003cbr\u003e\n2. The plugin automatically polls for a new quote every 24 hours\u003cbr\u003e\n3. Add to your playlist and enjoy noir wisdom on your e-ink display\n\u003cbr\u003e\u003cbr\u003e\nAll quotes are verified authentic from Wikiquote and capture the philosophical, dark, and action-packed moments that made Max Payne an iconic character in gaming.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eQuote Database:\u003c/strong\u003e 39 quotes verified from Wikiquote (35 Max Payne across trilogy, 4 Mona Sax)\n",
+                    "github_url": "https://github.com/hossain-khan/trmnl-max-payne-quotes-plugin",
+                    "learn_more_url": "https://hossain-khan.github.io/trmnl-max-payne-quotes-plugin/",
+                    "email_address": "trmnl@hossain.dev"
+                }
+            ],
+            "stats": {
+                "installs": 27,
+                "forks": 1
+            }
+        },
+        {
+            "id": 178528,
+            "user_id": 29,
+            "name": "Durham Waste Collection",
+            "published_at": "2025-12-18T02:42:45.976Z",
+            "icon_url": "https://trmnl-public.s3.us-east-2.amazonaws.com/fta9bofo75kbe71re9b0uu1x4rha",
+            "icon_content_type": "image/png",
+            "screenshot_url": "https://trmnl.s3.us-east-2.amazonaws.com/gntsy317uok8zcboqr6ig3iguvk2?response-content-disposition=inline%3B%20filename%3D%22plugin-fd2160%22%3B%20filename%2A%3DUTF-8%27%27plugin-fd2160\u0026response-content-type=image%2Fpng\u0026X-Amz-Algorithm=AWS4-HMAC-SHA256\u0026X-Amz-Credential=AKIA47CRUQUU4VKBBMOF%2F20260311%2Fus-east-2%2Fs3%2Faws4_request\u0026X-Amz-Date=20260311T062404Z\u0026X-Amz-Expires=300\u0026X-Amz-SignedHeaders=host\u0026X-Amz-Signature=4dddea3b3d7e68e75dc61156d04a2d27ef696b5ee8e13964a9ae266ad0ce7a04",
+            "author_bio": {
+                "keyname": "author_bio",
+                "name": "About This Plugin",
+                "field_type": "author_bio",
+                "category": "life,environment",
+                "description": "Durham Waste Collection displays your next garbage, recycling, green bin, and yard waste pickup dates directly on your TRMNL device.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🗓️ Real-time updates from Durham Region API\u003cbr\u003e\n♻️ All collection types (Blue Box, Green Bin, Garbage, Yard Waste)\u003cbr\u003e\n📱 Optimized layouts for all TRMNL view sizes\u003cbr\u003e\n🎨 Beautiful icons for each collection type\u003cbr\u003e\n⏰ Countdown display showing days until next pickup\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eSetup:\u003c/strong\u003e\u003cbr\u003e\n1. Visit our Configuration Helper to find your Place ID:\u003cbr\u003e\u003ca href=\"https://hossain-khan.github.io/trmnl-next-pickup-plugin/\"\u003ehttps://hossain-khan.github.io/trmnl-next-pickup-plugin/\u003c/a\u003e\u003cbr\u003e\n2. Enter your Durham Region address\u003cbr\u003e\n3. Copy the configuration values\u003cbr\u003e\n4. Paste them into the plugin form fields below\n\u003cbr\u003e\u003cbr\u003e\nThat's it! Your plugin will automatically refresh with the latest pickup schedule.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eNote:\u003c/strong\u003e This plugin is designed for Durham Region, Ontario residents only.\n",
+                "github_url": "https://github.com/hossain-khan/trmnl-next-pickup-plugin",
+                "learn_more_url": "https://hossain-khan.github.io/trmnl-next-pickup-plugin/",
+                "email_address": "trmnl@hossain.dev"
+            },
+            "custom_fields": [
+                {
+                    "keyname": "author_bio",
+                    "name": "About This Plugin",
+                    "field_type": "author_bio",
+                    "category": "life,environment",
+                    "description": "Durham Waste Collection displays your next garbage, recycling, green bin, and yard waste pickup dates directly on your TRMNL device.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eFeatures:\u003c/strong\u003e\u003cbr\u003e\n🗓️ Real-time updates from Durham Region API\u003cbr\u003e\n♻️ All collection types (Blue Box, Green Bin, Garbage, Yard Waste)\u003cbr\u003e\n📱 Optimized layouts for all TRMNL view sizes\u003cbr\u003e\n🎨 Beautiful icons for each collection type\u003cbr\u003e\n⏰ Countdown display showing days until next pickup\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eSetup:\u003c/strong\u003e\u003cbr\u003e\n1. Visit our Configuration Helper to find your Place ID:\u003cbr\u003e\u003ca href=\"https://hossain-khan.github.io/trmnl-next-pickup-plugin/\"\u003ehttps://hossain-khan.github.io/trmnl-next-pickup-plugin/\u003c/a\u003e\u003cbr\u003e\n2. Enter your Durham Region address\u003cbr\u003e\n3. Copy the configuration values\u003cbr\u003e\n4. Paste them into the plugin form fields below\n\u003cbr\u003e\u003cbr\u003e\nThat's it! Your plugin will automatically refresh with the latest pickup schedule.\n\u003cbr\u003e\u003cbr\u003e\n\u003cstrong\u003eNote:\u003c/strong\u003e This plugin is designed for Durham Region, Ontario residents only.\n",
+                    "github_url": "https://github.com/hossain-khan/trmnl-next-pickup-plugin",
+                    "learn_more_url": "https://hossain-khan.github.io/trmnl-next-pickup-plugin/",
+                    "email_address": "trmnl@hossain.dev"
+                },
+                {
+                    "keyname": "place_id",
+                    "field_type": "string",
+                    "name": "Place ID",
+                    "description": "Your unique location ID from Recollect. Find it easily at \u003ca href=\"https://hossain-khan.github.io/trmnl-next-pickup-plugin/\"\u003eour Configuration Helper\u003c/a\u003e.",
+                    "placeholder": "918DB048-D91A-11E8-B83E-68F5AF88FEB0"
+                },
+                {
+                    "keyname": "service_id",
+                    "field_type": "string",
+                    "name": "Service ID",
+                    "description": "Durham waste collection service ID",
+                    "placeholder": "257"
+                },
+                {
+                    "keyname": "address",
+                    "field_type": "string",
+                    "name": "Display Address",
+                    "description": "A friendly name for your location to show on the display",
+                    "placeholder": "1 King Street, Oshawa",
+                    "optional": true
+                }
+            ],
+            "stats": {
+                "installs": 9,
+                "forks": 5
+            }
+        }
+    ],
+    "total": 8,
+    "from": 1,
+    "to": 8,
+    "per_page": 25,
+    "current_page": 1,
+    "prev_page_url": null,
+    "next_page_url": null
+}
