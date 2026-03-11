@@ -1892,6 +1892,12 @@
         if (normalizedLabelColor) {
           labelColorInput.value = normalizedLabelColor;
         }
+        const recipeIdParam = params.get('recipeId');
+        const recipeIdNum = Number(recipeIdParam);
+        if (recipeIdParam && Number.isInteger(recipeIdNum) && recipeIdNum > 0) {
+          recipeInput.value = String(recipeIdNum);
+          recipeInputTouched = true;
+        }
       }
 
       async function update() {
