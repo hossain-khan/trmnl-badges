@@ -1577,8 +1577,7 @@
         // Save user_id to sessionStorage and update author badge link
         if (data.user_id) {
           sessionStorage.setItem('lastRecipeUserId', data.user_id);
-          const authorBadgeLink = document.getElementById('authorBadgeLink');
-          authorBadgeLink.href = `author-badge.html?userId=${data.user_id}`;
+          updateAuthorBadgeLink();
         }
 
         recipeInfo.classList.add('show');
@@ -1707,10 +1706,42 @@
         customizeToggle.classList.toggle('active', isCustomized);
       }
 
+      function updateAuthorBadgeLink() {
+        const userId = sessionStorage.getItem('lastRecipeUserId');
+        if (!userId) return;
+        const authorBadgeLink = document.getElementById('authorBadgeLink');
+        const glyph = document.querySelector('input[name="glyphOption"]:checked')?.value ?? 'brand';
+        const color = badgeColor.value.replace('#', '').toUpperCase();
+        const lColor = labelColorInput.value.replace('#', '').toUpperCase();
+        let href = `author-badge.html?userId=${userId}`;
+        if (glyph !== 'brand') href += `&glyph=${glyph}`;
+        if (color !== 'F8654B') href += `&color=${color}`;
+        if (lColor !== '3D3D3E') href += `&labelColor=${lColor}`;
+        authorBadgeLink.href = href;
+      }
+
+      function applyUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const glyph = params.get('glyph');
+        const color = params.get('color');
+        const labelColor = params.get('labelColor');
+        if (glyph && ['brand', 'black', 'white'].includes(glyph)) {
+          const radio = document.querySelector(`input[name="glyphOption"][value="${glyph}"]`);
+          if (radio) radio.checked = true;
+        }
+        if (color) {
+          badgeColor.value = `#${color}`;
+        }
+        if (labelColor) {
+          labelColorInput.value = `#${labelColor}`;
+        }
+      }
+
       async function update() {
         updatePreview();
         updateCode();
         updateCustomizeDot();
+        updateAuthorBadgeLink();
 
         // Fetch and display recipe info if valid ID
         const recipeId = extractRecipeId(recipeInput.value);
@@ -1769,6 +1800,9 @@
           }
         });
       });
+
+      // Apply customization values from URL query params (e.g. when navigating from author-badge.html)
+      applyUrlParams();
 
       // Initial update
       update();

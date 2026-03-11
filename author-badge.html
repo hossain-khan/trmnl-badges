@@ -1145,7 +1145,10 @@
         <div class="header-text">
           <h1>Author Badge Builder</h1>
           <p class="subtitle">
-            Generate badges for all your TRMNL recipes |<a href="index.html" class="nav-pill"
+            Generate badges for all your TRMNL recipes |<a
+              id="indexPageLink"
+              href="index.html"
+              class="nav-pill"
               >Single recipe</a
             >
           </p>
@@ -2098,6 +2101,23 @@
           : 'none';
       }
 
+      function updateIndexPageLink() {
+        const indexPageLink = document.getElementById('indexPageLink');
+        if (!indexPageLink) return;
+        const glyph = document.querySelector('input[name="glyphOption"]:checked')?.value ?? 'brand';
+        const color = document.getElementById('badgeColor').value.replace('#', '').toUpperCase();
+        const lColor = document
+          .getElementById('labelColorInput')
+          .value.replace('#', '')
+          .toUpperCase();
+        const searchParams = new URLSearchParams();
+        if (glyph !== 'brand') searchParams.set('glyph', glyph);
+        if (color !== 'F8654B') searchParams.set('color', color);
+        if (lColor !== '3D3D3E') searchParams.set('labelColor', lColor);
+        const qs = searchParams.toString();
+        indexPageLink.href = qs ? `index.html?${qs}` : 'index.html';
+      }
+
       let refreshTimer = null;
       let refreshSequence = 0;
 
@@ -2209,6 +2229,7 @@
 
       function handleAppearanceChange() {
         updateCustomizeActiveDot(); // immediately reflect state on the toggle button
+        updateIndexPageLink(); // keep the "Single recipe" nav link in sync
         debouncedRefresh(); // debounced preview refresh
       }
 
@@ -2218,10 +2239,31 @@
       document.getElementById('badgeColor').addEventListener('input', handleAppearanceChange);
       document.getElementById('labelColorInput').addEventListener('input', handleAppearanceChange);
 
-      // Check if userId is in URL query parameters and auto-prefill
+      // Check if userId and customization params are in URL query parameters and auto-prefill
       function checkAndPrefillUserId() {
         const params = new URLSearchParams(window.location.search);
         const userIdFromUrl = params.get('userId');
+        const glyphFromUrl = params.get('glyph');
+        const colorFromUrl = params.get('color');
+        const labelColorFromUrl = params.get('labelColor');
+
+        // Apply customization params transferred from the single-recipe page
+        if (glyphFromUrl && ['brand', 'black', 'white'].includes(glyphFromUrl)) {
+          const radio = document.querySelector(
+            `input[name="glyphOption"][value="${glyphFromUrl}"]`
+          );
+          if (radio) radio.checked = true;
+        }
+        if (colorFromUrl) {
+          document.getElementById('badgeColor').value = `#${colorFromUrl}`;
+        }
+        if (labelColorFromUrl) {
+          document.getElementById('labelColorInput').value = `#${labelColorFromUrl}`;
+        }
+
+        // Reflect any applied customization in the UI
+        updateCustomizeActiveDot();
+        updateIndexPageLink();
 
         if (userIdFromUrl) {
           // Prefill the input and show immediate loading feedback
