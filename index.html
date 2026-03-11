@@ -233,12 +233,12 @@
       }
 
       /* Custom animated tooltip */
-      .checkbox-group[data-tooltip] {
+      [data-tooltip] {
         position: relative;
       }
 
-      .checkbox-group[data-tooltip]::after,
-      .checkbox-group[data-tooltip]::before {
+      [data-tooltip]::after,
+      [data-tooltip]::before {
         pointer-events: none;
         opacity: 0;
         transition:
@@ -246,7 +246,7 @@
           transform 0.18s ease;
       }
 
-      .checkbox-group[data-tooltip]::after {
+      [data-tooltip]::after {
         content: attr(data-tooltip);
         position: absolute;
         bottom: calc(100% + 9px);
@@ -264,7 +264,7 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
 
-      .checkbox-group[data-tooltip]::before {
+      [data-tooltip]::before {
         content: '';
         position: absolute;
         bottom: calc(100% + 1px);
@@ -275,10 +275,27 @@
         z-index: 100;
       }
 
-      .checkbox-group[data-tooltip]:hover::after,
-      .checkbox-group[data-tooltip]:hover::before {
+      [data-tooltip]:hover::after,
+      [data-tooltip]:hover::before {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
+      }
+
+      /* Shimmer loading animation */
+      @keyframes shimmer-sweep {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
+      .shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%) !important;
+        background-size: 200% 100% !important;
+        animation: shimmer-sweep 1.2s ease-in-out infinite;
+        border-radius: 4px;
       }
 
       input[type='checkbox'] {
@@ -1728,12 +1745,23 @@
       function updatePreview() {
         const url = generateBadgeUrl();
         if (!url) {
+          previewImage.classList.remove('shimmer');
           previewImage.innerHTML =
             '<p style="color: #999; font-size: 12px;">Enter recipe ID to preview</p>';
           return;
         }
 
-        previewImage.innerHTML = `<img src="${url}" alt="Badge Preview">`;
+        previewImage.innerHTML = '';
+        previewImage.classList.add('shimmer');
+        const img = document.createElement('img');
+        img.alt = 'Badge Preview';
+        img.onload = () => {
+          previewImage.classList.remove('shimmer');
+          previewImage.innerHTML = '';
+          previewImage.appendChild(img);
+        };
+        img.onerror = () => previewImage.classList.remove('shimmer');
+        img.src = url;
       }
 
       function generateSyntaxHighlightedMarkdown(url) {
