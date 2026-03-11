@@ -1505,7 +1505,7 @@
           <div class="recipes-header">
             Individual Recipe Badges (<span id="recipeCount">0</span> recipes)
           </div>
-          <div class="checkbox-group">
+          <div class="checkbox-group" title="Badge markdown will NOT include a link to the recipe">
             <input type="checkbox" id="linkToRecipe" />
             <label for="linkToRecipe" class="checkbox-label">Link Recipe</label>
           </div>
@@ -2079,6 +2079,16 @@
           generateBtn.textContent = 'Generate Author Badges';
         }
       }
+
+      // Update Link Recipe checkbox tooltip based on state
+      const linkToRecipeCheckbox = document.getElementById('linkToRecipe');
+      const linkToRecipeGroup = linkToRecipeCheckbox.closest('.checkbox-group');
+      function updateLinkRecipeTooltip() {
+        linkToRecipeGroup.title = linkToRecipeCheckbox.checked
+          ? 'Badge markdown will include a clickable link to the recipe page'
+          : 'Badge markdown will NOT include a link to the recipe';
+      }
+      linkToRecipeCheckbox.addEventListener('change', updateLinkRecipeTooltip);
 
       // Event listeners
       generateBtn.addEventListener('click', generateAuthorBadges);
