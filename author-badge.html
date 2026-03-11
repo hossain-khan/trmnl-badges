@@ -148,12 +148,12 @@
       }
 
       /* Custom animated tooltip */
-      .checkbox-group[data-tooltip] {
+      [data-tooltip] {
         position: relative;
       }
 
-      .checkbox-group[data-tooltip]::after,
-      .checkbox-group[data-tooltip]::before {
+      [data-tooltip]::after,
+      [data-tooltip]::before {
         pointer-events: none;
         opacity: 0;
         transition:
@@ -161,7 +161,7 @@
           transform 0.18s ease;
       }
 
-      .checkbox-group[data-tooltip]::after {
+      [data-tooltip]::after {
         content: attr(data-tooltip);
         position: absolute;
         bottom: calc(100% + 9px);
@@ -179,7 +179,7 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
 
-      .checkbox-group[data-tooltip]::before {
+      [data-tooltip]::before {
         content: '';
         position: absolute;
         bottom: calc(100% + 1px);
@@ -190,10 +190,27 @@
         z-index: 100;
       }
 
-      .checkbox-group[data-tooltip]:hover::after,
-      .checkbox-group[data-tooltip]:hover::before {
+      [data-tooltip]:hover::after,
+      [data-tooltip]:hover::before {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
+      }
+
+      /* Shimmer loading animation */
+      @keyframes shimmer-sweep {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
+      .shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%) !important;
+        background-size: 200% 100% !important;
+        animation: shimmer-sweep 1.2s ease-in-out infinite;
+        border-radius: 4px;
       }
 
       input[type='checkbox'] {
@@ -1561,7 +1578,12 @@
             <input type="checkbox" id="linkToRecipe" />
             <label for="linkToRecipe" class="checkbox-label">Link Recipe</label>
           </div>
-          <button type="button" class="copy-all-global-btn" id="copyAllBadgesBtn">
+          <button
+            type="button"
+            class="copy-all-global-btn"
+            id="copyAllBadgesBtn"
+            data-tooltip="Copies badge markdown for all recipes (no recipe links)"
+          >
             📋 Copy All Badges
           </button>
         </div>
@@ -1728,13 +1750,17 @@
        * Load badge SVG into container
        */
       async function loadBadgePreview(containerId, badgeType, userId, isPretty = false) {
+        const container = document.getElementById(containerId);
         try {
-          const container = document.getElementById(containerId);
+          container.innerHTML = '';
+          container.classList.add('shimmer');
           const badgeUrl = `${BASE_URL}/badge/${badgeType}?userId=${userId}${isPretty ? '&pretty' : ''}${getCustomParams()}`;
           const response = await fetch(badgeUrl);
           const svgText = await response.text();
+          container.classList.remove('shimmer');
           container.innerHTML = svgText;
         } catch (error) {
+          container.classList.remove('shimmer');
           console.error(`Error loading ${badgeType} badge:`, error);
         }
       }
@@ -1836,13 +1862,17 @@
        * Load individual recipe badge preview
        */
       async function loadRecipeBadgePreview(containerId, recipeId, badgeType, isPretty = false) {
+        const container = document.getElementById(containerId);
         try {
-          const container = document.getElementById(containerId);
+          container.innerHTML = '';
+          container.classList.add('shimmer');
           const badgeUrl = `${BASE_URL}/badge/${badgeType}?recipe=${recipeId}${isPretty ? '&pretty' : ''}${getCustomParams()}`;
           const response = await fetch(badgeUrl);
           const svgText = await response.text();
+          container.classList.remove('shimmer');
           container.innerHTML = svgText;
         } catch (error) {
+          container.classList.remove('shimmer');
           console.error(`Error loading ${badgeType} badge for recipe ${recipeId}:`, error);
         }
       }
@@ -2139,9 +2169,16 @@
       const linkToRecipeCheckbox = document.getElementById('linkToRecipe');
       const linkToRecipeGroup = linkToRecipeCheckbox.closest('.checkbox-group');
       function updateLinkRecipeTooltip() {
-        linkToRecipeGroup.dataset.tooltip = linkToRecipeCheckbox.checked
+        const isLinked = linkToRecipeCheckbox.checked;
+        linkToRecipeGroup.dataset.tooltip = isLinked
           ? 'Badge markdown will include a clickable link to the recipe page'
           : 'Badge markdown will NOT include a link to the recipe';
+        const copyAllBadgesBtn = document.getElementById('copyAllBadgesBtn');
+        if (copyAllBadgesBtn) {
+          copyAllBadgesBtn.dataset.tooltip = isLinked
+            ? 'Copies badge markdown for all recipes with links to each recipe page'
+            : 'Copies badge markdown for all recipes (no recipe links)';
+        }
       }
       linkToRecipeCheckbox.addEventListener('change', updateLinkRecipeTooltip);
 
