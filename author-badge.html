@@ -1480,7 +1480,7 @@
           <button type="button" class="generate-btn" id="generateBtn">
             Generate Author Badges
           </button>
-          <div class="checkbox-group">
+          <div class="checkbox-group" data-tooltip="Numbers shown as-is (e.g. 1730)">
             <input type="checkbox" id="prettyFormat" />
             <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
           </div>
@@ -2123,6 +2123,9 @@
           // Show sections
           authorStatsSection.classList.add('show');
           individualRecipesSection.classList.add('show');
+
+          // Scroll to results
+          authorStatsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } catch (error) {
           console.error('Error:', error);
           showValidation(false, 'An error occurred. Please try again.');
@@ -2151,6 +2154,9 @@
       });
 
       prettyFormat.addEventListener('change', async () => {
+        prettyFormat.closest('.checkbox-group').dataset.tooltip = prettyFormat.checked
+          ? 'Numbers shown in compact format (e.g. 1.73K)'
+          : 'Numbers shown as-is (e.g. 1730)';
         if (currentUserId) {
           // Re-render with new format
           const stats = aggregateStats(currentRecipes);

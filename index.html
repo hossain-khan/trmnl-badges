@@ -1376,7 +1376,11 @@
                 >
                 <input type="text" id="customLabel" placeholder="e.g., 'Total Downloads Count'" />
               </div>
-              <div class="checkbox-group" style="flex-shrink: 0; padding-bottom: 10px">
+              <div
+                class="checkbox-group"
+                style="flex-shrink: 0; padding-bottom: 10px"
+                data-tooltip="Numbers shown as-is (e.g. 1730)"
+              >
                 <input type="checkbox" id="prettyFormat" />
                 <label for="prettyFormat" class="checkbox-label">Pretty format (1.73K)</label>
               </div>
@@ -1836,7 +1840,12 @@
       });
       badgeTypeRadios.forEach((radio) => radio.addEventListener('change', update));
       customLabel.addEventListener('input', debouncedUpdate); // Debounced to prevent excessive requests
-      prettyFormat.addEventListener('change', update);
+      prettyFormat.addEventListener('change', () => {
+        prettyFormat.closest('.checkbox-group').dataset.tooltip = prettyFormat.checked
+          ? 'Numbers shown in compact format (e.g. 1.73K)'
+          : 'Numbers shown as-is (e.g. 1730)';
+        update();
+      });
       linkToRecipe.addEventListener('change', () => {
         linkToRecipe.closest('.checkbox-group').dataset.tooltip = linkToRecipe.checked
           ? 'Badge markdown will include a clickable link to the recipe page'
