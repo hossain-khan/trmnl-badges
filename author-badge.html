@@ -577,20 +577,28 @@
       async function fetchUserRecipesFromRecipe(recipeId) {
         try {
           // First fetch the recipe to get its user_id
+          console.log(`[DEBUG] Fetching recipe stats for recipe ID: ${recipeId}`);
           const recipeResponse = await fetch(`${BASE_URL}/api/stats?recipe=${recipeId}`);
+          console.log(`[DEBUG] Recipe stats response status: ${recipeResponse.status}`);
+          
           if (!recipeResponse.ok) {
             console.debug(`Recipe lookup failed for recipe ID ${recipeId}: ${recipeResponse.status}`);
             return null;
           }
 
           const recipeData = await recipeResponse.json();
+          console.log(`[DEBUG] Recipe data received:`, recipeData);
+          
           if (!recipeData || !recipeData.user_id) {
             console.debug(`Recipe data missing or invalid for recipe ID ${recipeId}:`, recipeData);
             return null;
           }
 
           // Now fetch all recipes for this user
-          return await fetchUserRecipes(recipeData.user_id);
+          console.log(`[DEBUG] Fetching recipes for user_id: ${recipeData.user_id}`);
+          const userRecipes = await fetchUserRecipes(recipeData.user_id);
+          console.log(`[DEBUG] User recipes result:`, userRecipes);
+          return userRecipes;
         } catch (error) {
           console.error('Error fetching user recipes from recipe:', error);
           return null;
