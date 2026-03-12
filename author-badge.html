@@ -579,11 +579,13 @@
           // First fetch the recipe to get its user_id
           const recipeResponse = await fetch(`${BASE_URL}/api/stats?recipe=${recipeId}`);
           if (!recipeResponse.ok) {
+            console.debug(`Recipe lookup failed for recipe ID ${recipeId}: ${recipeResponse.status}`);
             return null;
           }
 
           const recipeData = await recipeResponse.json();
-          if (!recipeData || !recipeData.stats) {
+          if (!recipeData || !recipeData.user_id) {
+            console.debug(`Recipe data missing or invalid for recipe ID ${recipeId}:`, recipeData);
             return null;
           }
 
