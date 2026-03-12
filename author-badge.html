@@ -1125,7 +1125,7 @@
       linkToRecipeCheckbox.addEventListener('change', updateLinkRecipeTooltip);
 
       // Event listeners
-      generateBtn.addEventListener('click', generateAuthorBadges);
+      generateBtn.addEventListener('click', () => generateAuthorBadges());
       authorInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           generateAuthorBadges();
