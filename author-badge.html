@@ -554,10 +554,10 @@
       /**
        * Extract user_id from recipe URL or return input if it's already a user ID
        */
-      function extractUserIdFromRecipe(input) {
+      function extractRecipeIdFromInput(input) {
         input = input.trim();
 
-        // If it's a URL, extract the recipe ID and fetch its user_id
+        // If it's a URL, extract the recipe ID
         if (input.includes('/')) {
           const match = input.match(/\/recipes\/(\d+)/);
           return match ? match[1] : null;
@@ -572,9 +572,9 @@
       }
 
       /**
-       * Get user_id from recipe, then fetch all recipes for that user
+       * Get author's recipes by looking up a recipe first to find the user
        */
-      async function fetchUserRecipesFromRecipe(recipeId) {
+      async function getAuthorRecipesByRecipeId(recipeId) {
         try {
           // First fetch the recipe to get its user_id
           console.log(`[DEBUG] Fetching recipe stats for recipe ID: ${recipeId}`);
@@ -596,7 +596,7 @@
 
           // Now fetch all recipes for this user
           console.log(`[DEBUG] Fetching recipes for user_id: ${recipeData.user_id}`);
-          const userRecipes = await fetchUserRecipes(recipeData.user_id);
+          const userRecipes = await getAuthorRecipesByUserId(recipeData.user_id);
           console.log(`[DEBUG] User recipes result:`, userRecipes);
           return userRecipes;
         } catch (error) {
@@ -608,7 +608,7 @@
       /**
        * Fetch all recipes for a given user ID
        */
-      async function fetchUserRecipes(userId) {
+      async function getAuthorRecipesByUserId(userId) {
         try {
           const response = await fetch(`${BASE_URL}/api/recipes?user_id=${userId}`);
           if (!response.ok) {
@@ -1040,7 +1040,7 @@
 
         try {
           let result = null;
-          const potentialId = extractUserIdFromRecipe(input);
+          const potentialId = extractRecipeIdFromInput(input);
 
           console.log(`[FLOW] generateAuthorBadges called with isUserId=${isUserId}`);
           console.log(`[FLOW] Input: "${input}"`);
@@ -1053,19 +1053,19 @@
           }
 
           if (!isUserId) {
-            console.log(`[FLOW] isUserId is false, calling fetchUserRecipesFromRecipe(${potentialId})`);
+            console.log(`[FLOW] isUserId is false, calling getAuthorRecipesByRecipeId(${potentialId})`);
             // Try to fetch as recipe ID first
-            result = await fetchUserRecipesFromRecipe(potentialId);
-            console.log(`[FLOW] fetchUserRecipesFromRecipe returned:`, result);
+            result = await getAuthorRecipesByRecipeId(potentialId);
+            console.log(`[FLOW] getAuthorRecipesByRecipeId returned:`, result);
           } else {
             console.log(`[FLOW] isUserId is true, skipping recipe lookup`);
           }
 
           // If that fails (or isUserId is true), try as user ID directly
           if (!result) {
-            console.log(`[FLOW] result is falsy, calling fetchUserRecipes(${potentialId}) as fallback`);
-            result = await fetchUserRecipes(potentialId);
-            console.log(`[FLOW] fetchUserRecipes returned:`, result);
+            console.log(`[FLOW] result is falsy, calling getAuthorRecipesByUserId(${potentialId}) as fallback`);
+            result = await getAuthorRecipesByUserId(potentialId);
+            console.log(`[FLOW] getAuthorRecipesByUserId returned:`, result);
           }
 
           if (!result || !result.data || result.data.length === 0) {
