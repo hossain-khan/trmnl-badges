@@ -1013,8 +1013,11 @@
 
       /**
        * Main generate function
+       * @param {boolean} [isUserId=false] - When true, skips the recipe ID lookup and treats
+       *   the input directly as a user ID. Set this when the input is known to be a user ID
+       *   (e.g. loaded from the ?userId= URL parameter) to avoid an unnecessary failed API call.
        */
-      async function generateAuthorBadges() {
+      async function generateAuthorBadges(isUserId = false) {
         const input = authorInput.value.trim();
 
         if (!input) {
@@ -1035,10 +1038,12 @@
             return;
           }
 
-          // Try to fetch as recipe ID first
-          result = await fetchUserRecipesFromRecipe(potentialId);
+          if (!isUserId) {
+            // Try to fetch as recipe ID first
+            result = await fetchUserRecipesFromRecipe(potentialId);
+          }
 
-          // If that fails, try as user ID directly
+          // If that fails (or isUserId is true), try as user ID directly
           if (!result) {
             result = await fetchUserRecipes(potentialId);
           }
@@ -1357,8 +1362,9 @@
           generateBtn.disabled = true;
           generateBtn.textContent = 'Loading author badges...';
           showValidation(false, 'Auto-detected author ID, loading badges...');
-          // Auto-generate the author badges
-          generateAuthorBadges();
+          // Auto-generate the author badges, skipping the recipe-ID lookup
+          // since we already know this is a user ID from the URL parameter
+          generateAuthorBadges(true);
         }
       }
 
