@@ -1125,6 +1125,10 @@
       linkToRecipeCheckbox.addEventListener('change', updateLinkRecipeTooltip);
 
       // Event listeners
+      // NOTE: Use arrow function to prevent click event from being passed as isUserId parameter.
+      // Direct reference (generateBtn.addEventListener('click', generateAuthorBadges)) would pass
+      // the PointerEvent as the first argument, binding it to isUserId and making it truthy,
+      // causing the recipe lookup logic to be skipped. See issue/PR history for details.
       generateBtn.addEventListener('click', () => generateAuthorBadges());
       authorInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
