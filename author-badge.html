@@ -1042,6 +1042,10 @@
           let result = null;
           const potentialId = extractUserIdFromRecipe(input);
 
+          console.log(`[FLOW] generateAuthorBadges called with isUserId=${isUserId}`);
+          console.log(`[FLOW] Input: "${input}"`);
+          console.log(`[FLOW] Extracted potentialId: "${potentialId}"`);
+
           if (!potentialId) {
             showValidation(false, 'Invalid input format');
             generateBtn.disabled = false;
@@ -1049,13 +1053,19 @@
           }
 
           if (!isUserId) {
+            console.log(`[FLOW] isUserId is false, calling fetchUserRecipesFromRecipe(${potentialId})`);
             // Try to fetch as recipe ID first
             result = await fetchUserRecipesFromRecipe(potentialId);
+            console.log(`[FLOW] fetchUserRecipesFromRecipe returned:`, result);
+          } else {
+            console.log(`[FLOW] isUserId is true, skipping recipe lookup`);
           }
 
           // If that fails (or isUserId is true), try as user ID directly
           if (!result) {
+            console.log(`[FLOW] result is falsy, calling fetchUserRecipes(${potentialId}) as fallback`);
             result = await fetchUserRecipes(potentialId);
+            console.log(`[FLOW] fetchUserRecipes returned:`, result);
           }
 
           if (!result || !result.data || result.data.length === 0) {
