@@ -217,7 +217,7 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 16px;
+        gap: 30px;
         flex-wrap: wrap;
       }
 
@@ -911,6 +911,16 @@
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 16px;
+      }
+
+      .customize-panel-inner .form-group {
+        min-width: 0;
+      }
+
+      /* Badge Scale needs extra width to prevent label and value pill from wrapping
+         when the scale value changes to larger values like 2.5x or 3x */
+      .customize-panel-inner .row > .form-group:nth-child(2) {
+        min-width: 165px;
       }
 
       /* =============================================
