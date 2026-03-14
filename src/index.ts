@@ -531,6 +531,7 @@ app.get('/badge/counter', async (context) => {
   const badge = generateBadge({
     label: 'Badges Served',
     message: formatNumber(validCount, true),
+    glyph: 'white',
   });
 
   return returnSuccessBadge(context, badge);
