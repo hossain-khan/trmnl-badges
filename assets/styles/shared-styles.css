@@ -1634,6 +1634,12 @@ code {
     gap: 16px;
   }
 
+  /* recipe-page only */
+  .recipe-page .customize-panel-inner .row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
   /* author-page only */
   .recipes-header-row {
     flex-wrap: wrap;
