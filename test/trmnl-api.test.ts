@@ -1,7 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fetchRecipe, fetchUserRecipes } from '../src/trmnl-api';
 import { APP_USER_AGENT } from '../src/constants';
-import { mockRecipe, mockUserRecipesResponse } from './fixtures';
+import {
+  mockRecipe,
+  mockUserRecipesResponse,
+  mockUserRecipesPage1,
+  mockUserRecipesPage2,
+} from './fixtures';
 
 describe('fetchRecipe', () => {
   let mockFetch: ReturnType<typeof vi.fn>;
@@ -205,9 +210,9 @@ describe('fetchUserRecipes', () => {
 
     const result = await fetchUserRecipes('29');
 
-    expect(result).toEqual(mockUserRecipesResponse);
+    expect(result).toEqual({ data: mockUserRecipesResponse.data });
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://trmnl.com/recipes.json?user_id=29',
+      'https://trmnl.com/recipes.json?per_page=100&sort-by=popularity&user_id=29',
       expect.objectContaining({
         headers: {
           Accept: 'application/json',
@@ -290,7 +295,7 @@ describe('fetchUserRecipes', () => {
     await fetchUserRecipes('user 123');
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://trmnl.com/recipes.json?user_id=user%20123',
+      'https://trmnl.com/recipes.json?per_page=100&sort-by=popularity&user_id=user%20123',
       expect.objectContaining({
         headers: {
           Accept: 'application/json',
@@ -322,8 +327,104 @@ describe('fetchUserRecipes', () => {
     });
 
     const [r1, r2, r3] = await Promise.all([p1, p2, p3]);
-    expect(r1).toEqual(mockUserRecipesResponse);
-    expect(r2).toEqual(mockUserRecipesResponse);
-    expect(r3).toEqual(mockUserRecipesResponse);
+    expect(r1).toEqual({ data: mockUserRecipesResponse.data });
+    expect(r2).toEqual({ data: mockUserRecipesResponse.data });
+    expect(r3).toEqual({ data: mockUserRecipesResponse.data });
+  });
+
+  it('should fetch all pages when next_page_url is present', async () => {
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+        json: async () => mockUserRecipesPage1,
+      } as any)
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+        json: async () => mockUserRecipesPage2,
+      } as any);
+
+    const result = await fetchUserRecipes('6458');
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(mockFetch).toHaveBeenNthCalledWith(
+      1,
+      'https://trmnl.com/recipes.json?per_page=100&sort-by=popularity&user_id=6458',
+      expect.anything()
+    );
+    expect(mockFetch).toHaveBeenNthCalledWith(
+      2,
+      'https://trmnl.com/recipes.json?page=2&per_page=100&user_id=6458',
+      expect.anything()
+    );
+
+    expect(result).not.toBeNull();
+    expect(result!.data).toHaveLength(
+      mockUserRecipesPage1.data.length + mockUserRecipesPage2.data.length
+    );
+    expect(result!.data[0]).toEqual(mockUserRecipesPage1.data[0]);
+    expect(result!.data[100]).toEqual(mockUserRecipesPage2.data[0]);
+  });
+
+  it('should combine stats from all pages for a user with over 25 recipes', async () => {
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+        json: async () => mockUserRecipesPage1,
+      } as any)
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+        json: async () => mockUserRecipesPage2,
+      } as any);
+
+    const result = await fetchUserRecipes('6458');
+
+    expect(result).not.toBeNull();
+    // 100 recipes × 10 installs + 30 recipes × 5 installs = 1150
+    const totalInstalls = result!.data.reduce((sum, r) => sum + r.stats.installs, 0);
+    expect(totalInstalls).toBe(100 * 10 + 30 * 5);
+    // 100 recipes × 2 forks + 30 recipes × 1 fork = 230
+    const totalForks = result!.data.reduce((sum, r) => sum + r.stats.forks, 0);
+    expect(totalForks).toBe(100 * 2 + 30 * 1);
+  });
+
+  it('should return null when the first page returns non-JSON content-type', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      headers: new Map([['content-type', 'text/html']]),
+    } as any);
+
+    const result = await fetchUserRecipes('6458');
+
+    expect(result).toBeNull();
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return partial results when a subsequent page returns non-JSON', async () => {
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+        json: async () => mockUserRecipesPage1,
+      } as any)
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'text/html']]),
+      } as any);
+
+    const result = await fetchUserRecipes('6458');
+
+    expect(result).not.toBeNull();
+    expect(result!.data).toHaveLength(mockUserRecipesPage1.data.length);
   });
 });
