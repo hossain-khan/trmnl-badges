@@ -427,4 +427,94 @@ describe('fetchUserRecipes', () => {
     expect(result).not.toBeNull();
     expect(result!.data).toHaveLength(mockUserRecipesPage1.data.length);
   });
+
+  it('should return null when the first page returns a non-OK non-404 status', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+      headers: new Map([['content-type', 'application/json']]),
+    } as any);
+
+    const result = await fetchUserRecipes('6458');
+
+    expect(result).toBeNull();
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('should return partial results when a subsequent page returns a non-OK non-404 status', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+        json: async () => mockUserRecipesPage1,
+      } as any)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 503,
+        statusText: 'Service Unavailable',
+        headers: new Map([['content-type', 'application/json']]),
+      } as any);
+
+    const result = await fetchUserRecipes('6458');
+
+    expect(result).not.toBeNull();
+    expect(result!.data).toHaveLength(mockUserRecipesPage1.data.length);
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('should stop fetching and return collected recipes when pagination cap is reached', async () => {
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    // Build 21 pages where each page points to the next, simulating a very deep pagination.
+    // We use a unique userId to avoid deduplication cache collisions with other tests.
+    const maxPages = 20;
+    for (let i = 0; i < maxPages + 1; i++) {
+      const isLast = i === maxPages;
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+        json: async () => ({
+          data: [
+            {
+              id: 500000 + i,
+              user_id: 9999,
+              name: `Recipe ${i}`,
+              published_at: '2026-01-01T00:00:00.000Z',
+              stats: { installs: 1, forks: 0 },
+            },
+          ],
+          total: (maxPages + 1) * 1,
+          from: i + 1,
+          to: i + 1,
+          per_page: 1,
+          current_page: i + 1,
+          prev_page_url:
+            i > 0 ? `https://trmnl.com/recipes.json?page=${i}&per_page=1&user_id=9999` : null,
+          next_page_url: isLast
+            ? null
+            : `https://trmnl.com/recipes.json?page=${i + 2}&per_page=1&user_id=9999`,
+        }),
+      } as any);
+    }
+
+    const result = await fetchUserRecipes('9999');
+
+    // Should have stopped at MAX_PAGES (20), not fetched all 21 pages
+    expect(mockFetch).toHaveBeenCalledTimes(maxPages);
+    expect(result).not.toBeNull();
+    expect(result!.data).toHaveLength(maxPages);
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      '[trmnl-api] fetchUserRecipes pagination cap reached',
+      expect.objectContaining({ pageCount: maxPages, maxPages })
+    );
+    consoleWarnSpy.mockRestore();
+  });
 });

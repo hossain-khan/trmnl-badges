@@ -5,6 +5,7 @@ const TRMNL_API_BASE = 'https://trmnl.com';
 const TRMNL_API_TIMEOUT_MS = 4000;
 const TRMNL_API_CACHE_TTL_SECONDS = 60;
 const DEDUPE_METRICS_LOG_EVERY = 25;
+const FETCH_USER_RECIPES_MAX_PAGES = 20;
 
 type DedupeRequestKind = 'recipe' | 'user';
 
@@ -172,8 +173,18 @@ export async function fetchUserRecipes(userId: string): Promise<{ data: TRMNLRec
     try {
       const allRecipes: TRMNLRecipe[] = [];
       let nextUrl: string | null = initialUrl;
+      let pageCount = 0;
 
       while (nextUrl) {
+        if (pageCount >= FETCH_USER_RECIPES_MAX_PAGES) {
+          console.warn('[trmnl-api] fetchUserRecipes pagination cap reached', {
+            userId,
+            pageCount,
+            maxPages: FETCH_USER_RECIPES_MAX_PAGES,
+          });
+          break;
+        }
+
         const response = await fetchTrmnlJson(nextUrl, headers);
 
         const contentType = response.headers.get('content-type');
@@ -185,12 +196,20 @@ export async function fetchUserRecipes(userId: string): Promise<{ data: TRMNLRec
           if (response.status === 404) {
             return allRecipes.length > 0 ? { data: allRecipes } : null;
           }
-          throw new Error(`TRMNL API error: ${response.status} ${response.statusText}`);
+          // For other non-OK responses (e.g., 500, 503, 429), return any recipes already
+          // collected rather than discarding them by throwing and catching to null.
+          console.error('[trmnl-api] fetchUserRecipes upstream error', {
+            status: response.status,
+            statusText: response.statusText,
+            page: pageCount + 1,
+          });
+          return allRecipes.length > 0 ? { data: allRecipes } : null;
         }
 
         const result = (await response.json()) as TRMNLUserRecipesResponse;
         allRecipes.push(...result.data);
         nextUrl = result.next_page_url ?? null;
+        pageCount++;
       }
 
       return { data: allRecipes };
