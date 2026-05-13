@@ -50,7 +50,7 @@ export const mockRecipeZeroForks: TRMNLRecipe = {
   },
 };
 
-// Mock user recipes for author badge testing
+// Mock user recipes for author badge testing (single page, no pagination)
 export const mockUserRecipesResponse = {
   data: [
     {
@@ -87,7 +87,50 @@ export const mockUserRecipesResponse = {
   total: 3,
   from: 1,
   to: 3,
-  per_page: 50,
+  per_page: 100,
   current_page: 1,
+  prev_page_url: null,
+  next_page_url: null,
 };
 
+// Mock page 1 of a paginated user recipes response (simulates user with >100 recipes)
+export const mockUserRecipesPage1 = {
+  data: Array.from({ length: 100 }, (_, i) => ({
+    id: 300000 + i,
+    user_id: 6458,
+    name: `Recipe ${i + 1}`,
+    published_at: '2026-01-01T00:00:00.000Z',
+    stats: {
+      installs: 10,
+      forks: 2,
+    },
+  })),
+  total: 130,
+  from: 1,
+  to: 100,
+  per_page: 100,
+  current_page: 1,
+  prev_page_url: null,
+  next_page_url: 'https://trmnl.com/recipes.json?page=2&per_page=100&user_id=6458',
+};
+
+// Mock page 2 of a paginated user recipes response
+export const mockUserRecipesPage2 = {
+  data: Array.from({ length: 30 }, (_, i) => ({
+    id: 400000 + i,
+    user_id: 6458,
+    name: `Recipe ${i + 101}`,
+    published_at: '2026-01-01T00:00:00.000Z',
+    stats: {
+      installs: 5,
+      forks: 1,
+    },
+  })),
+  total: 130,
+  from: 101,
+  to: 130,
+  per_page: 100,
+  current_page: 2,
+  prev_page_url: 'https://trmnl.com/recipes.json?page=1&per_page=100&user_id=6458',
+  next_page_url: null,
+};

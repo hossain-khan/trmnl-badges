@@ -1,4 +1,4 @@
-import type { TRMNLRecipe } from './types';
+import type { TRMNLRecipe, TRMNLUserRecipesResponse } from './types';
 import { APP_USER_AGENT } from './constants';
 
 const TRMNL_API_BASE = 'https://trmnl.com';
@@ -157,37 +157,45 @@ export async function fetchRecipe(recipeId: string): Promise<TRMNLRecipe | null>
 }
 
 /**
- * Fetch all recipes for a specific user/author
- * Returns recipes with their stats (installs, forks)
+ * Fetch all recipes for a specific user/author, following pagination via next_page_url.
+ * Returns all recipes across all pages with their stats (installs, forks).
  */
 export async function fetchUserRecipes(userId: string): Promise<{ data: TRMNLRecipe[] } | null> {
-  const url = `${TRMNL_API_BASE}/recipes.json?user_id=${encodeURIComponent(userId)}`;
+  const initialUrl = `${TRMNL_API_BASE}/recipes.json?per_page=100&sort-by=popularity&user_id=${encodeURIComponent(userId)}`;
 
   const headers: Record<string, string> = {
     Accept: 'application/json',
     'User-Agent': APP_USER_AGENT,
   };
 
-  return getInFlightOrCreate(inFlightUserRequests, url, 'user', async () => {
+  return getInFlightOrCreate(inFlightUserRequests, initialUrl, 'user', async () => {
     try {
-      const response = await fetchTrmnlJson(url, headers);
+      const allRecipes: TRMNLRecipe[] = [];
+      let nextUrl: string | null = initialUrl;
 
-      const contentType = response.headers.get('content-type');
-      if (!contentType?.includes('application/json')) {
-        return null;
-      }
+      while (nextUrl) {
+        const response = await fetchTrmnlJson(nextUrl, headers);
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          return null;
+        const contentType = response.headers.get('content-type');
+        if (!contentType?.includes('application/json')) {
+          return allRecipes.length > 0 ? { data: allRecipes } : null;
         }
-        throw new Error(`TRMNL API error: ${response.status} ${response.statusText}`);
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            return allRecipes.length > 0 ? { data: allRecipes } : null;
+          }
+          throw new Error(`TRMNL API error: ${response.status} ${response.statusText}`);
+        }
+
+        const result = (await response.json()) as TRMNLUserRecipesResponse;
+        allRecipes.push(...result.data);
+        nextUrl = result.next_page_url ?? null;
       }
 
-      const result = (await response.json()) as { data: TRMNLRecipe[] };
-      return result;
+      return { data: allRecipes };
     } catch (error) {
-      recordUpstreamFailure(error, url);
+      recordUpstreamFailure(error, initialUrl);
       console.error('Error fetching user recipes:', error);
       return null;
     }

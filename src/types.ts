@@ -99,6 +99,21 @@ export interface HealthBadgeResponse {
   color: string;
 }
 
+/**
+ * Paginated response from the TRMNL recipes list API
+ * Returned by /recipes.json?user_id=<id>&per_page=100
+ */
+export interface TRMNLUserRecipesResponse {
+  data: TRMNLRecipe[];
+  total: number;
+  from: number;
+  to: number;
+  per_page: number;
+  current_page: number;
+  prev_page_url: string | null;
+  next_page_url: string | null;
+}
+
 export type Bindings = {
   NODE_ENV: string;
   /**
