@@ -68,12 +68,6 @@
       content="TRMNL, badges, recipes, author, markdown, github, statistical badges"
     />
     <meta name="author" content="Hossain Khan, TRMNL Community Member" />
-    <link
-      rel="alternate"
-      type="text/markdown"
-      href="/llms.txt"
-      title="LLM-friendly content for TRMNL Badge Builder"
-    />
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta
@@ -586,17 +580,15 @@
           console.log(`[DEBUG] Fetching recipe stats for recipe ID: ${recipeId}`);
           const recipeResponse = await fetch(`${BASE_URL}/api/stats?recipe=${recipeId}`);
           console.log(`[DEBUG] Recipe stats response status: ${recipeResponse.status}`);
-
+          
           if (!recipeResponse.ok) {
-            console.debug(
-              `Recipe lookup failed for recipe ID ${recipeId}: ${recipeResponse.status}`
-            );
+            console.debug(`Recipe lookup failed for recipe ID ${recipeId}: ${recipeResponse.status}`);
             return null;
           }
 
           const recipeData = await recipeResponse.json();
           console.log(`[DEBUG] Recipe data received:`, recipeData);
-
+          
           if (!recipeData || !recipeData.user_id) {
             console.debug(`Recipe data missing or invalid for recipe ID ${recipeId}:`, recipeData);
             return null;
@@ -1061,9 +1053,7 @@
           }
 
           if (!isUserId) {
-            console.log(
-              `[FLOW] isUserId is false, calling getAuthorRecipesByRecipeId(${potentialId})`
-            );
+            console.log(`[FLOW] isUserId is false, calling getAuthorRecipesByRecipeId(${potentialId})`);
             // Try to fetch as recipe ID first
             result = await getAuthorRecipesByRecipeId(potentialId);
             console.log(`[FLOW] getAuthorRecipesByRecipeId returned:`, result);
@@ -1073,9 +1063,7 @@
 
           // If that fails (or isUserId is true), try as user ID directly
           if (!result) {
-            console.log(
-              `[FLOW] result is falsy, calling getAuthorRecipesByUserId(${potentialId}) as fallback`
-            );
+            console.log(`[FLOW] result is falsy, calling getAuthorRecipesByUserId(${potentialId}) as fallback`);
             result = await getAuthorRecipesByUserId(potentialId);
             console.log(`[FLOW] getAuthorRecipesByUserId returned:`, result);
           }
