@@ -99,12 +99,17 @@ function getInFlightOrCreate<T>(
   return promise;
 }
 
-async function fetchTrmnlJson(url: string, headers: Record<string, string>): Promise<Response> {
+async function fetchTrmnlJson(
+  url: string,
+  headers: Record<string, string>,
+  options?: RequestInit
+): Promise<Response> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TRMNL_API_TIMEOUT_MS);
 
   try {
     return await fetch(url, {
+      ...options,
       headers,
       signal: controller.signal,
       // Ask Cloudflare to keep a short upstream cache to reduce burst traffic.
@@ -131,12 +136,21 @@ export async function fetchRecipe(recipeId: string): Promise<TRMNLRecipe | null>
 
   return getInFlightOrCreate(inFlightRecipeRequests, url, 'recipe', async () => {
     try {
-      const response = await fetchTrmnlJson(url, headers);
+      // Use redirect: 'manual' to catch upstream 302 redirects for non-existent recipes
+      const response = await fetchTrmnlJson(url, headers, { redirect: 'manual' });
 
-      // Check if response is JSON (a 302 redirect to recipes page returns HTML)
+      // Handle upstream redirects (TRMNL API redirects non-existent recipes to /recipes)
+      if (response.status >= 300 && response.status < 400) {
+        return null;
+      }
+
+      if (response.redirected) {
+        return null;
+      }
+
+      // Check if response is JSON (a redirect or HTML error page is non-JSON)
       const contentType = response.headers.get('content-type');
       if (!contentType?.includes('application/json')) {
-        // Recipe not found (API redirects to recipe list page with HTML, or other non-JSON response)
         return null;
       }
 
@@ -148,6 +162,18 @@ export async function fetchRecipe(recipeId: string): Promise<TRMNLRecipe | null>
       }
 
       const result = (await response.json()) as { data: TRMNLRecipe };
+
+      // Ensure data is a valid single recipe object with stats, not an Array or missing stats
+      if (
+        !result ||
+        !result.data ||
+        Array.isArray(result.data) ||
+        typeof result.data !== 'object' ||
+        !('stats' in result.data)
+      ) {
+        return null;
+      }
+
       return result.data;
     } catch (error) {
       recordUpstreamFailure(error, url);

@@ -103,7 +103,7 @@ Returned when the specified recipe ID does not exist on `trmnl.com`.
 }
 ```
 
-> **Deployment Discrepancy Note:** In the current live deployment at `https://trmnl-badges.gohk.xyz`, requests for non-existent recipe IDs return `HTTP 500 Internal Server Error` (`Internal Server Error` plain text) due to upstream redirect handling (upstream `trmnl.com` redirects non-existent recipe JSON requests to `/recipes` with an HTML page). The source implementation handles non-JSON redirect responses to correctly return `HTTP 404`. Redeploying the Worker from the latest source code resolves this discrepancy.
+> **Upstream Redirect Handling:** When a recipe ID does not exist on `trmnl.com`, the upstream API returns an `HTTP 302` redirect to `/recipes`. The `trmnl-badges` service explicitly intercepts 3xx redirects for recipe lookups and converts them into a clean `HTTP 404` (`Recipe not found`) response.
 
 ##### Server or Upstream Error (`HTTP 500 Internal Server Error`)
 
