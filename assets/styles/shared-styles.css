@@ -20,8 +20,8 @@
    Base / Body
    ----------------------------------------------------------------------------- */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-    sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   background-color: #3d3d3e;
   min-height: 100vh;
   display: flex;
