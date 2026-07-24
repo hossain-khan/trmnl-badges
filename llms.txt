@@ -32,9 +32,11 @@ Badge endpoints also accept `userId=<id>` instead of `recipe=<id>` to aggregate 
 
 ## API Endpoints
 
-- `GET /api/stats?recipe=<id>` — JSON object with installs, forks, and connections for a recipe.
-- `GET /api/recipes?user_id=<id>` — JSON array of all published recipes for a user.
+- `GET /api/stats?recipe=<id>` — JSON object with `stats` (`installs`, `forks`) for a recipe.
+- `GET /api/recipes?user_id=<id>` — JSON object containing a `data` array of published recipes for a user.
 - `GET /health` — JSON with status, version, and timestamp.
+
+See [JSON Proxy API Documentation](docs/api.md) for full API specs.
 
 ## Source Code
 

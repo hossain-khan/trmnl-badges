@@ -27,7 +27,8 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 </details>
 
 > [!NOTE]  
-> 🎨 **Try the Interactive Badge Builder** 🛠️  
+> 🎨 **Try the Interactive Badge Builder** 🛠️
+>
 > - 🧰 **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)**: An easy, visual way to create and customize badges with live previews.
 > - 👤 **[Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html)**: Generate combined badges for you and all your recipes.
 
@@ -47,15 +48,15 @@ https://trmnl.com/recipes/28496
 
 ### Badge Examples
 
-| Badge Type        | Code                                                                                                        | Preview                                                                                                   |
-| ----------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| **Installs**      | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)`                                    | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)                                    |
-| **Forks**         | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496)`                                          | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496)                                          |
-| **Connections**   | `![Connections](https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496)`                              | ![Connections](https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496)                              |
-| **Pretty Format** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=9917&pretty)`                              | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=9917&pretty)                              |
-| **Custom Label**  | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count)`            | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count)            |
-| **Linked Badge**  | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496)` | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496) |
-| **Customizations**  | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&glyph=white&color=D03EB5&labelColor=537BCA)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&glyph=white&color=D03EB5&labelColor=537BCA) |
+| Badge Type         | Code                                                                                                                | Preview                                                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **Installs**       | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)`                                            | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)                                            |
+| **Forks**          | `![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496)`                                                  | ![Forks](https://trmnl-badges.gohk.xyz/badge/forks?recipe=28496)                                                  |
+| **Connections**    | `![Connections](https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496)`                                      | ![Connections](https://trmnl-badges.gohk.xyz/badge/connections?recipe=28496)                                      |
+| **Pretty Format**  | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=9917&pretty)`                                      | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=9917&pretty)                                      |
+| **Custom Label**   | `![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count)`                    | ![Downloads](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&label=Download%20Count)                    |
+| **Linked Badge**   | `[![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496)`         | [![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496)](https://trmnl.com/recipes/28496)         |
+| **Customizations** | `![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&glyph=white&color=D03EB5&labelColor=537BCA)` | ![Installs](https://trmnl-badges.gohk.xyz/badge/installs?recipe=28496&glyph=white&color=D03EB5&labelColor=537BCA) |
 
 ## Badge URL Query Parameters
 
@@ -131,13 +132,13 @@ Your user ID can be found by using the [Badge Builder](https://hossain-khan.gith
 
 ### Author Badge Examples
 
-| Badge Type          | Code                                                                                                            | Preview                                                                                                  |
-| ------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Recipes**         | `![Recipes](https://trmnl-badges.gohk.xyz/badge/recipes?userId=364)`                                            | ![Recipes](https://trmnl-badges.gohk.xyz/badge/recipes?userId=364)                                       |
-| **Total Installs**  | `![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364)`                                    | ![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364)                                |
-| **Total Forks**     | `![Total Forks](https://trmnl-badges.gohk.xyz/badge/forks?userId=364)`                                          | ![Total Forks](https://trmnl-badges.gohk.xyz/badge/forks?userId=364)                                      |
-| **Total Connections** | `![Total Connections](https://trmnl-badges.gohk.xyz/badge/connections?userId=364)`                            | ![Total Connections](https://trmnl-badges.gohk.xyz/badge/connections?userId=364)                          |
-| **Pretty Format**   | `![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364&pretty)`                            | ![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364&pretty)                         |
+| Badge Type            | Code                                                                                | Preview                                                                           |
+| --------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| **Recipes**           | `![Recipes](https://trmnl-badges.gohk.xyz/badge/recipes?userId=364)`                | ![Recipes](https://trmnl-badges.gohk.xyz/badge/recipes?userId=364)                |
+| **Total Installs**    | `![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364)`        | ![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364)        |
+| **Total Forks**       | `![Total Forks](https://trmnl-badges.gohk.xyz/badge/forks?userId=364)`              | ![Total Forks](https://trmnl-badges.gohk.xyz/badge/forks?userId=364)              |
+| **Total Connections** | `![Total Connections](https://trmnl-badges.gohk.xyz/badge/connections?userId=364)`  | ![Total Connections](https://trmnl-badges.gohk.xyz/badge/connections?userId=364)  |
+| **Pretty Format**     | `![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364&pretty)` | ![Total Installs](https://trmnl-badges.gohk.xyz/badge/installs?userId=364&pretty) |
 
 ### Author Badge HTML Usage
 
@@ -150,6 +151,12 @@ Your user ID can be found by using the [Badge Builder](https://hossain-khan.gith
 
 > [!TIP]
 > Use the **[Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html)** for a visual way to generate author badges with live previews and per-recipe breakdowns.
+
+## JSON Proxy API
+
+For third-party integrations (such as [Shields.io](https://shields.io)), this service provides a public JSON proxy API with built-in caching and request deduplication.
+
+- 📖 **[JSON Proxy API Documentation](docs/api.md)** — Complete API reference for `GET /api/stats` and `GET /api/recipes`.
 
 ## Contributing
 
