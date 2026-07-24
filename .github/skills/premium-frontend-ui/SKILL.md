@@ -1,6 +1,6 @@
 ---
 name: premium-frontend-ui
-description: "A comprehensive guide for GitHub Copilot to craft immersive, high-performance web experiences with advanced motion, typography, and architectural craftsmanship."
+description: 'A comprehensive guide for GitHub Copilot to craft immersive, high-performance web experiences with advanced motion, typography, and architectural craftsmanship.'
 ---
 
 # Immersive Frontend UI Craftsmanship

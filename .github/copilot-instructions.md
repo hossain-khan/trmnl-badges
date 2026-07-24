@@ -10,19 +10,19 @@ The app fetches recipe statistics (installs, forks) from the public TRMNL API an
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Runtime | **Cloudflare Workers** (serverless edge) |
-| Framework | **Hono** v4 (lightweight web framework) |
-| Language | **TypeScript** (strict mode, ES2022 target) |
-| Badge generation | **badgen** library |
-| Schema validation | **Zod** v4 |
-| Testing | **Vitest** |
-| Coverage | V8 provider, uploaded to Codecov |
-| Deployment | **Wrangler** CLI (`wrangler deploy --minify`) |
-| KV storage | Cloudflare KV namespace `BADGE_COUNTER` |
-| Code formatting | **Prettier** (enforced via Husky pre-commit hook) |
-| HTML validation | `html-validate` |
+| Layer             | Technology                                        |
+| ----------------- | ------------------------------------------------- |
+| Runtime           | **Cloudflare Workers** (serverless edge)          |
+| Framework         | **Hono** v4 (lightweight web framework)           |
+| Language          | **TypeScript** (strict mode, ES2022 target)       |
+| Badge generation  | **badgen** library                                |
+| Schema validation | **Zod** v4                                        |
+| Testing           | **Vitest**                                        |
+| Coverage          | V8 provider, uploaded to Codecov                  |
+| Deployment        | **Wrangler** CLI (`wrangler deploy --minify`)     |
+| KV storage        | Cloudflare KV namespace `BADGE_COUNTER`           |
+| Code formatting   | **Prettier** (enforced via Husky pre-commit hook) |
+| HTML validation   | `html-validate`                                   |
 
 ---
 
@@ -75,11 +75,13 @@ npm run deploy         # Deploy to Cloudflare Workers (requires Wrangler auth)
 ```
 
 **Type checking only (no emit):**
+
 ```bash
 npx tsc --noEmit
 ```
 
 **CI checks that must pass:**
+
 1. `npx tsc --noEmit` — TypeScript type check
 2. `npm run validate:html` — HTML validation
 3. `npm test -- --run --coverage` — All unit tests with coverage
@@ -93,6 +95,7 @@ npx tsc --noEmit
 The Hono app binds to `Bindings` type (from `src/types.ts`). Current app version: `APP_VERSION = '1.7.0'`.
 
 **Badge endpoints** (return `image/svg+xml`):
+
 - `GET /badge/installs?recipe=<id>` or `?userId=<id>`
 - `GET /badge/forks?recipe=<id>` or `?userId=<id>`
 - `GET /badge/connections?recipe=<id>` or `?userId=<id>` — combined installs+forks
@@ -100,15 +103,18 @@ The Hono app binds to `Bindings` type (from `src/types.ts`). Current app version
 - `GET /badge/counter` — total badges served (reads from KV)
 
 **JSON API endpoints**:
+
 - `GET /api/stats?recipe=<id>` — recipe stats object
 - `GET /api/recipes?user_id=<id>` — array of all user recipes
 
 **Utility endpoints**:
+
 - `GET /health` — returns JSON with status, version, timestamp
 - `GET /health-badge` — shields.io-compatible endpoint
 - `GET /` — redirects to GitHub repo (production) or dev message
 
 **Shared query parameters** across badge endpoints:
+
 - `label` — override the left label text
 - `pretty` — compact number formatting (e.g. `1.2K`)
 - `color` — hex color for the right side (without `#`)
@@ -158,11 +164,13 @@ Tests live in `test/` and use **Vitest** with globals enabled (no import needed 
 **Mocking:** `vi.mock('../src/trmnl-api')` mocks all TRMNL API calls. Fixtures in `test/fixtures.ts` provide realistic mock data (`mockRecipe`, `mockUserRecipesResponse`, etc.).
 
 **Test a single file:**
+
 ```bash
 npm test -- --run test/utils.test.ts
 ```
 
 **Test with coverage:**
+
 ```bash
 npm test -- --run --coverage
 ```
@@ -175,10 +183,10 @@ Coverage reports appear in `coverage/` (HTML) and as `coverage/lcov.info` for Co
 
 ## Environment Variables & Bindings
 
-| Name | Type | Source | Purpose |
-|---|---|---|---|
-| `NODE_ENV` | string | `wrangler.toml` vars | Environment detection (`"production"` in prod) |
-| `BADGE_COUNTER` | `KVNamespace` | `wrangler.toml` kv_namespaces | Cloudflare KV store for badge counter |
+| Name            | Type          | Source                        | Purpose                                        |
+| --------------- | ------------- | ----------------------------- | ---------------------------------------------- |
+| `NODE_ENV`      | string        | `wrangler.toml` vars          | Environment detection (`"production"` in prod) |
+| `BADGE_COUNTER` | `KVNamespace` | `wrangler.toml` kv_namespaces | Cloudflare KV store for badge counter          |
 
 No secrets or API keys are required for the TRMNL API (it is public). The only CI secret is `CODECOV_TOKEN` for uploading coverage reports.
 
@@ -207,11 +215,11 @@ No secrets or API keys are required for the TRMNL API (it is public). The only C
 
 ## CI/CD Pipelines
 
-| Workflow | Trigger | Key Steps |
-|---|---|---|
-| `ci.yml` | Push to main, PRs | tsc type-check → HTML validate → unit tests → Codecov upload |
+| Workflow          | Trigger           | Key Steps                                                                        |
+| ----------------- | ----------------- | -------------------------------------------------------------------------------- |
+| `ci.yml`          | Push to main, PRs | tsc type-check → HTML validate → unit tests → Codecov upload                     |
 | `integration.yml` | Push to main, PRs | type-check → unit tests → live integration tests (`scripts/integration-test.sh`) |
-| `pages.yml` | Push to main | Deploy repo to GitHub Pages (badge builder HTML) |
+| `pages.yml`       | Push to main      | Deploy repo to GitHub Pages (badge builder HTML)                                 |
 
 The integration test script sends real HTTP requests to the deployed Worker. It is not run in the standard unit test suite.
 
@@ -222,10 +230,12 @@ The integration test script sends real HTTP requests to the deployed Worker. It 
 **Versioning:** Follows semantic versioning (semver) with format `MAJOR.MINOR.PATCH` (e.g., `1.7.0`).
 
 **Tagging Convention:** Git tags **do not use a `v` prefix**. Tag names match version numbers exactly:
+
 - ✅ Correct: `git tag 1.7.0`
 - ❌ Incorrect: `git tag v1.7.0`
 
 **Release Process:**
+
 1. Create a release branch: `git checkout -b release/<version>`
 2. Update version in two files:
    - `package.json` — `"version"` field

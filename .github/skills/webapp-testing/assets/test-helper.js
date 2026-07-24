@@ -16,7 +16,7 @@ async function waitForCondition(condition, timeout = 5000, interval = 100) {
     }
     await new Promise((resolve) => setTimeout(resolve, interval));
   }
-  throw new Error("Condition not met within timeout");
+  throw new Error('Condition not met within timeout');
 }
 
 /**
@@ -26,7 +26,7 @@ async function waitForCondition(condition, timeout = 5000, interval = 100) {
  */
 function captureConsoleLogs(page) {
   const logs = [];
-  page.on("console", (msg) => {
+  page.on('console', (msg) => {
     logs.push({
       type: msg.type(),
       text: msg.text(),
@@ -42,7 +42,7 @@ function captureConsoleLogs(page) {
  * @param {string} name - Base name for screenshot
  */
 async function captureScreenshot(page, name) {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const filename = `${name}-${timestamp}.png`;
   await page.screenshot({ path: filename, fullPage: true });
   console.log(`Screenshot saved: ${filename}`);

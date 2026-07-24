@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       base_url:
-        description: "Base URL for production integration tests"
+        description: 'Base URL for production integration tests'
         required: false
-        default: "https://trmnl-badges.gohk.xyz"
+        default: 'https://trmnl-badges.gohk.xyz'
 
 permissions:
   contents: read

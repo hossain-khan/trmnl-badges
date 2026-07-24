@@ -200,7 +200,7 @@ app.use('/badge/*', async (context, next) => {
   }
 });
 
-// Badge endpoints for TRMNL recipes
+// SVG badge endpoint for TRMNL recipe installs (single recipe or aggregated author stats)
 app.get('/badge/installs', async (context) => {
   try {
     const { recipe, userId, label, pretty, color, labelColor, glyph, scale } = context.req.query();
@@ -263,6 +263,7 @@ app.get('/badge/installs', async (context) => {
   }
 });
 
+// SVG badge endpoint for TRMNL recipe forks (single recipe or aggregated author stats)
 app.get('/badge/forks', async (context) => {
   try {
     const { recipe, userId, label, pretty, color, labelColor, glyph, scale } = context.req.query();
@@ -325,6 +326,7 @@ app.get('/badge/forks', async (context) => {
   }
 });
 
+// SVG badge endpoint for total TRMNL recipes published by an author
 app.get('/badge/recipes', async (context) => {
   try {
     const { userId, label, pretty, color, labelColor, glyph, scale } = context.req.query();
@@ -361,6 +363,10 @@ app.get('/badge/recipes', async (context) => {
   }
 });
 
+// SVG badge endpoint for TRMNL recipe connections (single recipe or aggregated author stats)
+// Connection is basically sum of forks and installs
+// https://discord.com/channels/1281055965508141100/1284986484767723611/1472606943976624323
+// See API spec for details: https://github.com/hossain-khan/trmnl-badges/blob/main/docs/api.md
 app.get('/badge/connections', async (context) => {
   try {
     const { recipe, userId, label, pretty, color, labelColor, glyph, scale } = context.req.query();
@@ -428,7 +434,8 @@ app.get('/badge/connections', async (context) => {
   }
 });
 
-// API endpoint for TRMNL recipe stats
+// JSON API endpoint for TRMNL recipe stats
+// See API spec for details: https://github.com/hossain-khan/trmnl-badges/blob/main/docs/api.md
 app.get('/api/stats', async (context) => {
   const { recipe } = context.req.query();
 
@@ -462,7 +469,8 @@ app.get('/api/stats', async (context) => {
   return context.json(stats);
 });
 
-// API endpoint for fetching all recipes for a specific user/author
+// JSON API endpoint for fetching all recipes for a specific user/author
+// See API spec for details: https://github.com/hossain-khan/trmnl-badges/blob/main/docs/api.md
 app.get('/api/recipes', async (context) => {
   const { user_id } = context.req.query();
 
@@ -484,6 +492,7 @@ app.get('/api/recipes', async (context) => {
 // Utility endpoints for status, testing and development
 ///////////////////////////////////////////////////////////
 
+// JSON API endpoint for service health status and app version
 app.get('/health', (context) => {
   return context.json({
     status: 'ok',
@@ -493,7 +502,7 @@ app.get('/health', (context) => {
   });
 });
 
-// Health badge endpoint for shields.io
+// Shields.io endpoint JSON badge for service health status
 app.get('/health-badge', (context) => {
   return context.json({
     schemaVersion: 1,
@@ -503,6 +512,7 @@ app.get('/health-badge', (context) => {
   });
 });
 
+// Root endpoint redirecting to GitHub repo in production or status message in dev mode
 app.get('/', (context) => {
   if (context.env.NODE_ENV === 'production') {
     return context.redirect('https://github.com/hossain-khan/trmnl-badges');
