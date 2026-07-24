@@ -881,6 +881,16 @@ describe('TRMNL Badges API', () => {
       expect(json).toHaveProperty('error', 'Recipe not found');
     });
 
+    it('should return 404 when recipe=0 is requested', async () => {
+      vi.mocked(fetchRecipe).mockResolvedValueOnce(null);
+
+      const response = await app.request('/api/stats?recipe=0');
+      expect(response.status).toBe(404);
+
+      const json = await response.json();
+      expect(json).toHaveProperty('error', 'Recipe not found');
+    });
+
     it('should return JSON stats for a valid recipe', async () => {
       vi.mocked(fetchRecipe).mockResolvedValueOnce(mockRecipe);
 

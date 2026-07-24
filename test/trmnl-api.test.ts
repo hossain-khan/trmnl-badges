@@ -48,16 +48,38 @@ describe('fetchRecipe', () => {
     );
   });
 
-  it('should return null when recipe does not exist (302 redirect with HTML)', async () => {
+  it('should return null when recipe does not exist (302 redirect with Location header)', async () => {
     const mockResponse = {
       ok: false,
       status: 302,
-      headers: new Map([['content-type', 'text/html; charset=utf-8']]),
+      headers: new Map([
+        ['location', 'https://trmnl.com/recipes'],
+        ['content-type', 'text/html; charset=utf-8'],
+      ]),
     };
 
     mockFetch.mockResolvedValueOnce(mockResponse as any);
 
     const result = await fetchRecipe('22715322');
+
+    expect(result).toBeNull();
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://trmnl.com/recipes/22715322.json',
+      expect.objectContaining({ redirect: 'manual' })
+    );
+  });
+
+  it('should return null when API returns an array in data field (redirected list JSON response)', async () => {
+    const mockResponse = {
+      ok: true,
+      status: 200,
+      headers: new Map([['content-type', 'application/json; charset=utf-8']]),
+      json: async () => ({ data: [{ id: 1, name: 'Recipe 1' }] }),
+    };
+
+    mockFetch.mockResolvedValueOnce(mockResponse as any);
+
+    const result = await fetchRecipe('0');
 
     expect(result).toBeNull();
   });
