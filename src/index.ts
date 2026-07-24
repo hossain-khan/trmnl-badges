@@ -361,6 +361,10 @@ app.get('/badge/recipes', async (context) => {
   }
 });
 
+// API endpoint for TRMNL recipe connections
+// Connection is basically sum of forks and installs
+// https://discord.com/channels/1281055965508141100/1284986484767723611/1472606943976624323
+// See API spec for details: https://github.com/hossain-khan/trmnl-badges/blob/main/docs/api.md
 app.get('/badge/connections', async (context) => {
   try {
     const { recipe, userId, label, pretty, color, labelColor, glyph, scale } = context.req.query();
@@ -429,6 +433,7 @@ app.get('/badge/connections', async (context) => {
 });
 
 // API endpoint for TRMNL recipe stats
+// See API spec for details: https://github.com/hossain-khan/trmnl-badges/blob/main/docs/api.md
 app.get('/api/stats', async (context) => {
   const { recipe } = context.req.query();
 
@@ -463,6 +468,7 @@ app.get('/api/stats', async (context) => {
 });
 
 // API endpoint for fetching all recipes for a specific user/author
+// See API spec for details: https://github.com/hossain-khan/trmnl-badges/blob/main/docs/api.md
 app.get('/api/recipes', async (context) => {
   const { user_id } = context.req.query();
 
