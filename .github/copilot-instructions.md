@@ -227,22 +227,31 @@ The integration test script sends real HTTP requests to the deployed Worker. It 
 
 ## Release & Tagging
 
-**Versioning:** Follows semantic versioning (semver) with format `MAJOR.MINOR.PATCH` (e.g., `1.7.0`).
+**Versioning:** Follows semantic versioning (semver) with format `MAJOR.MINOR.PATCH` (e.g., `1.8.0`).
 
 **Tagging Convention:** Git tags **do not use a `v` prefix**. Tag names match version numbers exactly:
 
-- ✅ Correct: `git tag 1.7.0`
-- ❌ Incorrect: `git tag v1.7.0`
+- ✅ Correct: `git tag 1.8.0`
+- ❌ Incorrect: `git tag v1.8.0`
 
 **Release Process:**
 
-1. Create a release branch: `git checkout -b release/<version>`
-2. Update version in two files:
+1. Create a release branch: `git checkout -b release/<version>` (e.g., `release/1.8.0`)
+2. Update version in three files:
    - `package.json` — `"version"` field
    - `src/constants.ts` — `APP_VERSION` export
    - `.github/copilot-instructions.md` — current app version reference
-3. Commit changes: `git commit -m "Release v<version>"`
-4. Create git tag: `git tag <version>` (without `v` prefix)
-5. Push tag to GitHub: `git push origin <version>`
-6. Create GitHub Release via web UI with changelog
-7. Deploy to Cloudflare Workers: `npm run deploy`
+3. Run local verification checks:
+   - `npx tsc --noEmit`
+   - `npm run validate:html`
+   - `npm test -- --run`
+4. Commit version changes: `git commit -am "Release v<version>"`
+5. Create git tag: `git tag <version>` (without `v` prefix)
+6. Push release branch and tag to GitHub:
+   - `git push -u origin release/<version>`
+   - `git push origin <version>`
+7. Open Pull Request and merge into `main`:
+   - `gh pr create --title "Release v<version>"`
+8. Create GitHub Release notes (via CLI or web UI):
+   - `gh release create <version> --generate-notes`
+9. Deploy to Cloudflare Workers: `npm run deploy`
