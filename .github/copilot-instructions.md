@@ -92,7 +92,7 @@ npx tsc --noEmit
 
 ### `src/index.ts` — Route Handlers
 
-The Hono app binds to `Bindings` type (from `src/types.ts`). Current app version: `APP_VERSION = '1.7.0'`.
+The Hono app binds to `Bindings` type (from `src/types.ts`). Current app version: `APP_VERSION = '1.8.0'`.
 
 **Badge endpoints** (return `image/svg+xml`):
 

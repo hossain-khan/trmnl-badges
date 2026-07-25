@@ -1,7 +1,7 @@
 {
   "name": "trmnl-badges",
   "private": true,
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "TRMNL Badges - Cloudflare Workers app for generating TRMNL recipe badges",
   "type": "module",
   "main": "index.js",
