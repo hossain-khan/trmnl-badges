@@ -32,6 +32,8 @@ Dynamic SVG badges displaying statistics for [TRMNL](https://trmnl.com/) [recipe
 > - 🧰 **[TRMNL Badge Builder](https://hossain-khan.github.io/trmnl-badges/)**: An easy, visual way to create and customize badges with live previews.
 > - 👤 **[Author Badge Builder](https://hossain-khan.github.io/trmnl-badges/author-badge.html)**: Generate combined badges for you and all your recipes.
 
+<img width="2898" height="2894" alt="Builder Demo" src="https://github.com/user-attachments/assets/f0e15b2c-51a8-4bcc-9fdd-59d5b8486c87" />
+
 ## Usage
 
 Add badges to your TRMNL recipe documentation using Markdown or HTML.
